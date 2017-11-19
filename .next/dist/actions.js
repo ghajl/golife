@@ -1,0 +1,98 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.failure = failure;
+exports.loadData = loadData;
+exports.loadDataSuccess = loadDataSuccess;
+exports.changePattern = changePattern;
+exports.changeBoardSize = changeBoardSize;
+exports.toggleStopped = toggleStopped;
+exports.setStopped = setStopped;
+exports.incrementGeneration = incrementGeneration;
+exports.setSpeed = setSpeed;
+exports.setClear = setClear;
+exports.setGameValues = setGameValues;
+var actionTypes = exports.actionTypes = {
+  FAILURE: 'FAILURE',
+
+  LOAD_DATA: 'LOAD_DATA',
+  LOAD_DATA_SUCCESS: 'LOAD_DATA_SUCCESS',
+  CHANGE_PATTERN: 'CHANGE_PATTERN',
+  CHANGE_BOARD_SIZE: 'CHANGE_BOARD_SIZE',
+  TOGGLE_STOPPED: 'TOGGLE_STOPPED',
+  SET_STOPPED: 'SET_STOPPED',
+  INCREMENT_GENERATION: 'INCREMENT_GENERATION',
+  SET_SPEED: 'SET_SPEED',
+  SET_CLEAR: 'SET_CLEAR',
+  SET_GAME_VALUES: 'SET_GAME_VALUES'
+};
+
+function failure(error) {
+  return {
+    type: actionTypes.FAILURE,
+    error: error
+  };
+}
+
+function loadData() {
+  return { type: actionTypes.LOAD_DATA };
+}
+
+function loadDataSuccess(data) {
+  return {
+    type: actionTypes.LOAD_DATA_SUCCESS,
+    data: data
+  };
+}
+
+function changePattern(index) {
+  console.log(index);
+  return {
+    type: actionTypes.CHANGE_PATTERN,
+    index: index
+  };
+}
+
+function changeBoardSize(index) {
+  return {
+    type: actionTypes.CHANGE_BOARD_SIZE,
+    index: index
+  };
+}
+
+function toggleStopped() {
+  return { type: actionTypes.TOGGLE_STOPPED };
+}
+function setStopped(stopped, name) {
+  return {
+    type: actionTypes.SET_STOPPED,
+    stopped: stopped,
+    name: name
+  };
+}
+function incrementGeneration() {
+  return { type: actionTypes.INCREMENT_GENERATION
+
+  };
+}
+
+function setSpeed(fps) {
+  return { type: actionTypes.SET_SPEED,
+    fps: fps
+  };
+}
+
+function setClear() {
+  return { type: actionTypes.SET_CLEAR };
+}
+
+function setGameValues(cellsList, size) {
+  return {
+    type: actionTypes.SET_GAME_VALUES,
+    cellsList: cellsList,
+    size: size
+  };
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFjdGlvbnMuanMiXSwibmFtZXMiOlsiYWN0aW9uVHlwZXMiLCJGQUlMVVJFIiwiTE9BRF9EQVRBIiwiTE9BRF9EQVRBX1NVQ0NFU1MiLCJDSEFOR0VfUEFUVEVSTiIsIkNIQU5HRV9CT0FSRF9TSVpFIiwiVE9HR0xFX1NUT1BQRUQiLCJTRVRfU1RPUFBFRCIsIklOQ1JFTUVOVF9HRU5FUkFUSU9OIiwiU0VUX1NQRUVEIiwiU0VUX0NMRUFSIiwiU0VUX0dBTUVfVkFMVUVTIiwiZmFpbHVyZSIsImVycm9yIiwidHlwZSIsImxvYWREYXRhIiwibG9hZERhdGFTdWNjZXNzIiwiZGF0YSIsImNoYW5nZVBhdHRlcm4iLCJpbmRleCIsImNvbnNvbGUiLCJsb2ciLCJjaGFuZ2VCb2FyZFNpemUiLCJ0b2dnbGVTdG9wcGVkIiwic2V0U3RvcHBlZCIsInN0b3BwZWQiLCJuYW1lIiwiaW5jcmVtZW50R2VuZXJhdGlvbiIsInNldFNwZWVkIiwiZnBzIiwic2V0Q2xlYXIiLCJzZXRHYW1lVmFsdWVzIiwiY2VsbHNMaXN0Iiwic2l6ZSJdLCJtYXBwaW5ncyI6IkFBQUE7Ozs7O1FBZU8sQUFBUztRQVNULEFBQVM7UUFJVCxBQUFTO1FBT1QsQUFBUztRQVFULEFBQVM7UUFTVCxBQUFTO1FBR1QsQUFBUztRQU9ULEFBQVM7UUFNVCxBQUFTO1FBT1QsQUFBUztRQUlULEFBQVM7QUEvRVQsSUFBTTtXQUFjLEFBQ2hCLEFBRVQ7O2FBSHlCLEFBR2QsQUFDWDtxQkFKeUIsQUFJTixBQUNuQjtrQkFMeUIsQUFLVCxBQUNoQjtxQkFOeUIsQUFNTixBQUNuQjtrQkFQeUIsQUFPVCxBQUNoQjtlQVJ5QixBQVFaLEFBQ2I7d0JBVHlCLEFBU0gsQUFDdEI7YUFWeUIsQUFVZCxBQUNYO2FBWHlCLEFBV2QsQUFDWDttQkFaSyxBQUFvQixBQVlSLEFBR25CO0FBZjJCLEFBQ3pCOztBQWNLLGlCQUFBLEFBQWtCLE9BQU8sQUFDOUI7O1VBQ1EsWUFERCxBQUNhLEFBQ2xCO1dBRkYsQUFBTyxBQUlSO0FBSlEsQUFDTDtBQU9KOztBQUFPLG9CQUFxQixBQUMxQjtTQUFPLEVBQUMsTUFBTSxZQUFkLEFBQU8sQUFBbUIsQUFDM0I7QUFFRDs7QUFBTyx5QkFBQSxBQUEwQixNQUFNLEFBQ3JDOztVQUNRLFlBREQsQUFDYSxBQUNsQjtVQUZGLEFBQU8sQUFJUjtBQUpRLEFBQ0w7QUFLSjs7QUFBTyx1QkFBQSxBQUF1QixPQUFPLEFBQ25DO1VBQUEsQUFBUSxJQUFSLEFBQVksQUFDWjs7VUFDUSxZQURELEFBQ2EsQUFDbEI7V0FGRixBQUFPLEFBSVI7QUFKUSxBQUNMO0FBS0o7O0FBQU8seUJBQUEsQUFBeUIsT0FBTyxBQUNyQzs7VUFDUSxZQURELEFBQ2EsQUFDbEI7V0FGRixBQUFPLEFBTVI7QUFOUSxBQUNMO0FBT0o7O0FBQU8seUJBQXlCLEFBQzlCO1NBQU8sRUFBQyxNQUFNLFlBQWQsQUFBTyxBQUFtQixBQUMzQjtBQUNEO0FBQU8sb0JBQUEsQUFBb0IsU0FBcEIsQUFBNkIsTUFBTSxBQUN4Qzs7VUFDUSxZQURELEFBQ2EsQUFDbEI7YUFGSyxBQUdMO1VBSEYsQUFBTyxBQUtSO0FBTFEsQUFDTDtBQUtKO0FBQU8sK0JBQStCLEFBQ3BDO1dBQVEsTUFBTSxZQUFkLEFBQU8sQUFBbUIsQUFHM0I7O0FBSFE7QUFLVDs7QUFBTyxrQkFBQSxBQUFrQixLQUFLLEFBQzVCO1dBQVEsTUFBTSxZQUFQLEFBQW1CLEFBQ3hCO1NBREYsQUFBTyxBQUlSO0FBSlE7QUFNVDs7QUFBTyxvQkFBb0IsQUFDekI7U0FBTyxFQUFDLE1BQU0sWUFBZCxBQUFPLEFBQW1CLEFBQzNCO0FBRUQ7O0FBQU8sdUJBQUEsQUFBdUIsV0FBdkIsQUFBa0MsTUFBTSxBQUM3Qzs7VUFDUSxZQURELEFBQ2EsQUFDbEI7ZUFGSyxBQUdMO1VBSEYsQUFBTyxBQUtSO0FBTFEsQUFDTCIsImZpbGUiOiJhY3Rpb25zLmpzIiwic291cmNlUm9vdCI6IkM6L2ZvbGRlci9uZXcvZ29sIn0=

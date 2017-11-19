@@ -1,0 +1,206 @@
+
+export function getChangeList(valuesBoard,nextGeneration,checkList){
+   
+    // this.valuesBoard[Y][X].setCheckList(checkList);
+    var checkList = checkList;
+    
+    var changeList = [];
+// console.log(valuesBoard);
+    for(let i=0;i<nextGeneration.list.length;i++){
+      // console.log(nextGeneration.list[i][0]+ " " +nextGeneration.list[i][1]+ " " + valuesBoard[nextGeneration.list[i][0]][nextGeneration.list[i][1]]);
+        valuesBoard[nextGeneration.list[i][0]][nextGeneration.list[i][1]].changeState();
+    }
+    // console.log(checkList.length);
+    // checkList.map(x=>console.log(x.Y + "x" + x.X));
+    // console.log(checkList.length+"yyy");
+    if(checkList.length>valuesBoard.length*valuesBoard[0].length/12){
+        // console.log(checkList.length+"yy");
+        return totalNeighborsRevision(valuesBoard)
+    } else {
+        if(nextGeneration.isFirst){
+            for(let i=0;i<nextGeneration.list.length;i++){
+                checkList[checkList.length] = valuesBoard[nextGeneration.list[i][0]][nextGeneration.list[i][1]];
+            }      
+        }
+
+        // checkList.forEach(x => console.log(x.Y+"-"+x.X+"."));
+        checkList = makeUnique(checkList);
+    // checkList.forEach(x => console.log(x.Y+"-"+x.X+"--"));
+        for(let i=0;i<checkList.length;i++){
+            if(isGoingToChange(checkList[i])){
+                changeList[changeList.length] = [checkList[i].Y,checkList[i].X];
+            } 
+        }
+        return changeList;      
+    }
+
+      // return totalNeighborsRevision(valuesBoard)
+}
+
+
+export function totalLiveCellsRevision(valuesBoard){
+    var changeList = [];
+    for(let i=0,ilen=valuesBoard.length;i<ilen;i++){
+        for(let j=0,jlen=valuesBoard[i].length;j<jlen;j++){
+            if(valuesBoard[i][j].state === 1)changeList[changeList.length] = [i,j];
+        }
+    }
+    return changeList;
+}
+
+export function totalNeighborsRevision(valuesBoard){
+    var changeList = [];
+    for(let i=0,ilen=valuesBoard.length;i<ilen;i++){
+        for(let j=0,jlen=valuesBoard[i].length;j<jlen;j++){
+            // if(valuesBoard[i][j].state === 2)changeList.push([i,j]);
+            if(isGoingToChange(valuesBoard[i][j])){
+                changeList[changeList.length] = [i,j];
+            }
+        }
+    }
+    return changeList;
+}
+
+export function isGoingToChange(cell){
+    return (cell.state === 1 && (cell.getNeighborsCount() < 2 || cell.getNeighborsCount() > 3)) || 
+          (cell.state === 0 && cell.getNeighborsCount() === 3)
+    // return (cell.getNeighborsCount() < 2 && cell.state === 2) || 
+    //         (cell.getNeighborsCount() > 3 && cell.state === 2) ||
+    //         (cell.getNeighborsCount() === 3 && cell.state === 1)
+}
+
+export function getChangePatternChangeList(valuesBoard, newPattern){
+    var changeList = [];
+    for(let i=0,ilen=valuesBoard.length;i<ilen;i++){
+        for(let j=0,jlen=valuesBoard[i].length;j<jlen;j++){
+            if(valuesBoard[i][j].state === 1){
+                const ind = newPattern.indexOf([i,j]);
+                ~ind ? newPattern.splice(ind,1) : changeList.push([i,j]);
+            }
+        }
+    }
+    newPattern.forEach(x => changeList.push(x));
+    return changeList;
+}
+
+
+export function convertCoordinates(cellList){
+  // var cellList = cellList;
+  let res = {};
+  for(let i=0;i<cellList.length;i++){
+    const currentY = cellList[i][0];
+    const currentX = cellList[i][1];
+    const tableX = Math.floor(currentX/10);
+    const tableY = Math.floor(currentY/10);
+    const X = currentX%10;
+    const Y = currentY%10;
+    const key = [tableY,tableX].join(" ");
+    
+    if (typeof res[key] == "undefined"){
+        res[key] = [];
+    }
+
+    res[key][res[key].length] = [Y,X];    
+  }
+  return res;
+}
+
+export function makeUnique(checkList){
+  return checkList.sort((a,b) => {
+    if(a.Y > b.Y) return 1;
+    else if (a.Y === b.Y){
+      if (a.X > b.X) return 1;
+      else if (a.X === b.X) return 0;
+      else if (a.X < b.X) return -1;
+    } else if (a.Y < b.Y) {
+      return -1;
+    }
+  }).filter((c,i,arr) => {
+    if(i === 0) return true;
+    else {
+      if(c.Y === arr[i-1].Y && c.X === arr[i-1].X) return false;  
+    }
+    return true;
+  })
+
+}
+
+export function getLiveCells(valuesBoard){
+    const cellList=[];
+    for(let i=0,ilen=valuesBoard.length;i<ilen;i++){
+        for(let j=0,jlen=valuesBoard[i].length;j<jlen;j++){
+            if(valuesBoard[i][j].state === 1) cellList[cellList.length] = [i,j];
+        }
+    }
+    return cellList;
+}
+
+export function getCurrentBoard(valuesBoard,changeCellsList){
+
+const board = valuesBoard;
+    for(let i=0;i<changeCellsList.length;i++){
+      let Y = changeCellsList[i][0];
+      let X = changeCellsList[i][1];
+      board[Y][X] = board[Y][X] === 1?0:1;
+    }
+  return board;
+
+}
+
+export function adjustToSize(pattern,boardHeight,boardWidth){
+    const patternSize = getPatternSize(pattern)
+    const center = [Math.floor((boardHeight - 1) / 2), Math.floor((boardWidth - 1) / 2)]
+    const trans = [Math.floor((patternSize.maxY - patternSize.minY) / 2), Math.floor((patternSize.maxX - patternSize.minX) / 2)]
+    // console.log(patternSize)
+    // console.log(`${center} ${transX} ${transY}`)
+    const result = pattern.map(cell => {
+        const y = cell[0] + center[0] - trans[0]
+        // console.log(y+ "pat");
+        const x = cell[1] + center[1] - trans[1]
+        return [y,x];
+    });
+
+    return result;
+}
+
+export function alterNextGenerationChangeCellsList(nextGenerationChangeCellsList,valuesBoard,clickedCell){
+    console.log(nextGenerationChangeCellsList);
+    const ind = nextGenerationChangeCellsList.indexOf(clickedCell);
+    if(~ind){
+        return clickedCell;
+    } else {
+
+    }
+    var cellList = nextGenerationChangeCellsList.filter(x => x === clickedCell && valuesBoard[clickedCell[0],clickedCell[1]].state === 1);
+    console.log(cellList);
+    if(cellList.length === nextGenerationChangeCellsList.length) cellList.push(clickedCell);
+    return cellList;
+}
+
+export function getRandomPattern(height,width){
+    const min = Math.floor(height*width*.05);
+    const max = Math.floor(height*width*.2);
+    const len = getRandomInt(min, max);
+    return Array.from({length: len}, () => [Math.floor(Math.random() * height),Math.floor(Math.random() * width)]);
+}
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getPatternSize(pattern){
+    return pattern.reduce((acc, val, ind) => {
+        if(ind === 0){
+            acc.minX = acc.maxX = val[1]
+            acc.minY = acc.maxY = val[0]
+            
+        } else {
+            acc.minX = val[1] < acc.minX ? val[1] : acc.minX
+            acc.maxX = val[1] > acc.maxX ? val[1] : acc.maxX
+            acc.minY = val[0] < acc.minY ? val[0] : acc.minY
+            acc.maxY = val[0] > acc.maxY ? val[0] : acc.maxY
+        }
+
+        return acc
+    }, {})
+}
