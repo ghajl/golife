@@ -1,87 +1,92 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
 
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
+exports.fetchPatterns = fetchPatterns;
+exports.loadDataSaga = loadDataSaga;
+exports.rootSaga = rootSaga;
+
 var _reduxSaga = require('redux-saga');
 
 var _effects = require('redux-saga/effects');
 
-var _es6Promise = require('es6-promise');
+var _isomorphicFetch = require('isomorphic-fetch');
 
-var _es6Promise2 = _interopRequireDefault(_es6Promise);
-
-require('isomorphic-unfetch');
+var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
 var _actions = require('./actions');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
 
 var _marked = /*#__PURE__*/_regenerator2.default.mark(loadDataSaga),
-    _marked2 = /*#__PURE__*/_regenerator2.default.mark(rootSaga);
+    _marked2 = /*#__PURE__*/_regenerator2.default.mark(rootSaga); /* global fetch */
 
-/* global fetch */
+// import es6promise from 'es6-promise';
+// import 'isomorphic-unfetch';
 
-_es6Promise2.default.polyfill();
+
+// es6promise.polyfill();
+
+function fetchPatterns() {
+	return (0, _isomorphicFetch2.default)('https://gist.githubusercontent.com/ghajl/d873bcb8d32128b32618c7468dc6ca43/raw/0b4862bb8e1245a263d0c36802c9c0864321f13d/patterns.json').then(function (res) {
+		return res.json();
+	});
+}
 
 function loadDataSaga() {
-  var res, data;
-  return _regenerator2.default.wrap(function loadDataSaga$(_context) {
-    while (1) {
-      switch (_context.prev = _context.next) {
-        case 0:
-          _context.prev = 0;
-          _context.next = 3;
-          return fetch('https://gist.githubusercontent.com/ghajl/d873bcb8d32128b32618c7468dc6ca43/raw/0b4862bb8e1245a263d0c36802c9c0864321f13d/patterns.json');
+	var data;
+	return _regenerator2.default.wrap(function loadDataSaga$(_context) {
+		while (1) {
+			switch (_context.prev = _context.next) {
+				case 0:
+					_context.prev = 0;
+					_context.next = 3;
+					return (0, _effects.call)(fetchPatterns);
 
-        case 3:
-          res = _context.sent;
-          _context.next = 6;
-          return res.json();
+				case 3:
+					data = _context.sent;
+					_context.next = 6;
+					return (0, _effects.put)((0, _actions.loadDataSuccess)(data));
 
-        case 6:
-          data = _context.sent;
-          _context.next = 9;
-          return (0, _effects.put)((0, _actions.loadDataSuccess)(data));
+				case 6:
+					_context.next = 12;
+					break;
 
-        case 9:
-          _context.next = 15;
-          break;
+				case 8:
+					_context.prev = 8;
+					_context.t0 = _context['catch'](0);
+					_context.next = 12;
+					return (0, _effects.put)((0, _actions.failure)(_context.t0));
 
-        case 11:
-          _context.prev = 11;
-          _context.t0 = _context['catch'](0);
-          _context.next = 15;
-          return (0, _effects.put)((0, _actions.failure)(_context.t0));
-
-        case 15:
-        case 'end':
-          return _context.stop();
-      }
-    }
-  }, _marked, this, [[0, 11]]);
+				case 12:
+				case 'end':
+					return _context.stop();
+			}
+		}
+	}, _marked, this, [[0, 8]]);
 }
 
 function rootSaga() {
-  return _regenerator2.default.wrap(function rootSaga$(_context2) {
-    while (1) {
-      switch (_context2.prev = _context2.next) {
-        case 0:
-          _context2.next = 2;
-          return (0, _effects.takeLatest)(_actions.actionTypes.LOAD_DATA, loadDataSaga);
+	return _regenerator2.default.wrap(function rootSaga$(_context2) {
+		while (1) {
+			switch (_context2.prev = _context2.next) {
+				case 0:
+					_context2.next = 2;
+					return (0, _effects.takeLatest)(_actions.actionTypes.LOAD_DATA, loadDataSaga);
 
-        case 2:
-        case 'end':
-          return _context2.stop();
-      }
-    }
-  }, _marked2, this);
+				case 2:
+				case 'end':
+					return _context2.stop();
+			}
+		}
+	}, _marked2, this);
 }
-
-exports.default = rootSaga;
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNhZ2EuanMiXSwibmFtZXMiOlsibG9hZERhdGFTYWdhIiwicm9vdFNhZ2EiLCJkZWxheSIsImFsbCIsImNhbGwiLCJwdXQiLCJ0YWtlIiwidGFrZUxhdGVzdCIsImVzNnByb21pc2UiLCJhY3Rpb25UeXBlcyIsImZhaWx1cmUiLCJsb2FkRGF0YVN1Y2Nlc3MiLCJwb2x5ZmlsbCIsImZldGNoIiwicmVzIiwianNvbiIsImRhdGEiLCJMT0FEX0RBVEEiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7QUFFQSxBQUFROztBQUNSLEFBQVEsQUFBSyxBQUFNLEFBQUssQUFBTTs7QUFDOUIsQUFBTzs7OztBQUNQOztBQUVBLEFBQVEsQUFBYSxBQUFTOzs7O3NEQUluQixBO3VELEFBWUE7O0FBdkJYOztBQVNBLHFCQUFBLEFBQVc7O0FBRVgsU0FBQSxBQUFXLGVBQVg7V0FBQTtxRUFBQTtjQUFBO3VDQUFBO2FBQUE7MEJBQUE7MEJBQUE7aUJBRXNCLE1BRnRCLEFBRXNCLEFBQU07O2FBQWxCO0FBRlYseUJBQUE7MEJBQUE7aUJBR3VCLElBSHZCLEFBR3VCLEFBQUk7O2FBQWpCO0FBSFYsMEJBQUE7MEJBQUE7aUJBSVUsa0JBQUksOEJBSmQsQUFJVSxBQUFJLEFBQWdCOzthQUo5QjswQkFBQTtBQUFBOzthQUFBOzBCQUFBOzBDQUFBOzBCQUFBO2lCQU9VLGtCQUFJLCtCQVBkLEFBT1U7O2FBUFY7YUFBQTswQkFBQTs7QUFBQTt5QkFBQTs7O0FBWUEsU0FBQSxBQUFXLFdBQVg7a0VBQUE7Y0FBQTt5Q0FBQTthQUFBOzJCQUFBO2lCQUNRLHlCQUFXLHFCQUFYLEFBQXVCLFdBRC9CLEFBQ1EsQUFBa0M7O2FBRDFDO2FBQUE7MkJBQUE7O0FBQUE7ZUFBQTtBQUtBOztrQkFBQSxBQUFlIiwiZmlsZSI6InNhZ2EuanMiLCJzb3VyY2VSb290IjoiQzovZm9sZGVyL25ldy9nb2wifQ==
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNhZ2EuanMiXSwibmFtZXMiOlsiZmV0Y2hQYXR0ZXJucyIsImxvYWREYXRhU2FnYSIsInJvb3RTYWdhIiwidGhlbiIsInJlcyIsImpzb24iLCJkYXRhIiwiTE9BRF9EQVRBIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7O1FBV2dCLEEsZ0JBQUEsQTtRLEFBS0UsZSxBQUFBO1FBY0EsQSxXQUFBLEE7O0FBNUJsQjs7QUFDQTs7QUFHQTs7OztBQUNBOzs7Ozs7c0RBU2tCLEE7dURBY0EsQSxXQTlCbEI7O0FBSUE7QUFDQTs7O0FBSUE7O0FBRU8sU0FBQSxBQUFTLGdCQUFnQixBQUMvQjt1Q0FBTyxBQUFNLHdJQUFOLEFBQ04sS0FBSyxlQUFBO1NBQU8sSUFBUCxBQUFPLEFBQUk7QUFEakIsQUFBTyxBQUVQLEVBRk87OztBQUlELFNBQUEsQUFBVyxlQUFYO0tBQUE7b0VBQUE7WUFBQTtvQ0FBQTtTQUFBO3FCQUFBO3FCQUFBO1lBRWtCLG1CQUZsQixBQUVrQixBQUFLOztTQUFsQjtBQUZMLHFCQUFBO3FCQUFBO1lBTUssa0JBQUksOEJBTlQsQUFNSyxBQUFJLEFBQWdCOztTQU56QjtxQkFBQTtBQUFBOztTQUFBO3FCQUFBO3FDQUFBO3FCQUFBO1lBU1Esa0JBQUksK0JBVFosQUFTUTs7U0FUUjtTQUFBO3FCQUFBOztBQUFBO3dCQUFBOzs7QUFjQSxTQUFBLEFBQVcsV0FBWDtpRUFBQTtZQUFBO3NDQUFBO1NBQUE7c0JBQUE7WUFDRyx5QkFBVyxxQkFBWCxBQUF1QixXQUQxQixBQUNHLEFBQWtDOztTQURyQztTQUFBO3NCQUFBOztBQUFBO2NBQUEiLCJmaWxlIjoic2FnYS5qcyIsInNvdXJjZVJvb3QiOiJDOi9mb2xkZXIvbmV3L2dvbCJ9

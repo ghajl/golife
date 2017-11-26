@@ -34,7 +34,7 @@ const SelectButtonsBar = (props) => {
                 <Select
                     
                     index={props.gridSizesIndex}
-                    items={props.gridSizes}
+                    items={props.gridSizesLabel}
                     
                     onChange={(v) => props.changeBoardSizeEventHandler(v)}
                     label={props.gridLabel}

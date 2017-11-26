@@ -27,7 +27,7 @@ export const initialState = {
   size: null
 }
 
-function reducer (state = initialState, action) {
+export function reducer (state = initialState, action) {
   switch (action.type) {
     case actionTypes.FAILURE:
       return {
@@ -36,7 +36,6 @@ function reducer (state = initialState, action) {
       }
 
     case actionTypes.LOAD_DATA_SUCCESS:
-    // console.log(action.data)
       return {
         ...state,
         ...{patterns: action.data}
@@ -118,12 +117,12 @@ function reducer (state = initialState, action) {
       }   
 
     case actionTypes.SET_GAME_VALUES:
-    console.log("sfd");
+    
       return {
         ...state,
         ...{
             cellsList: action.cellsList, 
-            size: action.size,
+            
             generationCount: state.generationCount -  1,
             }
           }

@@ -15,8 +15,7 @@ export const actionTypes = {
 
 export function failure (error) {
   return {
-    type: actionTypes.FAILURE,
-    error
+    type: actionTypes.FAILURE
   }
 }
 
@@ -34,7 +33,6 @@ export function loadDataSuccess (data) {
 }
 
 export function changePattern(index) {
-  console.log(index);
   return {
     type: actionTypes.CHANGE_PATTERN,
     index
@@ -61,9 +59,7 @@ export function setStopped(stopped, name) {
   }
 }
 export function incrementGeneration() {
-  return {type: actionTypes.INCREMENT_GENERATION,
-    
-  }
+  return { type: actionTypes.INCREMENT_GENERATION }
 }
 
 export function setSpeed(fps) {
@@ -77,10 +73,9 @@ export function setClear() {
   return {type: actionTypes.SET_CLEAR}
 }
 
-export function setGameValues(cellsList, size) {
+export function setGameValues(cellsList) {
   return {
     type: actionTypes.SET_GAME_VALUES,
-    cellsList, 
-    size
+    cellsList
   }
 }

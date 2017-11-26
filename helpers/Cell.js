@@ -32,11 +32,11 @@ export default class Cell {
     }
 
     get Y(){
-      return this._Y;
+        return this._Y;
     }
 
     get X(){
-      return this._X;
+        return this._X;
     }
 
 
@@ -58,12 +58,12 @@ export default class Cell {
       this.value === 0? this.state = 1 : this.state = 0;
     }
 
-    addListener(type, listener){
-      if (typeof this.listeners[type] == "undefined"){
-          this.listeners[type] = [];
-      }
+    addListeners(type, listeners){
+      // if (typeof this.listeners[type] == "undefined"){
+      //     this.listeners[type] = [];
+      // }
 
-      this.listeners[type].push(listener);
+      this.listeners[type] = listeners.slice(0);
       // console.log("x");
     }
 

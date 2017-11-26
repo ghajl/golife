@@ -1,12 +1,11 @@
 import Cell from './Cell';
 import { getChangeList, convertCoordinates, makeUnique, getLiveCells, 
-  totalLiveCellsRevision, getCurrentBoard, adjustToSize, 
-  getChangePatternChangeList, alterNextGenerationChangeCellsList, 
-  totalNeighborsRevision, getRandomPattern} from './helpers';
+  adjustToSize, getNewPatternChangeList,  
+  boardTotalCheck, getRandomPattern} from './helpers';
 
 
 class GameGrid {
-    constructor(name, width, height, squareSize, isOpen = false)
+    constructor(name, width, height, squareSize, isOpenUniverse = false)
     {
 	  	this.gridWidth = width;
 	  	this.gridHeight = height;
@@ -14,12 +13,12 @@ class GameGrid {
         this.visibleGridWidth = width;
         this.visibleGridHeight = height;
         this.gridName = name;
-        this.gridIsOpen = isOpen;
+        this.gridIsOpen = isOpenUniverse;
         this.checkList = [];
         this.originalCellImage = null;
        
-        this.nextGenerationChangeCellsList=null;
-        this.nextGeneration = {
+        // this.nextGenerationChangeCellsList=null;
+        this.cellsStateChange = {
             list:null,
             isFirst:true,
         }
@@ -27,21 +26,8 @@ class GameGrid {
             this.gridWidth = this.gridWidth + 40;
             this.gridHeight = this.gridHeight + 40;
         }
-        this.valuesBoard = Array(this.gridHeight).fill(null);
-        for(let i=0;i<this.gridHeight;i++){
-            this.valuesBoard[i] = Array(this.gridWidth).fill(null);
-            for(let j=0;j<this.gridWidth;j++){
-                this.valuesBoard[i][j] = new Cell(this.checkList,i,j);
-            }
-        }
-        for(let i=0;i<this.gridHeight;i++){
-          
-            for(let j=0;j<this.gridWidth;j++){
-              
-                this.setListeners(i,j);
-            }
-      
-        }
+        this.valuesBoard = createGameMatrix(this.gridWidth, this.gridHeight, this.checkList, this.gridIsOpen);
+
 	}
 
 
@@ -60,49 +46,14 @@ class GameGrid {
     get name(){
         return this.gridName;
     }
-    setListeners(Y,X){
-
-        const cellList=[];
-        for(let i=-1;i<2;i++){
-            for(let j=-1;j<2;j++){
-                let tX = X+j,tY = Y+i;
-                if(this.gridIsOpen){
-                    if(tY >= 0 && tY < this.gridHeight && tX >= 0 && tX < this.gridWidth && !(i ===0 && j === 0)){
-                        cellList.push(this.valuesBoard[tY][tX]);
-                    }
-                } else {
-                    if(tY<0)tY=this.gridHeight-1;
-                    else if(tY >= this.gridHeight)tY=0;
-                    if(tX<0)tX=this.gridWidth-1;
-                    else if(tX >= this.gridWidth)tX=0;
-                    if(!(i ===0 && j === 0)){
-                        cellList.push(this.valuesBoard[tY][tX]);
-                      
-                    }                    
-                }
-
-
-            }
-        }
-
-
-        cellList.forEach(c => this.valuesBoard[Y][X].addListener("neighborStateChange",function(val){
-            val===1?c.addNeighbor():c.removeNeighbor();
-        }));
-        
-        var c = this.valuesBoard[Y][X];
-        this.valuesBoard[Y][X].addListener("neighborsChange",function(){
-          
-            c.checkList[c.checkList.length] = c;
-        })
-    }
 
 
 
-    reload(width,height,squareSize,canvas,isOpen){
+
+    reload(width,height,squareSize,canvas,isOpenUniverse = false){
         this.checkList = [];
-        this.nextGenerationChangeCellsList=null;
-        this.nextGeneration = {
+        // this.nextGenerationChangeCellsList=null;
+        this.cellsStateChange = {
             list:null,
             isFirst:true,
         }
@@ -113,88 +64,100 @@ class GameGrid {
         this.visibleGridWidth = width;
         this.visibleGridHeight = height;
         this.gridSquareSize = squareSize;
-        this.gridIsOpen = isOpen;
+        this.gridIsOpen = isOpenUniverse;
         if(this.gridIsOpen){
             this.gridWidth = this.gridWidth + 40;
             this.gridHeight = this.gridHeight + 40;
         }
-        this.canvas.width=((this.visibleGridWidth + 1) * this.gridSquareSize) * this.ratio;
-        this.canvas.height=((this.visibleGridHeight + 1) * this.gridSquareSize) * this.ratio;
-        let r = this.canvas.height / this.canvas.width;
-        this.canvas.style.width="100%";
-        this.canvas.style.height=this.canvas.offsetWidth * r + "px";
+        this.canvas = createCanvas(canvas, this.visibleGridWidth, this.visibleGridHeight, this.gridSquareSize, this.ratio);
+        // this.canvas.width=((this.visibleGridWidth + 1) * this.gridSquareSize) * this.ratio;
+        // this.canvas.height=((this.visibleGridHeight + 1) * this.gridSquareSize) * this.ratio;
+        // let r = this.canvas.height / this.canvas.width;
+        // this.canvas.style.width="100%";
+        // this.canvas.style.height=this.canvas.offsetWidth * r + "px";
 
-        this.ctx = this.canvas.getContext('2d')
-        this.ctx.scale(this.ratio, this.ratio)    
-        drawGrid(this.canvas, this.visibleGridWidth, this.visibleGridHeight, this.gridSquareSize)
-        this.originalCellImage = this.ctx.getImageData(this.gridSquareSize * this.ratio / 2, this.gridSquareSize * this.ratio / 2, this.gridSquareSize * this.ratio, this.gridSquareSize* this.ratio)
-        this.valuesBoard = Array(this.gridHeight).fill(null);
-        for(let i=0;i<this.gridHeight;i++){
-            this.valuesBoard[i] = Array(this.gridWidth).fill(null);
-            for(let j=0;j<this.gridWidth;j++){
-                this.valuesBoard[i][j] = new Cell(this.checkList,i,j);
-            }
-        }
-        for(let i=0;i<this.gridHeight;i++){
+        // this.ctx.scale(this.ratio, this.ratio)    
+        drawGrid(this.canvas, this.visibleGridWidth, this.visibleGridHeight, this.gridSquareSize);
+        let bufferCanvas = copyCanvas(this.canvas);
+        let ctx = bufferCanvas.getContext('2d');  
+        this.originalCellImage = ctx.getImageData(this.gridSquareSize * this.ratio / 2, this.gridSquareSize * this.ratio / 2, this.gridSquareSize * this.ratio, this.gridSquareSize* this.ratio)
+
+        this.valuesBoard = createGameMatrix(this.gridWidth, this.gridHeight, this.checkList, this.gridIsOpen);
+
+        //  = createCellsValuesMatrix(this.gridWidth, this.gridHeight, this.checkList, this.gridIsOpen);
+
+        
+        // for(let i = 0; i < height; i++){
           
-            for(let j=0;j<this.gridWidth;j++){
+        //     for(let j = 0; j < width; j++){
               
-                this.setListeners(i,j);
-            }
-      
-        }
+        //         let neighborsList = getNeighborsList(this.valuesBoard, this.gridWidth, this.gridHeight, i, j, this.gridIsOpen);//  setListeners(i,j);
+        //         let neighborStateChangeListenersList = getNeighborStateChangeListenersList(neighborsList);
+        //         this.valuesBoard[i][j].addListeners("neighborStateChange", neighborStateChangeListenersList);
+        //         let neighborsNumberChangeListenersList = getNeighborsNumberChangeListenersList(this.valuesBoard[i][j]);
+        //         this.valuesBoard[i][j].addListeners("neighborsChange", neighborsNumberChangeListenersList);
+
+        //     }
+        // }
+
+
     }
 
 
     //= componentdidmount
-    makeBoard(width,height,squareSize,ratio,canvas,liveCellsList,screen)
+    makeBoard(width,height,squareSize,ratio,canvas,savedCellsList)
     {
-        this.canvas = canvas;
-        this.canvas.width=((width + 1) * squareSize) * ratio;
+
+        // this.canvas = canvas;
+
+        this.canvas = createCanvas(canvas, width, height, squareSize, ratio);
+        // this.canvas.width=((width + 1) * squareSize) * ratio;
         
-        this.canvas.height=((height + 1) * squareSize) * ratio;     
-        let r = this.canvas.height / this.canvas.width;
-        this.canvas.style.width="100%";
-        this.canvas.style.height=this.canvas.offsetWidth * r + "px";
+        // this.canvas.height=((height + 1) * squareSize) * ratio;     
+        // let r = this.canvas.height / this.canvas.width;
+        // this.canvas.style.width="100%";
+        // this.canvas.style.height=this.canvas.offsetWidth * r + "px";
+        // this.ratio = ratio;
+        // this.ctx = this.canvas.getContext('2d');
+        // this.ctx.scale(ratio, ratio)
         this.ratio = ratio;
-        this.ctx = this.canvas.getContext('2d');
-        this.ctx.scale(ratio, ratio)
-
         drawGrid(this.canvas, width, height, squareSize);
-        this.originalCellImage = this.ctx.getImageData(squareSize * ratio / 2, squareSize * ratio / 2, squareSize * ratio, squareSize* ratio);
+        let bufferCanvas = copyCanvas(this.canvas);
+        let ctx = bufferCanvas.getContext('2d');         
+        this.originalCellImage = ctx.getImageData(squareSize * ratio / 2, squareSize * ratio / 2, squareSize * ratio, squareSize* ratio);
 
 
-        if(liveCellsList){
+        if(savedCellsList){
             if(this.gridIsOpen){
-                liveCellsList = liveCellsList.map(cell => [cell[0]+20,cell[1]+20]);
+                savedCellsList = savedCellsList.map(cell => [cell[0]+20,cell[1]+20]);
             }
-            this.nextGeneration.list = liveCellsList;
+            this.cellsStateChange.list = savedCellsList;
         
           
         } else {
-                this.nextGeneration.list = getRandomPattern(height,width);
+                this.cellsStateChange.list = getRandomPattern(height,width);
         }
-        this.nextGeneration.isFirst = true;
+        this.cellsStateChange.isFirst = true;
     }
 
     changePattern(index, patternsList, mode){
         var nextGenerationChangeCellsList;
         if(index>0){
-                //get the coordinates of choosed pattern adjusted to current board size
-                nextGenerationChangeCellsList=adjustToSize(patternsList[index-1].pattern,this.gridHeight,this.gridWidth);
-            } else {
-                //random live cells have index = 0
-                nextGenerationChangeCellsList=getRandomPattern(this.gridHeight,this.gridWidth);
-            }
+            //get the coordinates of choosed pattern adjusted to current board size
+            nextGenerationChangeCellsList=adjustToSize(patternsList[index-1].pattern,this.gridHeight,this.gridWidth);
+        } else {
+            //random live cells have index = 0
+            nextGenerationChangeCellsList=getRandomPattern(this.gridHeight,this.gridWidth);
+        }
         if(mode.clear){
-                //board is clear - there aren't any live cells on the board
-                this.nextGeneration.list = nextGenerationChangeCellsList;
-                this.nextGeneration.isFirst = true
-            } else {
-                //we have to clear the remained cells 
-                this.nextGeneration.list=getChangePatternChangeList(this.valuesBoard, nextGenerationChangeCellsList);
-                this.nextGeneration.isFirst = true;
-            }
+            //board is clear - there aren't any live cells on the board
+            this.cellsStateChange.list = nextGenerationChangeCellsList;
+            this.cellsStateChange.isFirst = true
+        } else {
+            //we have to clear the remained cells 
+            this.cellsStateChange.list=getNewPatternChangeList(this.valuesBoard, nextGenerationChangeCellsList);
+            this.cellsStateChange.isFirst = true;
+        }
     }
 
     handleClick(e){
@@ -218,8 +181,8 @@ class GameGrid {
                 const clickedCell = [nearestY - 1, nearestX - 1];
         
     
-                this.nextGeneration.list = [];
-                this.nextGeneration.list.push(clickedCell);
+                this.cellsStateChange.list = [];
+                this.cellsStateChange.list.push(clickedCell);
                 return true;
             }
       
@@ -247,34 +210,35 @@ class GameGrid {
         if(mode){
             if(mode.drawing){
                 //this operation changes valuesBoard and checklist
-                let changeCellList = getChangeList(this.valuesBoard,this.nextGeneration,this.checkList);//the list of cells that changes color;
+                
+                let changeCellList = getChangeList(this.valuesBoard,this.cellsStateChange,this.checkList);//the list of cells that changes color;
 
-                updateTable(this.valuesBoard, this.nextGeneration.list, this.canvas, this.gridSquareSize, this.gridWidth, this.gridHeight, this.originalCellImage, this.ratio);
+                updateTable(this.valuesBoard, this.cellsStateChange.list, this.canvas, this.gridSquareSize, this.gridWidth, this.gridHeight, this.originalCellImage, this.ratio);
             
-                this.nextGeneration.list = totalNeighborsRevision(this.valuesBoard);   
+                this.cellsStateChange.list = boardTotalCheck(this.valuesBoard);   
                      
             } else if(mode.clear) {
                 
 
-                this.nextGeneration.list=totalLiveCellsRevision(this.valuesBoard);
-                let changeCellList = getChangeList(this.valuesBoard,this.nextGeneration,this.checkList);//the list of cells that changes color;
-                this.nextGeneration.isFirst = true;
-                updateTable(this.valuesBoard, this.nextGeneration.list, this.canvas, this.gridSquareSize, this.gridWidth, this.gridHeight, this.originalCellImage, this.ratio);
+                this.cellsStateChange.list=getLiveCells(this.valuesBoard);
+                let changeCellList = getChangeList(this.valuesBoard,this.cellsStateChange,this.checkList);//the list of cells that changes color;
+                this.cellsStateChange.isFirst = true;
+                updateTable(this.valuesBoard, this.cellsStateChange.list, this.canvas, this.gridSquareSize, this.gridWidth, this.gridHeight, this.originalCellImage, this.ratio);
                 this.checkList.length = 0;
             } else {
                 //this operation changes valuesBoard and checklist
-                let changeCellList = getChangeList(this.valuesBoard,this.nextGeneration,this.checkList);//the list of cells that changes color;
+                let changeCellList = getChangeList(this.valuesBoard,this.cellsStateChange,this.checkList);//the list of cells that changes color;
 
-                updateTable(this.valuesBoard, this.nextGeneration.list, this.canvas, this.gridSquareSize, this.gridWidth, this.gridHeight, this.originalCellImage, this.ratio);
+                updateTable(this.valuesBoard, this.cellsStateChange.list, this.canvas, this.gridSquareSize, this.gridWidth, this.gridHeight, this.originalCellImage, this.ratio);
             
-                this.nextGeneration.list = changeCellList;     
-                this.nextGeneration.isFirst = false  
+                this.cellsStateChange.list = changeCellList;     
+                this.cellsStateChange.isFirst = false  
             }
         } else {
-            let changeCellList = getChangeList(this.valuesBoard,this.nextGeneration,this.checkList);//the list of cells that changes color;
-            updateTable(this.valuesBoard, this.nextGeneration.list, this.canvas, this.gridSquareSize, this.gridWidth, this.gridHeight, this.originalCellImage, this.ratio, this.gridIsOpen);
-            this.nextGeneration.list = changeCellList;     
-            this.nextGeneration.isFirst = false  
+            let changeCellList = getChangeList(this.valuesBoard,this.cellsStateChange,this.checkList);//the list of cells that changes color;
+            updateTable(this.valuesBoard, this.cellsStateChange.list, this.canvas, this.gridSquareSize, this.gridWidth, this.gridHeight, this.originalCellImage, this.ratio, this.gridIsOpen);
+            this.cellsStateChange.list = changeCellList;     
+            this.cellsStateChange.isFirst = false  
         }
 
     }
@@ -317,6 +281,139 @@ function drawGrid(canvas, width, height, squareSize){
     }
 } 
 
+export function createCellsValuesMatrix(width, height, checkList, isOpenUniverse){
+    let valuesBoard = Array(height).fill(null);
+    for(let i = 0; i < height; i++){
+        valuesBoard[i] = Array(width).fill(null);
+        for(let j = 0; j < width; j++){
+            valuesBoard[i][j] = new Cell(checkList,i,j);
+        }
+    }
+
+
+
+    return valuesBoard;
+}
+
+export function createGameMatrix(width, height, checkList, isOpenUniverse){
+        let board = createCellsValuesMatrix(width, height, checkList, isOpenUniverse);
+
+        
+        for(let i = 0; i < height; i++){
+          
+            for(let j = 0; j < width; j++){
+              
+                let neighborsList = getNeighborsList(board, width, height, i, j, isOpenUniverse);//  setListeners(i,j);
+                let neighborStateChangeListenersList = getNeighborStateChangeListenersList(neighborsList);
+                board[i][j].addListeners("neighborStateChange", neighborStateChangeListenersList);
+                let neighborsNumberChangeListenersList = getNeighborsNumberChangeListenersList(board[i][j]);
+                board[i][j].addListeners("neighborsChange", neighborsNumberChangeListenersList);
+
+            }
+        }
+        return board;
+}
+
+export function getNeighborsList(valuesBoard, width, height, Y, X, isOpenUniverse){
+    let cellList=[];
+    for(let i=-1;i<2;i++){
+        for(let j=-1;j<2;j++){
+            let tX = X+j,tY = Y+i;
+            if(isOpenUniverse){
+                if(tY >= 0 && tY < height && tX >= 0 && tX < width && !(i ===0 && j === 0)){
+                    cellList.push(valuesBoard[tY][tX]);
+                }
+            } else {
+                if(tY<0)tY=height-1;
+                else if(tY >= height)tY=0;
+                if(tX<0)tX=width-1;
+                else if(tX >= width)tX=0;
+                if(!(i ===0 && j === 0)){
+                    cellList.push(valuesBoard[tY][tX]);
+                }                    
+            }
+        }
+    }
+    cellList = makeUnique(cellList);
+    return cellList;
+}
+
+export function getNeighborStateChangeListenersList(neighborsList){
+    let listenersList = [];
+
+    neighborsList.forEach(c => 
+        listenersList.push(function(val){
+            val === 1 ? c.addNeighbor() : c.removeNeighbor();
+        }));
+    return listenersList;
+}
+
+// eighborsList.forEach(c => valuesBoard[i][j].addListener("neighborStateChange",function(val){
+//             val===1?c.addNeighbor():c.removeNeighbor();
+//         }));
+
+export function getNeighborsNumberChangeListenersList(cell){
+    let listenersList = [];
+    listenersList.push(function(){
+      
+        cell.checkList[cell.checkList.length] = cell;
+    });
+    return listenersList;
+}
+
+export function createCanvas(canvas, width, height, gridSquareSize, ratio){
+    canvas.width=((width + 1) * gridSquareSize) * ratio;
+    canvas.height=((height + 1) * gridSquareSize) * ratio;
+    let r = canvas.height / canvas.width;
+    canvas.style.width="100%";
+    canvas.style.height=canvas.offsetWidth * r + "px";
+
+    let ctx = canvas.getContext('2d');
+    ctx.scale(ratio, ratio);
+    return canvas;
+}
+
+function copyCanvas(original) {
+    var copy;
+  
+    copy = original.cloneNode();  
+    copy.getContext('2d').drawImage(original, 0, 0);
+  
+    return copy;
+}
+// function setListeners(Y,X){
+
+//     const cellList=[];
+//     for(let i=-1;i<2;i++){
+//         for(let j=-1;j<2;j++){
+//             let tX = X+j,tY = Y+i;
+//             if(this.gridIsOpen){
+//                 if(tY >= 0 && tY < this.gridHeight && tX >= 0 && tX < this.gridWidth && !(i ===0 && j === 0)){
+//                     cellList.push(this.valuesBoard[tY][tX]);
+//                 }
+//             } else {
+//                 if(tY<0)tY=this.gridHeight-1;
+//                 else if(tY >= this.gridHeight)tY=0;
+//                 if(tX<0)tX=this.gridWidth-1;
+//                 else if(tX >= this.gridWidth)tX=0;
+//                 if(!(i ===0 && j === 0)){
+//                     cellList.push(this.valuesBoard[tY][tX]);
+//                 }                    
+//             }
+//         }
+//     }
+
+
+//     cellList.forEach(c => this.valuesBoard[Y][X].addListener("neighborStateChange",function(val){
+//         val===1?c.addNeighbor():c.removeNeighbor();
+//     }));
+    
+//     var c = this.valuesBoard[Y][X];
+//     this.valuesBoard[Y][X].addListener("neighborsChange",function(){
+      
+//         c.checkList[c.checkList.length] = c;
+//     })
+// }
 
 
 function draw_circle(context, x, y, radius) {
@@ -330,9 +427,9 @@ function draw_circle(context, x, y, radius) {
     context.restore()
 }
 function updateTable(valuesBoard, changeList, canvas, squareSize, width, height, emptyCellImage, ratio, gridIsOpen){
-    console.log("updateTable")
+    // console.log("updateTable")
     changeList.forEach(cell => {
-        console.log("forEach")
+        // console.log("forEach")
         let Y = cell[0];
         let X = cell[1];
         if(gridIsOpen){

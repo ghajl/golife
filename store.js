@@ -5,7 +5,7 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import reducer, { initialState } from './reducer'
 import nextReduxSaga from 'next-redux-saga'
 import withRedux from 'next-redux-wrapper'
-import rootSaga from './saga'
+import {rootSaga} from './saga'
 
 const sagaMiddleware = createSagaMiddleware();
 

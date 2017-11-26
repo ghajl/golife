@@ -1,54 +1,58 @@
 
-export function getChangeList(valuesBoard,nextGeneration,checkList){
+export function getChangeList(valuesBoard,cellsStateChange,checkList){
    
-    // this.valuesBoard[Y][X].setCheckList(checkList);
-    var checkList = checkList;
-    
-    var changeList = [];
-// console.log(valuesBoard);
-    for(let i=0;i<nextGeneration.list.length;i++){
-      // console.log(nextGeneration.list[i][0]+ " " +nextGeneration.list[i][1]+ " " + valuesBoard[nextGeneration.list[i][0]][nextGeneration.list[i][1]]);
-        valuesBoard[nextGeneration.list[i][0]][nextGeneration.list[i][1]].changeState();
+    let changeList = [];
+    // console.log(cellsStateChange.list);
+    for(let i=0;i<cellsStateChange.list.length;i++){
+        valuesBoard[cellsStateChange.list[i][0]][cellsStateChange.list[i][1]].changeState();
     }
+    if(cellsStateChange.isFirst){
+        for(let i=0;i<cellsStateChange.list.length;i++){
+            checkList[checkList.length] = valuesBoard[cellsStateChange.list[i][0]][cellsStateChange.list[i][1]];
+        }      
+    }
+    checkList = makeUnique(checkList);
     // console.log(checkList.length);
-    // checkList.map(x=>console.log(x.Y + "x" + x.X));
-    // console.log(checkList.length+"yyy");
-    if(checkList.length>valuesBoard.length*valuesBoard[0].length/12){
-        // console.log(checkList.length+"yy");
-        return totalNeighborsRevision(valuesBoard)
+    // if(checkList.length>valuesBoard.length*valuesBoard[0].length/12){
+    if(checkList.length>200){        
+        
+        changeList = boardTotalCheck(valuesBoard)
     } else {
-        if(nextGeneration.isFirst){
-            for(let i=0;i<nextGeneration.list.length;i++){
-                checkList[checkList.length] = valuesBoard[nextGeneration.list[i][0]][nextGeneration.list[i][1]];
-            }      
-        }
 
-        // checkList.forEach(x => console.log(x.Y+"-"+x.X+"."));
-        checkList = makeUnique(checkList);
-    // checkList.forEach(x => console.log(x.Y+"-"+x.X+"--"));
+        // checkList = makeUnique(checkList);
         for(let i=0;i<checkList.length;i++){
             if(isGoingToChange(checkList[i])){
                 changeList[changeList.length] = [checkList[i].Y,checkList[i].X];
             } 
         }
-        return changeList;      
+            
     }
-
-      // return totalNeighborsRevision(valuesBoard)
+    // console.log(changeList);
+    return changeList;  
 }
 
 
-export function totalLiveCellsRevision(valuesBoard){
-    var changeList = [];
+// export function totalLiveCellsRevision(valuesBoard){
+//     var changeList = [];
+//     for(let i=0,ilen=valuesBoard.length;i<ilen;i++){
+//         for(let j=0,jlen=valuesBoard[i].length;j<jlen;j++){
+//             if(valuesBoard[i][j].state === 1)changeList[changeList.length] = [i,j];
+//         }
+//     }
+//     return changeList;
+// }
+
+export function getLiveCells(valuesBoard){
+    const cellList=[];
     for(let i=0,ilen=valuesBoard.length;i<ilen;i++){
         for(let j=0,jlen=valuesBoard[i].length;j<jlen;j++){
-            if(valuesBoard[i][j].state === 1)changeList[changeList.length] = [i,j];
+            if(valuesBoard[i][j].state === 1) cellList[cellList.length] = [i,j];
         }
     }
-    return changeList;
+    return cellList;
 }
 
-export function totalNeighborsRevision(valuesBoard){
+export function boardTotalCheck(valuesBoard){
     var changeList = [];
     for(let i=0,ilen=valuesBoard.length;i<ilen;i++){
         for(let j=0,jlen=valuesBoard[i].length;j<jlen;j++){
@@ -69,7 +73,7 @@ export function isGoingToChange(cell){
     //         (cell.getNeighborsCount() === 3 && cell.state === 1)
 }
 
-export function getChangePatternChangeList(valuesBoard, newPattern){
+export function getNewPatternChangeList(valuesBoard, newPattern){
     var changeList = [];
     for(let i=0,ilen=valuesBoard.length;i<ilen;i++){
         for(let j=0,jlen=valuesBoard[i].length;j<jlen;j++){
@@ -84,26 +88,26 @@ export function getChangePatternChangeList(valuesBoard, newPattern){
 }
 
 
-export function convertCoordinates(cellList){
-  // var cellList = cellList;
-  let res = {};
-  for(let i=0;i<cellList.length;i++){
-    const currentY = cellList[i][0];
-    const currentX = cellList[i][1];
-    const tableX = Math.floor(currentX/10);
-    const tableY = Math.floor(currentY/10);
-    const X = currentX%10;
-    const Y = currentY%10;
-    const key = [tableY,tableX].join(" ");
+// export function convertCoordinates(cellList){
+//   // var cellList = cellList;
+//   let res = {};
+//   for(let i=0;i<cellList.length;i++){
+//     const currentY = cellList[i][0];
+//     const currentX = cellList[i][1];
+//     const tableX = Math.floor(currentX/10);
+//     const tableY = Math.floor(currentY/10);
+//     const X = currentX%10;
+//     const Y = currentY%10;
+//     const key = [tableY,tableX].join(" ");
     
-    if (typeof res[key] == "undefined"){
-        res[key] = [];
-    }
+//     if (typeof res[key] == "undefined"){
+//         res[key] = [];
+//     }
 
-    res[key][res[key].length] = [Y,X];    
-  }
-  return res;
-}
+//     res[key][res[key].length] = [Y,X];    
+//   }
+//   return res;
+// }
 
 export function makeUnique(checkList){
   return checkList.sort((a,b) => {
@@ -125,27 +129,19 @@ export function makeUnique(checkList){
 
 }
 
-export function getLiveCells(valuesBoard){
-    const cellList=[];
-    for(let i=0,ilen=valuesBoard.length;i<ilen;i++){
-        for(let j=0,jlen=valuesBoard[i].length;j<jlen;j++){
-            if(valuesBoard[i][j].state === 1) cellList[cellList.length] = [i,j];
-        }
-    }
-    return cellList;
-}
 
-export function getCurrentBoard(valuesBoard,changeCellsList){
 
-const board = valuesBoard;
-    for(let i=0;i<changeCellsList.length;i++){
-      let Y = changeCellsList[i][0];
-      let X = changeCellsList[i][1];
-      board[Y][X] = board[Y][X] === 1?0:1;
-    }
-  return board;
+// export function getCurrentBoard(valuesBoard,changeCellsList){
 
-}
+// const board = valuesBoard;
+//     for(let i=0;i<changeCellsList.length;i++){
+//       let Y = changeCellsList[i][0];
+//       let X = changeCellsList[i][1];
+//       board[Y][X] = board[Y][X] === 1?0:1;
+//     }
+//   return board;
+
+// }
 
 export function adjustToSize(pattern,boardHeight,boardWidth){
     const patternSize = getPatternSize(pattern)
@@ -163,23 +159,23 @@ export function adjustToSize(pattern,boardHeight,boardWidth){
     return result;
 }
 
-export function alterNextGenerationChangeCellsList(nextGenerationChangeCellsList,valuesBoard,clickedCell){
-    console.log(nextGenerationChangeCellsList);
-    const ind = nextGenerationChangeCellsList.indexOf(clickedCell);
-    if(~ind){
-        return clickedCell;
-    } else {
+// export function alterNextGenerationChangeCellsList(nextGenerationChangeCellsList,valuesBoard,clickedCell){
+//     console.log(nextGenerationChangeCellsList);
+//     const ind = nextGenerationChangeCellsList.indexOf(clickedCell);
+//     if(~ind){
+//         return clickedCell;
+//     } else {
 
-    }
-    var cellList = nextGenerationChangeCellsList.filter(x => x === clickedCell && valuesBoard[clickedCell[0],clickedCell[1]].state === 1);
-    console.log(cellList);
-    if(cellList.length === nextGenerationChangeCellsList.length) cellList.push(clickedCell);
-    return cellList;
-}
+//     }
+//     var cellList = nextGenerationChangeCellsList.filter(x => x === clickedCell && valuesBoard[clickedCell[0],clickedCell[1]].state === 1);
+//     console.log(cellList);
+//     if(cellList.length === nextGenerationChangeCellsList.length) cellList.push(clickedCell);
+//     return cellList;
+// }
 
 export function getRandomPattern(height,width){
-    const min = Math.floor(height*width*.05);
-    const max = Math.floor(height*width*.2);
+    const min = Math.floor(Math.max(2, height*width*.05));
+    const max = Math.floor(Math.max(2, height*width*.2));
     const len = getRandomInt(min, max);
     return Array.from({length: len}, () => [Math.floor(Math.random() * height),Math.floor(Math.random() * width)]);
 }
