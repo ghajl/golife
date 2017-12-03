@@ -1,14 +1,7 @@
 import React from 'react';
-// import { NavLink } from 'react-router-dom';
 import injectSheet from 'react-jss';
 import PropTypes from 'prop-types';
-// const isSmall = props.screen.width < 768;
-// import browserHistory from 'history/createBrowserHistory';
 import Link from 'next/link'
-import pure from 'recompose/pure';
-// import { withStyles } from 'material-ui/styles';
-import withRoot from '../components/withRoot';
-// const history = browserHistory();
 
 
 
@@ -41,7 +34,7 @@ const styles = {
     title: {
 
         fontWeight: 900,
-'text-transform': 'none',
+        'text-transform': 'none',
         fontSize: '1.1em',
         '@media (min-width: 768px)': {
             fontSize: '1.5em',
@@ -84,12 +77,12 @@ const Header = (props) => {
         return (
         <div className={classes.nav}>
             {isSmall ? (
-            <div className={classes.title}><Link href="/">
+            <div className={classes.title}><Link prefetch href="/">
                 
                 <a><span className={classes.gameName}>GoL</span></a></Link>
             </div>
                 ) : (
-            <div ><Link href="/">
+            <div ><Link prefetch href="/">
                 <a className={classes.title}><span className={classes.authorName}>John Conway`s</span>
                 <span className={classes.gameName}>Game of Life</span></a></Link>
             </div>
@@ -98,13 +91,13 @@ const Header = (props) => {
     		
             {props.url.pathname === '/' ? (
                 <div className={classes.about}>
-                <Link href="/"><a><span className={classes.active}>Play</span></a></Link>
-                <Link href="/about"><a>Read</a></Link>
+                <Link prefetch href="/"><a><span className={classes.active}>Play</span></a></Link>
+                <Link prefetch href="/about"><a>Read</a></Link>
                 </div>
             ) : (
                 <div className={classes.about}>
-                <Link href="/"><a>Play</a></Link>
-                <Link href="/about"><a><span className={classes.active}>Read</span></a></Link>
+                <Link prefetch href="/"><a>Play</a></Link>
+                <Link prefetch href="/about"><a><span className={classes.active}>Read</span></a></Link>
                 </div>
             )}
             
@@ -114,7 +107,7 @@ const Header = (props) => {
 
 
 
-export default injectSheet(styles)(pure(Header));
+export default injectSheet(styles)(Header);
 
 
 Header.propTypes = {

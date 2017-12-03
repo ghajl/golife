@@ -7,6 +7,7 @@ import getContext from '../styles/getContext';
 
 // Apply some reset
 const styles = theme => ({
+
     '@global': {
         html: {
             background: 'white',
@@ -23,35 +24,55 @@ const styles = theme => ({
             },      
               // font: 14px "Century Gothic", Futura, sans-serif;
               // height: '100%',
-            margin:0,
-            paddingTop: '60px', 
+            // marginTop:'160px',
+            // paddingTop: '60px', 
+            display: 'flex',
+                        'flex-direction': 'column',
+                        height: '100%',
+            '& > div:first-child': {
+              height: '100%',
+              flex: '1 0 auto',
+              '& > div': {
+              // height: '100%',
+              // flex: '1 0 auto',
+              '&:first-child': {
+              height: '100%',
+              // flex: '1 0 auto',
+              '& > div': {
+                height: '100%',
+              }
+            }
+            }
+            }
         },
+
         a: {
             'text-decoration': 'none !important',
             outline: 'none',
         },
-        ol: {
-            paddingLeft: '30px',
+        
+        // ol: {
+        //     paddingLeft: '30px',
 
           
-        },
-        ul: {
-            paddingLeft: '30px',
+        // },
+        // ul: {
+        //     paddingLeft: '30px',
 
           
-        },
-        label: {
-            fontWeight: 'normal !important',
-        },
-    navbar: {
-        overflow: 'hidden',
-        boxShadow: [0, 3, 15, -6, '#222'],
-        position: 'fixed',
-        top: 0,
-        width: '100%',
-         'z-index': 3,
-        backgroundColor:"#fff",
-    },
+        // },
+        // label: {
+        //     fontWeight: 'normal !important',
+        // },
+    // navbar: {
+    //     overflow: 'hidden',
+    //     boxShadow: [0, 3, 15, -6, '#222'],
+    //     position: 'fixed',
+    //     top: 0,
+    //     width: '100%',
+    //      'z-index': 3,
+    //     backgroundColor:"#fff",
+    // },
     },
 });
 
@@ -82,7 +103,9 @@ function withRoot(BaseComponent) {
     }
 
     render() {
+
       return (
+        
         <MuiThemeProvider
           theme={this.styleContext.theme}
           sheetsManager={this.styleContext.sheetsManager}
@@ -91,6 +114,7 @@ function withRoot(BaseComponent) {
             <BaseComponent {...this.props} />
           </AppWrapper>
         </MuiThemeProvider>
+        
       );
     }
   }

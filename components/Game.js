@@ -13,7 +13,7 @@ import SelectButtonsBar from './SelectButtonsBar';
 import PlayButtonsBar from './PlayButtonsBar';
 import {boardNames} from '../helpers/boardNames';
 import {boardSizes} from '../helpers/boardSizes';
-
+import SvgIcon from 'material-ui/SvgIcon';
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -411,27 +411,26 @@ console.log(props);
                                 
                         </Grid>
                  </Grid>            
-                   
+
                <style jsx global>{`
                     .gameBoard {
                         text-align: center;
-                        margin-top: 20px;
+                        margin-top: 80px;
                         z-index: 2;
+
                      }
                     .paddingSides {
-                        padding-left: 10;
-                        padding-right: 10;
+                        padding-left: 10px;
+                        padding-right: 10px;
                     }
-                    .canvas {
-
-                    }
+                    
               `}</style>
               <Dialog open={this.state.showMessage} onRequestClose={this.handleCloseErrorDialog}>
                   <DialogTitle>{"Can`t download patterns"}</DialogTitle>
                   <DialogContent>
                     <DialogContentText>
                       We are sorry! For some reason we coudn`t download our example patterns from github server.
-                      But You are welcomed to draw your patterns on the board or You can generate randome patterns
+                      But you can draw your patterns on the board
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>

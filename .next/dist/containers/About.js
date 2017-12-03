@@ -14,7 +14,9 @@ var _About = require('../components/About');
 
 var _About2 = _interopRequireDefault(_About);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
 
 // import { addCount } from 'actions'
 // import { selectLight, selectLastUpdate, selectCount } from 'selectors'
@@ -31,4 +33,4 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _recompose.compose)((0, _recompose.setDisplayName)('AboutContainer'), (0, _reactRedux.connect)(function (state) {
   return state;
 }, mapDispatchToProps), _recompose.pure)(_About2.default);
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbnRhaW5lcnNcXEFib3V0LmpzIl0sIm5hbWVzIjpbImNvbm5lY3QiLCJzZXRTdG9wcGVkIiwiY29tcG9zZSIsInNldERpc3BsYXlOYW1lIiwicHVyZSIsIkFib3V0IiwibWFwRGlzcGF0Y2hUb1Byb3BzIiwic3RvcHBlZCIsIm5hbWUiLCJkaXNwYXRjaCIsInN0YXRlIl0sIm1hcHBpbmdzIjoiOzs7Ozs7QUFBQSxBQUFTOztBQUNULEFBQVM7O0FBSVQsQUFBUyxBQUFTLEFBQWdCOztBQUNsQyxBQUFPOzs7Ozs7QUFKUDtBQUNBO0FBQ0E7QUFLQSxJQUFNLHFCQUFxQixTQUFyQixBQUFxQiw2QkFBWSxBQUNyQzs7Z0JBQ2Msb0JBQUEsQUFBQyxTQUFELEFBQVUsTUFBUyxBQUM5QjtlQUFTLHlCQUFBLEFBQVcsU0FBcEIsQUFBUyxBQUFvQixBQUM3QjtBQUhILEFBQU8sQUFNUjs7QUFOUSxBQUNMO0FBRkosQUFVQTs7a0JBQWUsd0JBQ2IsK0JBRGEsQUFDYixBQUFlLDRDQUNQLGlCQUFBO1NBQUEsQUFBUztBQUFqQixDQUFBLEVBRkYsQUFBZSxBQUViLEFBQXdCLEFBQ3hCLEFBQ0EiLCJmaWxlIjoiQWJvdXQuanMiLCJzb3VyY2VSb290IjoiQzovZm9sZGVyL25ldy9nb2wifQ==
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbnRhaW5lcnNcXEFib3V0LmpzIl0sIm5hbWVzIjpbIm1hcERpc3BhdGNoVG9Qcm9wcyIsInNldFN0b3BwZWQiLCJzdG9wcGVkIiwibmFtZSIsImRpc3BhdGNoIiwic3RhdGUiXSwibWFwcGluZ3MiOiI7Ozs7OztBQUFBOztBQUNBOztBQUlBOztBQUNBOzs7Ozs7OztBQUpBO0FBQ0E7QUFDQTtBQUtBLElBQU0scUJBQXFCLFNBQXJCLEFBQXFCLDZCQUFZLEFBQ3JDOztnQkFDYyxvQkFBQSxBQUFDLFNBQUQsQUFBVSxNQUFTLEFBQzlCO2VBQVMseUJBQUEsQUFBVyxTQUFwQixBQUFTLEFBQW9CLEFBQzdCO0FBSEgsQUFBTyxBQU1SOztBQU5RLEFBQ0w7QUFGSjs7a0JBVWUsd0JBQ2IsK0JBRGEsQUFDYixBQUFlLDRDQUNQLGlCQUFBO1NBQUEsQUFBUztBQUFqQixDQUFBLEVBRmEsQUFFYixBQUF3Qiw4QyIsImZpbGUiOiJBYm91dC5qcyIsInNvdXJjZVJvb3QiOiJDOi9mb2xkZXIvbmV3L2dvbCJ9

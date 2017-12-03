@@ -16,7 +16,7 @@ import {boardNames} from '../helpers/boardNames'
 
 const styles = {
 	mainContent: {
-		marginTop: 15
+		marginTop: 75
 	},
     intro: {
     	// backgroundColor:'rgba(240,248,255,.7)',

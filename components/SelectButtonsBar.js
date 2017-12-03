@@ -19,7 +19,7 @@ const SelectButtonsBar = (props) => {
 // console.log(props.patternValue)
 	return (
 		
-		<Grid container spacing={0} direction={props.direction} align={props.align} justify={props.justify}>
+		<Grid container spacing={0} direction={props.direction} justify={props.justify}>
 			<Grid item xs className={props.classes.item}>
                 <Select
                     
@@ -51,7 +51,6 @@ export default withStyles(styles)(pure(SelectButtonsBar));
 SelectButtonsBar.propTypes = {
     classes: PropTypes.object.isRequired,
     direction: PropTypes.string,
-    align: PropTypes.string,
     justify: PropTypes.string,
     patternNamesIndex: PropTypes.number.isRequired,
     patternNames: PropTypes.array.isRequired,

@@ -36,14 +36,17 @@ class MyDocument extends Document {
            rel="stylesheet" 
           href="https://fonts.googleapis.com/css?family=Open+Sans|Codystar|Julius+Sans+One|Montserrat+Alternates|Oxygen|Playfair+Display+SC|Press+Start+2P|Syncopate|VT323"
            />
-          
+
           </Head>
           <body>
 
         
-          <Main />
+          <Main className="alma"/>
+          
           <NextScript />
+                    
         </body>
+        
       </html>
     );
   }
