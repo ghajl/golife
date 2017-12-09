@@ -114,6 +114,7 @@ const Footer = ({classes, screen}) => {
 			.wrapper {
 				margin-top: 2em;
 				border-bottom: 10px solid rgba(162,215,41,.5);
+				background-color: rgba(196,196,196,.1);
 			}
 			.footer {
 				// display: block;

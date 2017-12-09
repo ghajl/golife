@@ -83,6 +83,7 @@ class Layout extends React.Component {
         }
         // this.main = null;
         // this.push=null;
+
         this.setHeight = this.setHeight.bind(this);
     }
 
@@ -90,7 +91,7 @@ class Layout extends React.Component {
 
 
     componentDidMount(){
-        console.log(this.footer);
+        // console.log(this.footer);
         window.addEventListener('resize', this.handleWindowSizeChange);
         this.setState({
             screen : {
@@ -140,15 +141,17 @@ class Layout extends React.Component {
         });
         //         this.canvasBoard.width=((this.gridWidth + 1) * this.squareSize) * this.ratio;
         // console.log(`${this.gridWidth} + ${this.squareSize} * ${this.state.screen.ratio}`)
-        console.log(this.main)
-        console.log(this.push)
+        // console.log(this.main)
+        // console.log(this.push)
         this.setHeight(this.footer)
         // this.canvasBoard.height=((this.gridHeight + 1) * this.squareSize) * this.ratio;
     };
 
 
     render () {
-        console.log("ind")
+        // console.log("ind")
+        //         let glider = convert(text);
+        // console.log(glider)
         const HeaderSSR1 = () => (<HeaderSSR />);
         // const HeaderSSR1 = () => ( 
         //        <div className={this.props.classes.navbar}>
@@ -193,3 +196,5 @@ class Layout extends React.Component {
 }
 
 export default injectSheet(styles)(Layout)
+
+

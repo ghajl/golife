@@ -1,0 +1,1 @@
+module.exports = "0c1\r\n0c2\r\n1"

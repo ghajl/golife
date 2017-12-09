@@ -1,0 +1,1 @@
+module.exports = "4c13\r\n2c3c4c13c14c15\r\n1c16\r\n1c4c5c6c11c12c13c16\r\n0c1c3c5c7c10c12c14c16c17\r\n3c4c6c7c10c11c13c14\r\n3c5c7c10c12c14\r\n4c5c6c11c12c13\r\n\r\n4c5c7c10c12c13\r\n4c6c7c10c11c13"

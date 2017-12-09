@@ -1,6 +1,5 @@
 export const boardNames = {
   MAIN: 'MAIN',
-  
   BLOCK: 'BLOCK',
   BOAT: 'BOAT',
   LOAF: 'LOAF',
@@ -11,4 +10,6 @@ export const boardNames = {
   GLIDER: 'GLIDER',
   SPACESHIP: 'SPACESHIP',
   GUN: 'GUN',
+  GLASSES: 'GLASSES',
+  QUAD: 'QUAD',
 }

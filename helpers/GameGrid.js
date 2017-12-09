@@ -1,6 +1,6 @@
 import Cell from './Cell';
 import { getChangeList, convertCoordinates, makeUnique, getLiveCells, 
-  adjustToSize, getNewPatternChangeList,  
+  shiftToCenter, getNewPatternChangeList,  
   boardTotalCheck, getRandomPattern} from './helpers';
 
 
@@ -16,8 +16,6 @@ class GameGrid {
         this.gridIsOpen = isOpenUniverse;
         this.checkList = [];
         this.originalCellImage = null;
-       
-        // this.nextGenerationChangeCellsList=null;
         this.cellsStateChange = {
             list:null,
             isFirst:true,
@@ -52,7 +50,6 @@ class GameGrid {
 
     reload(width,height,squareSize,canvas,isOpenUniverse = false){
         this.checkList = [];
-        // this.nextGenerationChangeCellsList=null;
         this.cellsStateChange = {
             list:null,
             isFirst:true,
@@ -70,36 +67,12 @@ class GameGrid {
             this.gridHeight = this.gridHeight + 40;
         }
         this.canvas = createCanvas(canvas, this.visibleGridWidth, this.visibleGridHeight, this.gridSquareSize, this.ratio);
-        // this.canvas.width=((this.visibleGridWidth + 1) * this.gridSquareSize) * this.ratio;
-        // this.canvas.height=((this.visibleGridHeight + 1) * this.gridSquareSize) * this.ratio;
-        // let r = this.canvas.height / this.canvas.width;
-        // this.canvas.style.width="100%";
-        // this.canvas.style.height=this.canvas.offsetWidth * r + "px";
-
-        // this.ctx.scale(this.ratio, this.ratio)    
         drawGrid(this.canvas, this.visibleGridWidth, this.visibleGridHeight, this.gridSquareSize);
         let bufferCanvas = copyCanvas(this.canvas);
         let ctx = bufferCanvas.getContext('2d');  
         this.originalCellImage = ctx.getImageData(this.gridSquareSize * this.ratio / 2, this.gridSquareSize * this.ratio / 2, this.gridSquareSize * this.ratio, this.gridSquareSize* this.ratio)
 
         this.valuesBoard = createGameMatrix(this.gridWidth, this.gridHeight, this.checkList, this.gridIsOpen);
-
-        //  = createCellsValuesMatrix(this.gridWidth, this.gridHeight, this.checkList, this.gridIsOpen);
-
-        
-        // for(let i = 0; i < height; i++){
-          
-        //     for(let j = 0; j < width; j++){
-              
-        //         let neighborsList = getNeighborsList(this.valuesBoard, this.gridWidth, this.gridHeight, i, j, this.gridIsOpen);//  setListeners(i,j);
-        //         let neighborStateChangeListenersList = getNeighborStateChangeListenersList(neighborsList);
-        //         this.valuesBoard[i][j].addListeners("neighborStateChange", neighborStateChangeListenersList);
-        //         let neighborsNumberChangeListenersList = getNeighborsNumberChangeListenersList(this.valuesBoard[i][j]);
-        //         this.valuesBoard[i][j].addListeners("neighborsChange", neighborsNumberChangeListenersList);
-
-        //     }
-        // }
-
 
     }
 
@@ -108,18 +81,7 @@ class GameGrid {
     makeBoard(width,height,squareSize,ratio,canvas,savedCellsList)
     {
 
-        // this.canvas = canvas;
-
         this.canvas = createCanvas(canvas, width, height, squareSize, ratio);
-        // this.canvas.width=((width + 1) * squareSize) * ratio;
-        
-        // this.canvas.height=((height + 1) * squareSize) * ratio;     
-        // let r = this.canvas.height / this.canvas.width;
-        // this.canvas.style.width="100%";
-        // this.canvas.style.height=this.canvas.offsetWidth * r + "px";
-        // this.ratio = ratio;
-        // this.ctx = this.canvas.getContext('2d');
-        // this.ctx.scale(ratio, ratio)
         this.ratio = ratio;
         drawGrid(this.canvas, width, height, squareSize);
         let bufferCanvas = copyCanvas(this.canvas);
@@ -144,7 +106,7 @@ class GameGrid {
         var nextGenerationChangeCellsList;
         if(index>0){
             //get the coordinates of choosed pattern adjusted to current board size
-            nextGenerationChangeCellsList=adjustToSize(patternsList[index-1].pattern,this.gridHeight,this.gridWidth);
+            nextGenerationChangeCellsList=shiftToCenter(patternsList[index-1].pattern,this.gridHeight,this.gridWidth);
         } else {
             //random live cells have index = 0
             nextGenerationChangeCellsList=getRandomPattern(this.gridHeight,this.gridWidth);
@@ -348,9 +310,6 @@ export function getNeighborStateChangeListenersList(neighborsList){
     return listenersList;
 }
 
-// eighborsList.forEach(c => valuesBoard[i][j].addListener("neighborStateChange",function(val){
-//             val===1?c.addNeighbor():c.removeNeighbor();
-//         }));
 
 export function getNeighborsNumberChangeListenersList(cell){
     let listenersList = [];
@@ -381,46 +340,13 @@ function copyCanvas(original) {
   
     return copy;
 }
-// function setListeners(Y,X){
-
-//     const cellList=[];
-//     for(let i=-1;i<2;i++){
-//         for(let j=-1;j<2;j++){
-//             let tX = X+j,tY = Y+i;
-//             if(this.gridIsOpen){
-//                 if(tY >= 0 && tY < this.gridHeight && tX >= 0 && tX < this.gridWidth && !(i ===0 && j === 0)){
-//                     cellList.push(this.valuesBoard[tY][tX]);
-//                 }
-//             } else {
-//                 if(tY<0)tY=this.gridHeight-1;
-//                 else if(tY >= this.gridHeight)tY=0;
-//                 if(tX<0)tX=this.gridWidth-1;
-//                 else if(tX >= this.gridWidth)tX=0;
-//                 if(!(i ===0 && j === 0)){
-//                     cellList.push(this.valuesBoard[tY][tX]);
-//                 }                    
-//             }
-//         }
-//     }
-
-
-//     cellList.forEach(c => this.valuesBoard[Y][X].addListener("neighborStateChange",function(val){
-//         val===1?c.addNeighbor():c.removeNeighbor();
-//     }));
-    
-//     var c = this.valuesBoard[Y][X];
-//     this.valuesBoard[Y][X].addListener("neighborsChange",function(){
-      
-//         c.checkList[c.checkList.length] = c;
-//     })
-// }
 
 
 function draw_circle(context, x, y, radius) {
     context.save()
     context.beginPath();
     context.arc(x, y, radius, 0, Math.PI * 2, false);
-    context.globalAlpha = 0.3;
+    context.globalAlpha = 0.2;
     context.fillStyle = '#2F4F4F';
     context.fill();
     context.closePath();

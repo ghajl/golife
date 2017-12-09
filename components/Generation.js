@@ -5,16 +5,14 @@ import { connect } from 'react-redux';
 
 const Generation =({generationCount}) => {
 
-	const generation = ("0000000" + generationCount).substr(-7).replace(/(\w)(\w)(\w)(\w)/,'$1:$2$3$4:');
-
     return (
 	    <div className="generation">
-	      	{generation}
+	      	{generationCount}
 			<style jsx global>{`
                  .generation {
-					color: rgba(1,111,185,.8);
-					font-size: 20px;
-			        text-align: left;
+					color: rgba(255,0,0,.8);
+					font-size: 1.5em;
+			        text-align: right;
                  }
                  
             `}</style>

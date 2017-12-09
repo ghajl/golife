@@ -1,0 +1,1 @@
+module.exports = "24\r\n22c24\r\n12c13c20c21c34c35\r\n11c15c20c21c34c35\r\n0c1c10c16c20c21\r\n0c1c10c14c16c17c22c24\r\n10c16c24\r\n11c15\r\n12c13"
