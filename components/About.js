@@ -155,9 +155,7 @@ class About extends Component {
                 name: "Toad",
             },
         }
-        // for(let name in parameters){
-        //     console.log(parameters[name])
-        // }
+ 
         this.examples = {};
         for(let name in parameters){
             this.examples[name] = {
@@ -182,126 +180,14 @@ class About extends Component {
         for(let name in parameters){
             this.examples[name].canvasWidth = this.getWidth(this.examples[name].grid) 
         }
-        // let l = 
-        // console.log(l)
-        // let beaconParameters = {
 
-        // }
-        // let beehiveParameters = 
-        // let blinkerParameters = 
-        // let blockParameters = 
-        // let boatParameters = 
-        // let gliderParameters = 
-        // let spaceshipParameters = 
-        // let loafParameters = 
-        // let glassesParameters = 
-        // let quadParameters = 
-        // let toadParameters = 
-        // this.examples[boardNames.BEACON] = {
-        //     grid = 
-        // }
-        // this.examples[boardNames.BEACON].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // this.examples[boardNames.BEEHIVE].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // this.examples[boardNames.BLINKER].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // this.examples[boardNames.BLOCK].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // this.examples[boardNames.BOAT].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // this.examples[boardNames.GLIDER].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // this.examples[boardNames.GUN].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // this.examples[boardNames.LOAF].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // this.examples[boardNames.SPACESHIP].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // this.examples[boardNames.GLASSES].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // this.examples[boardNames.QUAD].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // this.examples[boardNames.TOAD].grid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // const blockGrid = new GameGrid(boardNames.BLOCK, 4, 4, 12);
-        // const boatGrid = new GameGrid(boardNames.BOAT, 5, 5, 12);
-        // const loafGrid = new GameGrid(boardNames.LOAF, 6, 6, 12);
-        // const beehiveGrid = new GameGrid(boardNames.BEEHIVE, 6, 5, 12); 
-        // const blinkerGrid = new GameGrid(boardNames.BLINKER, 5, 5, 12);
-        // const beaconGrid = new GameGrid(boardNames.BEACON, 6, 6, 12);
-        // const toadGrid = new GameGrid(boardNames.TOAD, 6, 6, 12);   
-        // const gliderGrid = new GameGrid(boardNames.GLIDER, 10, 10, 12);
-        // const spaceshipGrid = new GameGrid(boardNames.SPACESHIP, 12, 12, 12);
-        // const gunIsOpenUniv = true;
-        // const gunGrid = new GameGrid(boardNames.GUN, 40, 20, 12,gunIsOpenUniv);
-        
-        
-  //       let shift = [1,1]
-  //       const boatCellsList = createCellsList(boatCoordinates,shift);
-  //       // console.log(blockCoordinatesList)
-		// const blockCellsList = [[1,1],[1,2],[2,1],[2,2]];
-  //       // let shift = [1,1]
-  //       const blockCellsList = createCellsList(blockCoordinates,shift);
-  //       // let shift = [1,1]
-  //       const beehiveCellsList = createCellsList(beehiveCoordinates,shift);
-  //       // let shift = [1,1]
-  //       const loafCellsList = createCellsList(loafCoordinates,shift);
-  //       // let shift = [1,1]
-  //       const beaconCellsList = createCellsList(beaconCoordinates,shift);
-  //       shift = [2,1]
-  //       const blinkerCellsList = createCellsList(blinkerCoordinates,shift);        
-		// const toadCellsList = createCellsList(toadCoordinates,shift);        
-  //       // shift = [3,3]
-
-  //       const boatCellsList = [[1,1],[1,2],[2,1],[2,3],[3,2]];
-		// const loafCellsList = [[2,1],[1,3],[1,2],[2,4],[3,2],[4,3],[3,4]];
-		// const beehiveCellsList = [[1,2],[1,3],[2,1],[2,4],[3,2],[3,3]];
-		// const blinkerCellsList = [[2,1],[2,2],[2,3]];
-		// const beaconCellsList = [[1,1],[1,2],[2,1],[2,2],[3,3],[3,4],[4,3],[4,4]];
-		// const toadCellsList = [[2,2],[2,3],[2,4],[3,1],[3,2],[3,3]];
-		// const gliderCellsList = [[5,4],[4,3],[3,5],[4,5],[5,5]];
-		// const spaceshipCellsList = [[5,3],[7,3],[4,4],[4,5],[4,6],[4,7],[5,7],[6,7],[7,6]];
-		// const gunCellsList = [[5,1],[6,1],[5,2],[6,2],[5,11],[6,11],[7,11],[4,12],[8,12],[3,13],[9,13],[3,14],[9,14],
-		// [6,15],[4,16],[8,16],[5,17],[6,17],[7,17],[6,18],[3,21],[4,21],[5,21],[3,22],[4,22],[5,22],[2,23],[6,23],[1,25],[2,25],
-		// [6,25],[7,25],[3,35],[4,35],[3,36],[4,36]];
-		// this.patterns = {};
-        // for(let name in names){
-        //     this.examples[name].cells = shiftToCenter(coordinates[name], this.examples[name].grid.height,this.examples[name].grid.width)
-        // }
-        // console.log(this.examples[boardNames.BLOCK].cells)
-        // Object.keys(coordinates).forEach(name => {
-            // this.examples[boardNames.BLOCK].cells = shiftToCenter(coordinates[boardNames.BLOCK], this.examples[boardNames.BLOCK].grid.height,this.examples[boardNames.BLOCK].grid.width)
-        // })
-        console.log(this.examples[boardNames.BLOCK])
 		this.motionPatternList = [];
 		this.rAF = null;
 
-		// this.block = patternBoard(blockGrid, blockCellsList);
-		// this.boat = patternBoard(boatGrid, boatCellsList);
-		// this.loaf = patternBoard(loafGrid, loafCellsList);
-		// this.beehive = patternBoard(beehiveGrid, beehiveCellsList);
-		// this.blinker = patternBoard(blinkerGrid, blinkerCellsList);
-		// this.beacon = patternBoard(beaconGrid, beaconCellsList);
-		// this.toad = patternBoard(toadGrid, toadCellsList);
-		// this.glider = patternBoard(gliderGrid, gliderCellsList);
-		// this.spaceship = patternBoard(spaceshipGrid, spaceshipCellsList);
-		// this.gun = patternBoard(gunGrid, gunCellsList);
-  //       this.boards = [
-  //           this.block,
-  //           this.boat,
-  //           this.loaf,
-  //           this.beehive,
-  //           this.blinker,
-  //           this.beacon,
-  //           this.toad,
-  //           this.glider,
-  //           this.spaceship,
-  //           this.gun,
-  //           ];
 		this.interval=300;
 	
-		this.buttonColor = 'rgba(0, 0, 0, .7)';
+		this.buttonColor = 'rgba(0, 0, 0, .9)';
 
-
-        // this.blockWidth = this.getWidth(this.block.grid);
-        // this.boatWidth = this.getWidth(this.boat.grid);
-        // this.loafWidth = this.getWidth(this.loaf.grid);
-        // this.beehiveWidth = this.getWidth(this.beehive.grid);
-        // this.blinkerWidth = this.getWidth(this.blinker.grid);
-        // this.beaconWidth = this.getWidth(this.beacon.grid);
-        // this.toadWidth = this.getWidth(this.toad.grid);
-        // this.gliderWidth = this.getWidth(this.glider.grid);
-        // this.spaceshipWidth = this.getWidth(this.spaceship.grid);
-        // this.gunWidth = this.getWidth(this.gun.grid);
         this.setStopped = (stopped, name) => props.setStopped(stopped, name);
 	}
 
@@ -377,32 +263,10 @@ class About extends Component {
         let ratio = this.state.screen.ratio
         for(let name in this.examples){
             let {grid, cells, canvas} = this.examples[name];
-
+            console.log(name)
             grid.makeBoard(grid.width, grid.height, grid.squareSize, ratio, canvas, cells);
             grid.update();
         }
-
-    	// this.block.grid.makeBoard(this.block.grid.width,this.block.grid.height,this.block.grid.squareSize,this.state.screen.ratio,this.patterns.block,this.block.cellsList,this.state.screen);
-     //    this.block.grid.update();
-    	// this.boat.grid.makeBoard(this.boat.grid.width,this.boat.grid.height,this.boat.grid.squareSize,this.state.screen.ratio,this.patterns.boat,this.boat.cellsList,this.state.screen);
-     //    this.boat.grid.update();
-    	// this.loaf.grid.makeBoard(this.loaf.grid.width,this.loaf.grid.height,this.loaf.grid.squareSize,this.state.screen.ratio,this.patterns.loaf,this.loaf.cellsList,this.state.screen);
-     //    this.loaf.grid.update();
-    	// this.beehive.grid.makeBoard(this.beehive.grid.width,this.beehive.grid.height,this.beehive.grid.squareSize,this.state.screen.ratio,this.patterns.beehive,this.beehive.cellsList,this.state.screen);
-     //    this.beehive.grid.update();
-     //    this.blinker.grid.makeBoard(this.blinker.grid.width,this.blinker.grid.height,this.blinker.grid.squareSize,this.state.screen.ratio,this.patterns.blinker,this.blinker.cellsList);
-     //    this.blinker.grid.update();
-    	// this.beacon.grid.makeBoard(this.beacon.grid.width,this.beacon.grid.height,this.beacon.grid.squareSize,this.state.screen.ratio,this.patterns.beacon,this.beacon.cellsList);
-     //    this.beacon.grid.update();
-    	// this.toad.grid.makeBoard(this.toad.grid.width,this.toad.grid.height,this.toad.grid.squareSize,this.state.screen.ratio,this.patterns.toad,this.toad.cellsList);
-     //    this.toad.grid.update();
-     //  	this.glider.grid.makeBoard(this.glider.grid.width,this.glider.grid.height,this.glider.grid.squareSize,this.state.screen.ratio,this.patterns.glider,this.glider.cellsList);
-     //    this.glider.grid.update();  
-     //  	this.spaceship.grid.makeBoard(this.spaceship.grid.width,this.spaceship.grid.height,this.spaceship.grid.squareSize,this.state.screen.ratio,this.patterns.spaceship,this.spaceship.cellsList);
-     //    this.spaceship.grid.update();  
-        
-     //  	this.gun.grid.makeBoard(this.gun.grid.width,this.gun.grid.height,this.gun.grid.squareSize,this.state.screen.ratio,this.patterns.gun,this.gun.cellsList);
-     //    this.gun.grid.update();             	       
     }
 
 
@@ -557,10 +421,9 @@ class About extends Component {
     			    
     			    <Grid item xs>
                         <BoardElement 
-                            values = {this.examples[boardNames.BLINKER]}
-                            width = {this.blinkerWidth}
-                            patternName = "Blinker"
-                            stopped = {this.props.stopped[this.blinker.grid.name]}
+                            width = {this.examples[boardNames.BLINKER].canvasWidth}
+                            patternName = {this.examples[boardNames.BLINKER].name}
+                            stopped = {this.props.stopped[boardNames.BLINKER]}
                             buttonColor = {this.buttonColor} 
                             withButton = {true}
                             setCanvas = {el => this.examples[boardNames.BLINKER].canvas = el}
@@ -571,10 +434,9 @@ class About extends Component {
     			    
     			    <Grid item xs> 
                         <BoardElement 
-                            values = {this.examples[boardNames.BEACON]}
-                            width = {this.beaconWidth}
-                            patternName = "Beacon"
-                            stopped = {this.props.stopped[this.beacon.grid.name]}
+                            width = {this.examples[boardNames.BEACON].canvasWidth}
+                            patternName = {this.examples[boardNames.BEACON].name}
+                            stopped = {this.props.stopped[boardNames.BEACON]}
                             buttonColor = {this.buttonColor} 
                             withButton = {true}
                             setCanvas = {el => this.examples[boardNames.BEACON].canvas = el}
@@ -585,16 +447,39 @@ class About extends Component {
     			    
     			    <Grid item xs >
                         <BoardElement 
-                            values = {this.examples[boardNames.TOAD]}
-                            width = {this.toadWidth}
-                            patternName = "Toad"
-                            stopped = {this.props.stopped[this.toad.grid.name]}
+                            width = {this.examples[boardNames.TOAD].canvasWidth}
+                            patternName = {this.examples[boardNames.TOAD].name}
+                            stopped = {this.props.stopped[boardNames.TOAD]}
                             buttonColor = {this.buttonColor} 
                             withButton = {true}
                             setCanvas = {el => this.examples[boardNames.TOAD].canvas = el}
                             handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardNames.TOAD])}
                         />                    
     			    </Grid>
+
+                    <Grid item xs >
+                        <BoardElement 
+                            width = {this.examples[boardNames.GLASSES].canvasWidth}
+                            patternName = {this.examples[boardNames.GLASSES].name}
+                            stopped = {this.props.stopped[boardNames.GLASSES]}
+                            buttonColor = {this.buttonColor} 
+                            withButton = {true}
+                            setCanvas = {el => this.examples[boardNames.GLASSES].canvas = el}
+                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardNames.GLASSES])}
+                        />                    
+                    </Grid>
+
+                    <Grid item xs >
+                        <BoardElement 
+                            width = {this.examples[boardNames.QUAD].canvasWidth}
+                            patternName = {this.examples[boardNames.QUAD].name}
+                            stopped = {this.props.stopped[boardNames.QUAD]}
+                            buttonColor = {this.buttonColor} 
+                            withButton = {true}
+                            setCanvas = {el => this.examples[boardNames.QUAD].canvas = el}
+                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardNames.QUAD])}
+                        />                    
+                    </Grid>
     			    
     		    </Grid>
     		    </div>
@@ -614,10 +499,9 @@ class About extends Component {
     			    
     			    <Grid item xs> 
                         <BoardElement 
-                            values = {this.examples[boardNames.GLIDER]}
-                            width = {this.gliderWidth}
-                            patternName = "Glider"
-                            stopped = {this.props.stopped[this.glider.grid.name]}
+                            width = {this.examples[boardNames.GLIDER].canvasWidth}
+                            patternName = {this.examples[boardNames.GLIDER].name}
+                            stopped = {this.props.stopped[boardNames.GLIDER]}
                             buttonColor = {this.buttonColor} 
                             withButton = {true}
                             setCanvas = {el => this.examples[boardNames.GLIDER].canvas = el}
@@ -628,10 +512,9 @@ class About extends Component {
 
     			    <Grid item xs> 
                         <BoardElement 
-                            board = {this.examples[boardNames.SPACESHIP]}
-                            width = {this.spaceshipWidth}
-                            patternName = "Lightweight Spaceship"
-                            stopped = {this.props.stopped[this.spaceship.grid.name]}
+                            width = {this.examples[boardNames.SPACESHIP].canvasWidth}
+                            patternName = {this.examples[boardNames.SPACESHIP].name}
+                            stopped = {this.props.stopped[boardNames.SPACESHIP]}
                             buttonColor = {this.buttonColor} 
                             withButton = {true}
                             setCanvas = {el => this.examples[boardNames.SPACESHIP].canvas = el}
@@ -659,9 +542,8 @@ class About extends Component {
     			    
     			    <Grid item xs={12}> 
                         <BoardElement 
-                            values = {this.examples[boardNames.GUN]}
-                            patternName = "The Gosper Glider Gun"
-                            stopped = {this.props.stopped[this.gun.grid.name]}
+                            patternName =  {this.examples[boardNames.GUN].name}
+                            stopped = {this.props.stopped[boardNames.GUN]}
                             buttonColor = {this.buttonColor} 
                             withButton = {true}
                             setCanvas = {el => this.examples[boardNames.GUN].canvas = el}

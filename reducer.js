@@ -6,25 +6,21 @@ export const initialState = {
 	error: false,
 	patterns:[],
   generationCount: -1,   
-  stopped: {
-    [boardNames.MAIN]: true,
-    [boardNames.BLOCK]: true,
-    [boardNames.BOAT]: true,
-    [boardNames.LOAF]: true,
-    [boardNames.BEEHIVE]: true,
-    [boardNames.BLINKER]: true,
-    [boardNames.BEACON]: true,
-    [boardNames.TOAD]: true,
-    [boardNames.GLIDER]: true,
-    [boardNames.SPACESHIP]: true,
-    [boardNames.GUN]: true,
-  },
+  stopped: initBoards(),
 
   patternNamesIndex:0,
   fps: 2,
   gridSizesIndex:1,
   cellsList: null, 
   size: null
+}
+
+function initBoards () {
+  let boards = {};
+  for( let name in boardNames ) {
+    boards[name] = true
+  }  
+  return boards
 }
 
 export function reducer (state = initialState, action) {
@@ -76,19 +72,7 @@ export function reducer (state = initialState, action) {
               ...{stopped:
                   {
                     ...state.stopped,
-                    ...{
-                        [boardNames.MAIN]: true,
-                        [boardNames.BLOCK]: true,
-                        [boardNames.BOAT]: true,
-                        [boardNames.LOAF]: true,
-                        [boardNames.BEEHIVE]: true,
-                        [boardNames.BLINKER]: true,
-                        [boardNames.BEACON]: true,
-                        [boardNames.TOAD]: true,
-                        [boardNames.GLIDER]: true,
-                        [boardNames.SPACESHIP]: true,
-                        [boardNames.GUN]: true,
-                      }
+                    ...initBoards()
                   }
                  }
               }

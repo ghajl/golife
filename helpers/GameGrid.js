@@ -80,7 +80,7 @@ class GameGrid {
     //= componentdidmount
     makeBoard(width,height,squareSize,ratio,canvas,savedCellsList)
     {
-
+        // console.log(width)
         this.canvas = createCanvas(canvas, width, height, squareSize, ratio);
         this.ratio = ratio;
         drawGrid(this.canvas, width, height, squareSize);
@@ -321,6 +321,7 @@ export function getNeighborsNumberChangeListenersList(cell){
 }
 
 export function createCanvas(canvas, width, height, gridSquareSize, ratio){
+    console.log(canvas)
     canvas.width=((width + 1) * gridSquareSize) * ratio;
     canvas.height=((height + 1) * gridSquareSize) * ratio;
     let r = canvas.height / canvas.width;
