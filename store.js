@@ -1,5 +1,5 @@
 import createSagaMiddleware from 'redux-saga'
-import { createStore, applyMiddleware, compose } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 // import { createLogger } from 'redux-logger'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import reducer, { initialState } from './reducer'
@@ -11,7 +11,6 @@ const sagaMiddleware = createSagaMiddleware();
 
 export function configureStore (state = initialState){
 	
-  // const middlewares = [thunkMiddleware, createLogger()]
   const store = createStore(
     reducer,
     state,

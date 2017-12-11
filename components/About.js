@@ -27,6 +27,7 @@ var oscQuadCoordinates = require('../static/oscQuad.txt');
 var toadCoordinates = require('../static/toad.txt');
 
 const styles = {
+
 	mainContent: {
 		marginTop: 75
 	},
@@ -60,6 +61,9 @@ const styles = {
         display: 'inline-block',
     	marginTop:30,
     },
+    link: {
+        'text-decoration': 'underline !important',
+    },    
 };
 
 
@@ -290,8 +294,8 @@ class About extends Component {
     	    
     	    	<p className={`${classes.intro} ${classes.text}`}>
     	    	<strong>The Game of Life</strong> is the best-known two-dimensional  
-                "<a href="https://en.wikipedia.org/wiki/Cellular_automaton" target="_blank" title="Cellular automaton">cellular automaton</a>", 
-                invented in 1970 by the British mathematician <a href="https://en.wikipedia.org/wiki/John_Horton_Conway" target="_blank" title="John Conway">John Horton Conway</a>. 
+                "<a className={classes.link} href="https://en.wikipedia.org/wiki/Cellular_automaton" target="_blank" title="Cellular automaton">cellular automaton</a>", 
+                invented in 1970 by the British mathematician <a className={classes.link} href="https://en.wikipedia.org/wiki/John_Horton_Conway" title="John Conway">John Horton Conway</a>. 
                 The life is a cellular automaton, which is a model of a discrete abstract computational system, 
                 composed of a finite or infinite set of objects – "cells". The cell in the game of life has two states - 
                 “alive” and “dead”, or "populated" and "unpopulated". The cells live on a two-dimensional grid and each cell 
@@ -559,7 +563,7 @@ class About extends Component {
     	    	</h2>
 
     	    	<p className={classes.text}>Conway was interested in a problem presented in the 1940s by 
-    	    	mathematician <a href="https://en.wikipedia.org/wiki/John_von_Neumann"  target="_blank" title="John von Neumann">John von Neumann</a>, 
+    	    	mathematician <a className={classes.link} href="https://en.wikipedia.org/wiki/John_von_Neumann" title="John von Neumann">John von Neumann</a>, 
     	    	who attempted to find a hypothetical machine that could build copies of itself 
     	    	and succeeded when he found a mathematical model for such a machine with very 
     	    	complicated rules on a rectangular grid. The Game of Life emerged as Conway's 
@@ -580,9 +584,53 @@ class About extends Component {
     			</p>
     			</blockquote>
 
-
-                
-    			
+                <h2 className={classes.title}>
+                References
+                </h2>
+                <p className={classes.text}>
+                Wikipedia. 2017. Conway's Game of Life. [ONLINE] Available at: <a className={classes.link} href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life</a>. 
+                Overview of history, rules and examples of patterns of the Game of Life
+                </p>
+                <p className={classes.text}>
+                www.ericweisstein.com. 1996-2005. Eric Weisstein's Treasure Trove of the Life C.A. [ONLINE] Available at: <a className={classes.link} href="http://www.ericweisstein.com/encyclopedias/life/">http://www.ericweisstein.com/encyclopedias/life/</a>. 
+                This source includes large collection of examples of possible patterns.
+                </p>                
+                <h2 className={classes.title}>
+                Links
+                </h2>
+                <p className={classes.text}>
+                <a className={classes.link} href="http://www.scholarpedia.org/article/Game_of_Life">www.scholarpedia.org/article/Game_of_Life</a>
+                </p> 
+                <p className={classes.text}>
+                <a className={classes.link} href="https://www.ibiblio.org/lifepatterns/">www.ibiblio.org/lifepatterns/</a>
+                </p>   
+                <p className={classes.text}>
+                <a className={classes.link} href="http://mathworld.wolfram.com/GameofLife.html">http://mathworld.wolfram.com/GameofLife.html</a>
+                </p>   		
+                <p className={classes.text}>
+                <a className={classes.link} href="http://www.conwaylife.com/">http://www.conwaylife.com/</a>
+                </p>	
+                <p className={classes.text}>
+                <a className={classes.link} href="http://golly.sourceforge.net/">http://golly.sourceforge.net/</a>
+                </p>
+                <p className={classes.text}>
+                <a className={classes.link} href="http://www.math.com/students/wonders/life/life.html">http://www.math.com/students/wonders/life/life.html</a>
+                </p>
+                <p className={classes.text}>
+                <a className={classes.link} href="http://www.cuug.ab.ca/dewara/life/life.html">http://www.cuug.ab.ca/dewara/life/life.html</a>
+                </p>
+                <p className={classes.text}>
+                <a className={classes.link} href="http://www.radicaleye.com/lifepage/" >http://www.radicaleye.com/lifepage/</a>
+                </p>
+                <p className={classes.text}>
+                <a className={classes.link} href="https://www.theguardian.com/science/alexs-adventures-in-numberland/2014/dec/15/the-game-of-life-a-beginners-guide">https://www.theguardian.com/science/alexs-adventures-in-numberland/2014/dec/15/the-game-of-life-a-beginners-guide</a>
+                </p>
+                <p className={classes.text}>
+                <a className={classes.link} href="http://www.instructables.com/id/OTCA-Metapixel-Conways-Game-of-Life/">http://www.instructables.com/id/OTCA-Metapixel-Conways-Game-of-Life/</a>
+                </p>
+                <p className={classes.text}>
+                <a className={classes.link} href="http://natureofcode.com/book/chapter-7-cellular-automata/">http://natureofcode.com/book/chapter-7-cellular-automata/</a>
+                </p>
     			</Grid>
     			<Grid item xs={1} sm={2} > </Grid>
     			</Grid>

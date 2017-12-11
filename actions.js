@@ -1,11 +1,9 @@
 export const actionTypes = {
   FAILURE: 'FAILURE',
-  
   LOAD_DATA: 'LOAD_DATA',
   LOAD_DATA_SUCCESS: 'LOAD_DATA_SUCCESS',
   CHANGE_PATTERN: 'CHANGE_PATTERN',
   CHANGE_BOARD_SIZE: 'CHANGE_BOARD_SIZE',
-  TOGGLE_STOPPED: 'TOGGLE_STOPPED',
   SET_STOPPED: 'SET_STOPPED',
   INCREMENT_GENERATION: 'INCREMENT_GENERATION',
   SET_SPEED: 'SET_SPEED',
@@ -48,9 +46,6 @@ export function changeBoardSize(index) {
 
 }
 
-export function toggleStopped() {
-  return {type: actionTypes.TOGGLE_STOPPED}
-}
 export function setStopped(stopped, name) {
   return {
     type: actionTypes.SET_STOPPED,

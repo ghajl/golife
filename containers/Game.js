@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { changePattern, changeBoardSize, toggleStopped, incrementGeneration, setStopped, setSpeed, setClear, setGameValues } from 'actions'
+import { changePattern, changeBoardSize, incrementGeneration, setStopped, setSpeed, setClear, setGameValues } from 'actions'
 // import { selectLight, selectLastUpdate, selectCount } from 'selectors'
 // import { createSelector } from 'reselect';
 import { compose, setDisplayName, pure } from 'recompose';
@@ -12,9 +12,6 @@ const mapDispatchToProps = dispatch => {
     },
     changeBoardSize: index => {
         dispatch(changeBoardSize(index))
-    },
-    toggleStopped: () => {
-	    dispatch(toggleStopped())
     },
     incrementGeneration: () => {
     	dispatch(incrementGeneration())

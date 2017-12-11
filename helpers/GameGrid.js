@@ -5,7 +5,7 @@ import { getChangeList, convertCoordinates, makeUnique, getLiveCells,
 
 
 class GameGrid {
-    constructor(name, width, height, squareSize, isOpenUniverse = false)
+    constructor(name, width, height, squareSize, isUnwrapped = false)
     {
 	  	this.gridWidth = width;
 	  	this.gridHeight = height;
@@ -13,18 +13,18 @@ class GameGrid {
         this.visibleGridWidth = width;
         this.visibleGridHeight = height;
         this.gridName = name;
-        this.gridIsOpen = isOpenUniverse;
+        this.gridIsUnwrapped = isUnwrapped;
         this.checkList = [];
         this.originalCellImage = null;
         this.cellsStateChange = {
             list:null,
             isFirst:true,
         }
-        if(this.gridIsOpen){
+        if(this.gridIsUnwrapped){
             this.gridWidth = this.gridWidth + 40;
             this.gridHeight = this.gridHeight + 40;
         }
-        this.valuesBoard = createGameMatrix(this.gridWidth, this.gridHeight, this.checkList, this.gridIsOpen);
+        this.valuesBoard = createGameMatrix(this.gridWidth, this.gridHeight, this.checkList, this.gridIsUnwrapped);
 
 	}
 
@@ -48,7 +48,7 @@ class GameGrid {
 
 
 
-    reload(width,height,squareSize,canvas,isOpenUniverse = false){
+    reload(width,height,squareSize,canvas,isUnwrapped = false){
         this.checkList = [];
         this.cellsStateChange = {
             list:null,
@@ -61,8 +61,8 @@ class GameGrid {
         this.visibleGridWidth = width;
         this.visibleGridHeight = height;
         this.gridSquareSize = squareSize;
-        this.gridIsOpen = isOpenUniverse;
-        if(this.gridIsOpen){
+        this.gridIsUnwrapped = isUnwrapped;
+        if(this.gridIsUnwrapped){
             this.gridWidth = this.gridWidth + 40;
             this.gridHeight = this.gridHeight + 40;
         }
@@ -72,7 +72,7 @@ class GameGrid {
         let ctx = bufferCanvas.getContext('2d');  
         this.originalCellImage = ctx.getImageData(this.gridSquareSize * this.ratio / 2, this.gridSquareSize * this.ratio / 2, this.gridSquareSize * this.ratio, this.gridSquareSize* this.ratio)
 
-        this.valuesBoard = createGameMatrix(this.gridWidth, this.gridHeight, this.checkList, this.gridIsOpen);
+        this.valuesBoard = createGameMatrix(this.gridWidth, this.gridHeight, this.checkList, this.gridIsUnwrapped);
 
     }
 
@@ -90,7 +90,7 @@ class GameGrid {
 
 
         if(savedCellsList){
-            if(this.gridIsOpen){
+            if(this.gridIsUnwrapped){
                 savedCellsList = savedCellsList.map(cell => [cell[0]+20,cell[1]+20]);
             }
             this.cellsStateChange.list = savedCellsList;
@@ -133,9 +133,9 @@ class GameGrid {
         const r = currentSquareSize / 2 - 1;
         const boardWidth=(this.gridWidth + 1) * currentSquareSize;
         const boardHeight=(this.gridHeight + 1) * currentSquareSize;
-        let x = Math.round((getCursorPos(e)[0]-cnvLeft)/(cnvRight-cnvLeft)*boardWidth);
-        let y = Math.round((getCursorPos(e)[1]-cnvTop)/(cnvBottom-cnvTop)*boardHeight);
-       if((x + currentSquareSize/2) % currentSquareSize !== 0 && (y + currentSquareSize/2) % currentSquareSize !== 0){
+        const x = Math.round((getCursorPos(e)[0]-cnvLeft)/(cnvRight-cnvLeft)*boardWidth);
+        const y = Math.round((getCursorPos(e)[1]-cnvTop)/(cnvBottom-cnvTop)*boardHeight);
+        if((x + currentSquareSize/2) % currentSquareSize !== 0 && (y + currentSquareSize/2) % currentSquareSize !== 0){
             const nearestX = Math.floor((x + currentSquareSize / 2) / currentSquareSize)
             const nearestY = Math.floor((y + currentSquareSize / 2) / currentSquareSize)
             if(Math.pow(x - nearestX * currentSquareSize, 2) + Math.pow(y - nearestY * currentSquareSize, 2) < Math.pow(r, 2)){
@@ -198,7 +198,7 @@ class GameGrid {
             }
         } else {
             let changeCellList = getChangeList(this.valuesBoard,this.cellsStateChange,this.checkList);//the list of cells that changes color;
-            updateTable(this.valuesBoard, this.cellsStateChange.list, this.canvas, this.gridSquareSize, this.gridWidth, this.gridHeight, this.originalCellImage, this.ratio, this.gridIsOpen);
+            updateTable(this.valuesBoard, this.cellsStateChange.list, this.canvas, this.gridSquareSize, this.gridWidth, this.gridHeight, this.originalCellImage, this.ratio, this.gridIsUnwrapped);
             this.cellsStateChange.list = changeCellList;     
             this.cellsStateChange.isFirst = false  
         }
@@ -243,7 +243,7 @@ function drawGrid(canvas, width, height, squareSize){
     }
 } 
 
-export function createCellsValuesMatrix(width, height, checkList, isOpenUniverse){
+export function createCellsValuesMatrix(width, height, checkList, isUnwrapped){
     let valuesBoard = Array(height).fill(null);
     for(let i = 0; i < height; i++){
         valuesBoard[i] = Array(width).fill(null);
@@ -257,15 +257,15 @@ export function createCellsValuesMatrix(width, height, checkList, isOpenUniverse
     return valuesBoard;
 }
 
-export function createGameMatrix(width, height, checkList, isOpenUniverse){
-        let board = createCellsValuesMatrix(width, height, checkList, isOpenUniverse);
+export function createGameMatrix(width, height, checkList, isUnwrapped){
+        let board = createCellsValuesMatrix(width, height, checkList, isUnwrapped);
 
         
         for(let i = 0; i < height; i++){
           
             for(let j = 0; j < width; j++){
               
-                let neighborsList = getNeighborsList(board, width, height, i, j, isOpenUniverse);//  setListeners(i,j);
+                let neighborsList = getNeighborsList(board, width, height, i, j, isUnwrapped);//  setListeners(i,j);
                 let neighborStateChangeListenersList = getNeighborStateChangeListenersList(neighborsList);
                 board[i][j].addListeners("neighborStateChange", neighborStateChangeListenersList);
                 let neighborsNumberChangeListenersList = getNeighborsNumberChangeListenersList(board[i][j]);
@@ -276,12 +276,12 @@ export function createGameMatrix(width, height, checkList, isOpenUniverse){
         return board;
 }
 
-export function getNeighborsList(valuesBoard, width, height, Y, X, isOpenUniverse){
+export function getNeighborsList(valuesBoard, width, height, Y, X, isUnwrapped){
     let cellList=[];
     for(let i=-1;i<2;i++){
         for(let j=-1;j<2;j++){
             let tX = X+j,tY = Y+i;
-            if(isOpenUniverse){
+            if(isUnwrapped){
                 if(tY >= 0 && tY < height && tX >= 0 && tX < width && !(i ===0 && j === 0)){
                     cellList.push(valuesBoard[tY][tX]);
                 }
@@ -353,13 +353,13 @@ function draw_circle(context, x, y, radius) {
     context.closePath();
     context.restore()
 }
-function updateTable(valuesBoard, changeList, canvas, squareSize, width, height, emptyCellImage, ratio, gridIsOpen){
+function updateTable(valuesBoard, changeList, canvas, squareSize, width, height, emptyCellImage, ratio, gridIsUnwrapped){
     // console.log("updateTable")
     changeList.forEach(cell => {
         // console.log("forEach")
         let Y = cell[0];
         let X = cell[1];
-        if(gridIsOpen){
+        if(gridIsUnwrapped){
             if(X >= 20 &&  X < width - 20 && Y >= 20 &&  Y < height - 20){
 
                 X -= 20;

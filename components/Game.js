@@ -69,7 +69,6 @@ class Game extends Component {
         this.changePattern = index => props.changePattern(index);
         this.changeBoardSize = index => props.changeBoardSize(index);
         this.start = this.start.bind(this);
-        this.toggleStopped = () => props.toggleStopped();
         this.setStopped = stopped => props.setStopped(stopped, this.grid.name);
         this.incrementGeneration = () => props.incrementGeneration();
         this.setSpeed = fps => props.setSpeed(fps);
@@ -479,7 +478,6 @@ Game.propTypes = {
     ),
     changePattern: PropTypes.func.isRequired,
     changeBoardSize: PropTypes.func.isRequired,
-    toggleStopped: PropTypes.func.isRequired,
     incrementGeneration: PropTypes.func.isRequired,
     setSpeed: PropTypes.func.isRequired,
     setClear: PropTypes.func.isRequired,

@@ -54,11 +54,6 @@ export function reducer (state = initialState, action) {
             patternNamesIndex:-1,
           }
       }
-    case actionTypes.TOGGLE_STOPPED:
-      return {
-        ...state,
-        ...{stopped: !state.stopped}
-      }
     case actionTypes.SET_STOPPED:
       if(action.name){
             return {
