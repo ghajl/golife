@@ -1,7 +1,8 @@
 import Cell from './Cell';
 import { getChangeList, convertCoordinates, makeUnique, getLiveCells, 
-  shiftToCenter, getNewPatternChangeList,  
+  shiftPatternToCenter, getNewPatternChangeList,  
   boardTotalCheck, getRandomPattern} from './helpers';
+import {colors as color} from './colors';
 
 
 class GameGrid {
@@ -106,7 +107,7 @@ class GameGrid {
         var nextGenerationChangeCellsList;
         if(index>0){
             //get the coordinates of choosed pattern adjusted to current board size
-            nextGenerationChangeCellsList=shiftToCenter(patternsList[index-1].pattern,this.gridHeight,this.gridWidth);
+            nextGenerationChangeCellsList=shiftPatternToCenter(patternsList[index-1].pattern,this.gridHeight,this.gridWidth);
         } else {
             //random live cells have index = 0
             nextGenerationChangeCellsList=getRandomPattern(this.gridHeight,this.gridWidth);
@@ -141,7 +142,6 @@ class GameGrid {
             if(Math.pow(x - nearestX * currentSquareSize, 2) + Math.pow(y - nearestY * currentSquareSize, 2) < Math.pow(r, 2)){
 
                 const clickedCell = [nearestY - 1, nearestX - 1];
-        
     
                 this.cellsStateChange.list = [];
                 this.cellsStateChange.list.push(clickedCell);
@@ -216,7 +216,7 @@ function drawGrid(canvas, width, height, squareSize){
     var ctx = canvas.getContext('2d');
     var radius = squareSize/2 - 1;
 
-    ctx.strokeStyle="#878789";
+    ctx.strokeStyle = color.GRID;
     const w = (width + 1) * squareSize
     const h = (height + 1) * squareSize
     ctx.lineWidth = .2;
@@ -347,8 +347,7 @@ function draw_circle(context, x, y, radius) {
     context.save()
     context.beginPath();
     context.arc(x, y, radius, 0, Math.PI * 2, false);
-    context.globalAlpha = 0.2;
-    context.fillStyle = '#2F4F4F';
+    context.fillStyle = color.EMPTY_CELL;
     context.fill();
     context.closePath();
     context.restore()
@@ -396,7 +395,7 @@ function drawCell(cell, canvas, squareSize, radius, shape, emptyCellImage, ratio
         context.save()
         context.beginPath();
         context.arc(X, Y, cellRadius, 0, Math.PI * 2, false);
-        context.fillStyle = '#FF0000';
+        context.fillStyle = color.LIVE_CELL;
         context.fill();
         context.closePath();
         context.restore()

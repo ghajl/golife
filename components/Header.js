@@ -2,6 +2,7 @@ import React from 'react';
 import injectSheet from 'react-jss';
 import PropTypes from 'prop-types';
 import Link from 'next/link'
+import {colors as color} from '../helpers/colors';
 
 
 
@@ -14,7 +15,7 @@ const styles = {
         'text-transform': 'uppercase',
         justifyContent: 'space-between',
         '@global a': {
-            color: '#A9A9A9',
+            color: color.HEADER_LINK_INACTIVE,
             
             display: 'block',
             padding: '1em',
@@ -23,10 +24,10 @@ const styles = {
             fallbacks:{
                 fontFamily: 'sans-serif',
             },
-            '&:hover': {
-                color: '#A2D729',
-                // background: '#3b80d1',  
-            }
+            // '&:hover': {
+            //     color: color.HEADER_LINK_ACTIVE,
+            //     // background: '#3b80d1',  
+            // }
         },
         
         
@@ -44,17 +45,17 @@ const styles = {
         }
     },
     authorName: {
-        color: '#011627',
+        color: color.TITLE_AUTHOR,
     },
     gameName: {
-        color: '#A2D729',
+        color: color.TITLE_GAME,
     },
     about: {
         display: 'flex',
         fontWeight: 900,
         '@global a': {
             '&:hover': {
-                color: '#016FB9',
+                color: color.HEADER_LINK_ACTIVE,
                 // background: '#3b80d1',  
             }
         },     
@@ -66,7 +67,7 @@ const styles = {
         }
     },
     active: {
-            color: '#016FB9',
+            color: color.HEADER_LINK_ACTIVE,
         },
 }
 
@@ -118,20 +119,3 @@ Header.propTypes = {
         ratio: PropTypes.number,
     })
 };
-// <Link href="/about">Read</Link>
-// const linkStyle = {
-//   marginRight: 15
-// }
-
-// const Header = () => (
-//     <div>
-//         <Link href="/">
-//           <a style={linkStyle}>Home</a>
-//         </Link>
-//         <Link href="/about">
-//           <a style={linkStyle}>About</a>
-//         </Link>
-//     </div>
-// )
-
-// export default Header

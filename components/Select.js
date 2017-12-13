@@ -3,14 +3,11 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import Menu, { MenuItem } from 'material-ui/Menu';
-import { red, purple } from 'material-ui/colors';
 
 const styles = theme => ({
     root: {
         width: '100%',
         maxWidth: 360,
-        
-      
     },
   
 });
@@ -22,8 +19,6 @@ class Select extends Component {
   	constructor(props){
     		super(props)
     		this.options = []
-                //       <MenuItem key={1} value={-1} primaryText={this.props.items[0]} />
-                // ];
             if(typeof props.items !== 'undefined'){
     	        for(let i=0;i<props.items.length;i++){
     	                this.options.push(props.items[i])
@@ -70,10 +65,7 @@ class Select extends Component {
           <List>
             <ListItem
               button
-              aria-haspopup="true"
-              aria-controls="lock-menu"
-              aria-label={this.props.label}
-              onClick={this.handleClickListItem}
+             onClick={this.handleClickListItem}
 
             >
             {this.props.index < 0 ? (
@@ -127,97 +119,3 @@ export default withStyles(styles)(Select);
 
 
 
-
-
-// export default class Select extends Component {
-// 	constructor(props){
-// 		super(props)
-// 		this.items = []
-//             //       <MenuItem key={1} value={-1} primaryText={this.props.items[0]} />
-//             // ];
-//         if(typeof this.props.items !== 'undefined'){
-// 	        for(let i=0;i<this.props.items.length;i++){
-// 	                this.items.push(<MenuItem key={i} value={i} primaryText={this.props.items[i]} />)
-// 			}	        
-//         }
-            
-// 	}
-// 	shouldComponentUpdate(nextProps) {
-// 		// console.log(nextProps.items + "it" + this.props.items)
-// 		// console.log(nextProps.items !== this.props.items)
-//         return nextProps.value !== this.props.value || nextProps.size !== this.props.size || nextProps.items !== this.props.items;
-//     }
-
-// 	render() {
-// 		this.items.length = 0
-//         if(typeof this.props.items !== 'undefined'){
-	        
-//         }		
-// 		return (
-// 	    <div>  
-	    
-
-// 	    </div>
-// 	    );
-// 	  }
-// }
-
-
-// 	constructor(props){
-// 		super(props)
-// 		this.items = []
-//             //       <MenuItem key={1} value={-1} primaryText={this.props.items[0]} />
-//             // ];
-//         if(typeof this.props.items !== 'undefined'){
-// 	        for(let i=0;i<this.props.items.length;i++){
-// 	                this.items.push(<MenuItem key={i} value={i} primaryText={this.props.items[i]} />)
-// 			}
-//         }
-            
-// 	}
-// 	shouldComponentUpdate(nextProps) {
-// 		// console.log(nextProps.items + "it" + this.props.items)
-// 		// console.log(nextProps.items !== this.props.items)
-//         return nextProps.value !== this.props.value || nextProps.size !== this.props.size || nextProps.items !== this.props.items;
-//     }
-
-// 	render() {
-// 		this.items.length = 0
-//         if(typeof this.props.items !== 'undefined'){
-// 	        for(let i=0;i<this.props.items.length;i++){
-// 	                this.items.push(<MenuItem key={i} value={i} primaryText={this.props.items[i]} />)
-// 			}
-//         }		
-// 		return (
-// 	    <div>  
-// 	    {this.props.size == 'small'? (
-
-// 	        <SelectField
-	        	
-// 	        	underlineStyle = {style}
-
-// 	        	autoWidth={false}
-// 	        	style={rootStyle}
-// 	        	value={this.props.value}
-// 		        onChange={(event, index, value) => this.props.onChange(value)}
-// 		        floatingLabelText={this.props.floatingLabelText}
-// 	        >
-// 	          {this.items}
-// 	        </SelectField>
-
-// 	    	) : (
-// 	        <SelectField
-	        	
-// 	        	underlineStyle = {style}
-
-// 	        	value={this.props.value}
-// 		        onChange={(event, index, value) => this.props.onChange(value)}
-// 		        floatingLabelText={this.props.floatingLabelText}
-// 	        >
-// 	          {this.items}
-// 	        </SelectField>
-// 	    	)}
-
-// 	    </div>
-// 	    );
-// 	  }

@@ -9,9 +9,9 @@ import IconButton from 'material-ui/IconButton';
 import ToggleIcon from 'material-ui-toggle-icon';
 import PlayArrow from 'material-ui-icons/PlayArrow';
 import Pause from 'material-ui-icons/Pause';
-import {boardNames} from '../helpers/boardNames'
-import { shiftToCenter } from '../helpers/helpers';
-
+import {boardNames as boardName} from '../helpers/boardNames'
+import { shiftPatternToCenter, shiftPattern } from '../helpers/helpers';
+import {colors as color} from '../helpers/colors';
 
 var beaconCoordinates = require('../static/beacon.txt');
 var beehiveCoordinates = require('../static/beehive.txt');
@@ -63,6 +63,8 @@ const styles = {
     },
     link: {
         'text-decoration': 'underline !important',
+        'overflow-wrap': 'break-word',
+        'word-wrap': 'break-word',
     },    
 };
 
@@ -74,87 +76,87 @@ class About extends Component {
 		super(props);
         let squareSize = 12;
         let parameters = {
-            [boardNames.BEACON]: {
-                w: 6,
-                h: 6, 
-                coordinates: createCellsList(beaconCoordinates,[0,0]),    
+            [boardName.BEACON]: {
+                width: 6,
+                height: 6, 
+                coordinates: createCellsList(beaconCoordinates),    
                 wrapped: true,   
                 name: "Beacon",       
             },
-            [boardNames.BEEHIVE]: {
-                w: 6,
-                h: 5,
-                coordinates: createCellsList(beehiveCoordinates,[0,0]),
+            [boardName.BEEHIVE]: {
+                width: 6,
+                height: 5,
+                coordinates: createCellsList(beehiveCoordinates),
                 wrapped: true, 
                 name: "Beehive",
             },
-            [boardNames.BLINKER]: {
-                w: 5,
-                h: 5,
-                coordinates: createCellsList(blinkerCoordinates,[0,0]),
+            [boardName.BLINKER]: {
+                width: 5,
+                height: 5,
+                coordinates: createCellsList(blinkerCoordinates),
                 wrapped: true, 
                 name: "Blinker",
             },
-            [boardNames.BLOCK]: {
-                w: 4,
-                h: 4,
-                coordinates: createCellsList(blockCoordinates,[0,0]),
+            [boardName.BLOCK]: {
+                width: 4,
+                height: 4,
+                coordinates: createCellsList(blockCoordinates),
                 wrapped: true, 
                 name: "Block",
             },
-            [boardNames.BOAT]: {
-                w: 5,
-                h: 5,
-                coordinates: createCellsList(boatCoordinates,[0,0]),
+            [boardName.BOAT]: {
+                width: 5,
+                height: 5,
+                coordinates: createCellsList(boatCoordinates),
                 wrapped: true, 
                 name: "Boat",
             },
-            [boardNames.GLIDER]: {
-                w: 10,
-                h: 10,
-                coordinates: createCellsList(gliderCoordinates,[0,0]),
+            [boardName.GLIDER]: {
+                width: 10,
+                height: 10,
+                coordinates: createCellsList(gliderCoordinates),
                 wrapped: true, 
                 name: "Glider",
             },
-            [boardNames.GUN]: {
-                w: 40,
-                h: 20,
-                coordinates: createCellsList(gunCoordinates,[1,1]),
+            [boardName.GUN]: {
+                width: 40,
+                height: 20,
+                coordinates: createCellsList(gunCoordinates),
                 wrapped: false, 
                 name: "The Gosper Glider Gun",
             },
-            [boardNames.LOAF]: {
-                w: 6,
-                h: 6,
-                coordinates: createCellsList(loafCoordinates,[0,0]),
+            [boardName.LOAF]: {
+                width: 6,
+                height: 6,
+                coordinates: createCellsList(loafCoordinates),
                 wrapped: true, 
                 name: "Loaf",
             },
-            [boardNames.SPACESHIP]: {
-                w: 12,
-                h: 12,
-                coordinates: createCellsList(lspaceshipCoordinates,[0,0]),
+            [boardName.SPACESHIP]: {
+                width: 12,
+                height: 12,
+                coordinates: createCellsList(lspaceshipCoordinates),
                 wrapped: true, 
                 name: "Lightweight Spaceship",
             },
-            [boardNames.GLASSES]: {
-                w: 20,
-                h: 13,
-                coordinates: createCellsList(oscGlassesCoordinates,[0,0]),
+            [boardName.GLASSES]: {
+                width: 20,
+                height: 13,
+                coordinates: createCellsList(oscGlassesCoordinates),
                 wrapped: true, 
                 name: "Glasses",
             },
-            [boardNames.QUAD]: {
-                w: 8,
-                h: 8,
-                coordinates: createCellsList(oscQuadCoordinates,[0,0]),
+            [boardName.QUAD]: {
+                width: 8,
+                height: 8,
+                coordinates: createCellsList(oscQuadCoordinates),
                 wrapped: true, 
                 name: "Quad",
             },
-            [boardNames.TOAD]: {
-                w: 6,
-                h: 6,
-                coordinates: createCellsList(toadCoordinates,[0,0]),
+            [boardName.TOAD]: {
+                width: 6,
+                height: 6,
+                coordinates: createCellsList(toadCoordinates),
                 wrapped: true, 
                 name: "Toad",
             },
@@ -163,10 +165,10 @@ class About extends Component {
         this.examples = {};
         for(let name in parameters){
             this.examples[name] = {
-                grid: new GameGrid(name, parameters[name].w, parameters[name].h, squareSize, !parameters[name].wrapped),
-                cells: name == boardNames.GUN ? 
-                                parameters[name].coordinates :
-                                shiftToCenter(parameters[name].coordinates, parameters[name].h, parameters[name].w),
+                grid: new GameGrid(name, parameters[name].width, parameters[name].height, squareSize, !parameters[name].wrapped),
+                cells: name == boardName.GUN ? 
+                                shiftPattern(parameters[name].coordinates, 1, 1) :
+                                shiftPatternToCenter(parameters[name].coordinates, parameters[name].height, parameters[name].width),
                 name: parameters[name].name,
             }
         }
@@ -177,33 +179,30 @@ class About extends Component {
                 width: window.innerWidth,
                 height: window.innerHeight,
                 ratio: window.devicePixelRatio || 1,
-                screenScale: window.innerWidth < 900 ? 3 : 10,
+                factor: window.innerWidth < 600 ? 3 : window.innerWidth < 960 ? 6 : 10,
             },
         }
 
         for(let name in parameters){
-            this.examples[name].canvasWidth = this.getWidth(this.examples[name].grid) 
+            this.examples[name].canvasWidth = this.getCanvasWidth(this.examples[name].grid) 
         }
 
-		this.motionPatternList = [];
+		this.startedPatternsList = [];
 		this.rAF = null;
 
 		this.interval=300;
 	
-		this.buttonColor = 'rgba(0, 0, 0, .9)';
-
         this.setStopped = (stopped, name) => props.setStopped(stopped, name);
 	}
 
-    getWidth(grid){
+    getCanvasWidth(grid){
         let {screen} = this.state;
         let {width, squareSize} = grid;
-        let w = ((width + 1) * squareSize * screen.width/100 * .7)/screen.screenScale;
+        let w = ((width + 1) * squareSize * screen.width/100 * .7)/screen.factor;
         return w > screen.width * .6 ? screen.width * .6 : w;
     }
 
     handlePlayToggle(pattern){
-        
         
         if(this.props.stopped[pattern.grid.name]){
             this.start(pattern);
@@ -216,9 +215,9 @@ class About extends Component {
     stop(pattern){
         if(!this.props.stopped[pattern.grid.name]){
             this.setStopped(true, pattern.grid.name);
-            let index = this.motionPatternList.indexOf(pattern);
-            this.motionPatternList.splice(index, 1);
-            if(this.motionPatternList.length === 0){
+            let index = this.startedPatternsList.indexOf(pattern);
+            this.startedPatternsList.splice(index, 1);
+            if(this.startedPatternsList.length === 0){
             	cancelAnimationFrame(this.rAF);
             }
         }
@@ -229,9 +228,9 @@ class About extends Component {
     start(pattern){
         if(this.props.stopped[pattern.grid.name]){
             this.setStopped(false, pattern.grid.name);
-            this.motionPatternList.push(pattern);
+            this.startedPatternsList.push(pattern);
             this.then = Date.now();
-            if(this.motionPatternList.length === 1){
+            if(this.startedPatternsList.length === 1){
             	this.rAF = requestAnimationFrame(() =>{this.update()});
             }
         }
@@ -244,19 +243,19 @@ class About extends Component {
             if (this.delta > this.interval) {
                 this.then = this.now - (this.delta % this.interval);
 
-                this.motionPatternList.forEach(p => p.grid.update())
+                this.startedPatternsList.forEach(p => p.grid.update())
                
             }  
             this.rAF = requestAnimationFrame(() =>{this.update()}); 
     }
 
     handleWindowSizeChange = () => {
-		this.examples[boardNames.GUN].grid.handleWindowSizeChange(this.examples[boardNames.GUN].canvas);
+		this.examples[boardName.GUN].grid.handleWindowSizeChange(this.examples[boardName.GUN].canvas);
     }
 
-    componentWillUpdate(){
-		this.examples[boardNames.GUN].canvasWidth = this.examples[boardNames.GUN].canvasWidth > this.state.screen.width * .6 ? 
-                                                    this.state.screen.width * .6 : this.examples[boardNames.GUN].canvasWidth
+    componentWillUpdate() {
+		this.examples[boardName.GUN].canvasWidth = this.examples[boardName.GUN].canvasWidth > this.state.screen.width * .6 ? 
+                                                    this.state.screen.width * .6 : this.examples[boardName.GUN].canvasWidth
     }
 
     componentWillMount() {
@@ -267,7 +266,6 @@ class About extends Component {
         let ratio = this.state.screen.ratio
         for(let name in this.examples){
             let {grid, cells, canvas} = this.examples[name];
-            console.log(name)
             grid.makeBoard(grid.width, grid.height, grid.squareSize, ratio, canvas, cells);
             grid.update();
         }
@@ -367,46 +365,46 @@ class About extends Component {
     	    	Stable finite patterns.
     	    	</p>
     	    	<div  className={classes.boardsSection} >
-    	    	<Grid container spacing={8} >
+    	    	<Grid container spacing={16} >
     	   
     			    
     			    
     			    <Grid item xs>
                         <BoardElement 
-                            width = {this.examples[boardNames.BLOCK].canvasWidth}
-                            patternName = {this.examples[boardNames.BLOCK].name}
+                            width = {this.examples[boardName.BLOCK].canvasWidth}
+                            patternName = {this.examples[boardName.BLOCK].name}
                             withButton = {false}
-                            setCanvas = {el => this.examples[boardNames.BLOCK].canvas = el}
+                            setCanvas = {el => this.examples[boardName.BLOCK].canvas = el}
                         />
     			    </Grid>
     			    
     			    
     			    <Grid item xs>
                         <BoardElement 
-                            width = {this.examples[boardNames.BOAT].canvasWidth}
-                            patternName = {this.examples[boardNames.BOAT].name}
+                            width = {this.examples[boardName.BOAT].canvasWidth}
+                            patternName = {this.examples[boardName.BOAT].name}
                             withButton = {false}
-                            setCanvas = {el => this.examples[boardNames.BOAT].canvas = el}
+                            setCanvas = {el => this.examples[boardName.BOAT].canvas = el}
                         />
     			    </Grid>
     			   
     			    
     			    <Grid item xs>
                         <BoardElement 
-                            width = {this.examples[boardNames.LOAF].canvasWidth}
-                            patternName = {this.examples[boardNames.LOAF].name}
+                            width = {this.examples[boardName.LOAF].canvasWidth}
+                            patternName = {this.examples[boardName.LOAF].name}
                             withButton = {false}
-                            setCanvas = {el => this.examples[boardNames.LOAF].canvas = el}
+                            setCanvas = {el => this.examples[boardName.LOAF].canvas = el}
                         />
     			    </Grid>
     			    
     			    
     			    <Grid item xs>
                         <BoardElement 
-                            width = {this.examples[boardNames.BEEHIVE].canvasWidth}
-                            patternName = {this.examples[boardNames.BEEHIVE].name}
+                            width = {this.examples[boardName.BEEHIVE].canvasWidth}
+                            patternName = {this.examples[boardName.BEEHIVE].name}
                             withButton = {false}
-                            setCanvas = {el => this.examples[boardNames.BEEHIVE].canvas = el}
+                            setCanvas = {el => this.examples[boardName.BEEHIVE].canvas = el}
                         />
     	            </Grid>
     			   
@@ -420,68 +418,68 @@ class About extends Component {
                 The most common period-2 oscillators include:
     	    	</p>
     	    	<div  className={classes.boardsSection} >
-    	    	<Grid container spacing={8}>
+    	    	<Grid container spacing={16}>
     	   
     			    
     			    <Grid item xs>
                         <BoardElement 
-                            width = {this.examples[boardNames.BLINKER].canvasWidth}
-                            patternName = {this.examples[boardNames.BLINKER].name}
-                            stopped = {this.props.stopped[boardNames.BLINKER]}
-                            buttonColor = {this.buttonColor} 
+                            width = {this.examples[boardName.BLINKER].canvasWidth}
+                            patternName = {this.examples[boardName.BLINKER].name}
+                            stopped = {this.props.stopped[boardName.BLINKER]}
+                            buttonColor = {color.BUTTON} 
                             withButton = {true}
-                            setCanvas = {el => this.examples[boardNames.BLINKER].canvas = el}
-                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardNames.BLINKER])}
+                            setCanvas = {el => this.examples[boardName.BLINKER].canvas = el}
+                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.BLINKER])}
                         />
     			    </Grid>
     			    
     			    
     			    <Grid item xs> 
                         <BoardElement 
-                            width = {this.examples[boardNames.BEACON].canvasWidth}
-                            patternName = {this.examples[boardNames.BEACON].name}
-                            stopped = {this.props.stopped[boardNames.BEACON]}
-                            buttonColor = {this.buttonColor} 
+                            width = {this.examples[boardName.BEACON].canvasWidth}
+                            patternName = {this.examples[boardName.BEACON].name}
+                            stopped = {this.props.stopped[boardName.BEACON]}
+                            buttonColor = {color.BUTTON} 
                             withButton = {true}
-                            setCanvas = {el => this.examples[boardNames.BEACON].canvas = el}
-                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardNames.BEACON])}
+                            setCanvas = {el => this.examples[boardName.BEACON].canvas = el}
+                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.BEACON])}
                         />                    
     
     			    </Grid>
     			    
     			    <Grid item xs >
                         <BoardElement 
-                            width = {this.examples[boardNames.TOAD].canvasWidth}
-                            patternName = {this.examples[boardNames.TOAD].name}
-                            stopped = {this.props.stopped[boardNames.TOAD]}
-                            buttonColor = {this.buttonColor} 
+                            width = {this.examples[boardName.TOAD].canvasWidth}
+                            patternName = {this.examples[boardName.TOAD].name}
+                            stopped = {this.props.stopped[boardName.TOAD]}
+                            buttonColor = {color.BUTTON} 
                             withButton = {true}
-                            setCanvas = {el => this.examples[boardNames.TOAD].canvas = el}
-                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardNames.TOAD])}
+                            setCanvas = {el => this.examples[boardName.TOAD].canvas = el}
+                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.TOAD])}
                         />                    
     			    </Grid>
 
                     <Grid item xs >
                         <BoardElement 
-                            width = {this.examples[boardNames.GLASSES].canvasWidth}
-                            patternName = {this.examples[boardNames.GLASSES].name}
-                            stopped = {this.props.stopped[boardNames.GLASSES]}
-                            buttonColor = {this.buttonColor} 
+                            width = {this.examples[boardName.GLASSES].canvasWidth}
+                            patternName = {this.examples[boardName.GLASSES].name}
+                            stopped = {this.props.stopped[boardName.GLASSES]}
+                            buttonColor = {color.BUTTON} 
                             withButton = {true}
-                            setCanvas = {el => this.examples[boardNames.GLASSES].canvas = el}
-                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardNames.GLASSES])}
+                            setCanvas = {el => this.examples[boardName.GLASSES].canvas = el}
+                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.GLASSES])}
                         />                    
                     </Grid>
 
                     <Grid item xs >
                         <BoardElement 
-                            width = {this.examples[boardNames.QUAD].canvasWidth}
-                            patternName = {this.examples[boardNames.QUAD].name}
-                            stopped = {this.props.stopped[boardNames.QUAD]}
-                            buttonColor = {this.buttonColor} 
+                            width = {this.examples[boardName.QUAD].canvasWidth}
+                            patternName = {this.examples[boardName.QUAD].name}
+                            stopped = {this.props.stopped[boardName.QUAD]}
+                            buttonColor = {color.BUTTON} 
                             withButton = {true}
-                            setCanvas = {el => this.examples[boardNames.QUAD].canvas = el}
-                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardNames.QUAD])}
+                            setCanvas = {el => this.examples[boardName.QUAD].canvas = el}
+                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.QUAD])}
                         />                    
                     </Grid>
     			    
@@ -498,31 +496,31 @@ class About extends Component {
     	    	They each move in a straight line.
     	    	</p>
     	    	<div  className={classes.boardsSection} >
-    	    	<Grid container spacing={8}>
+    	    	<Grid container spacing={16}>
     	   
     			    
     			    <Grid item xs> 
                         <BoardElement 
-                            width = {this.examples[boardNames.GLIDER].canvasWidth}
-                            patternName = {this.examples[boardNames.GLIDER].name}
-                            stopped = {this.props.stopped[boardNames.GLIDER]}
-                            buttonColor = {this.buttonColor} 
+                            width = {this.examples[boardName.GLIDER].canvasWidth}
+                            patternName = {this.examples[boardName.GLIDER].name}
+                            stopped = {this.props.stopped[boardName.GLIDER]}
+                            buttonColor = {color.BUTTON} 
                             withButton = {true}
-                            setCanvas = {el => this.examples[boardNames.GLIDER].canvas = el}
-                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardNames.GLIDER])}
+                            setCanvas = {el => this.examples[boardName.GLIDER].canvas = el}
+                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.GLIDER])}
                         />                    
     			    </Grid>
     			   
 
     			    <Grid item xs> 
                         <BoardElement 
-                            width = {this.examples[boardNames.SPACESHIP].canvasWidth}
-                            patternName = {this.examples[boardNames.SPACESHIP].name}
-                            stopped = {this.props.stopped[boardNames.SPACESHIP]}
-                            buttonColor = {this.buttonColor} 
+                            width = {this.examples[boardName.SPACESHIP].canvasWidth}
+                            patternName = {this.examples[boardName.SPACESHIP].name}
+                            stopped = {this.props.stopped[boardName.SPACESHIP]}
+                            buttonColor = {color.BUTTON} 
                             withButton = {true}
-                            setCanvas = {el => this.examples[boardNames.SPACESHIP].canvas = el}
-                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardNames.SPACESHIP])}
+                            setCanvas = {el => this.examples[boardName.SPACESHIP].canvas = el}
+                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.SPACESHIP])}
                         />                    
     			    </Grid>
 
@@ -546,12 +544,12 @@ class About extends Component {
     			    
     			    <Grid item xs={12}> 
                         <BoardElement 
-                            patternName =  {this.examples[boardNames.GUN].name}
-                            stopped = {this.props.stopped[boardNames.GUN]}
-                            buttonColor = {this.buttonColor} 
+                            patternName =  {this.examples[boardName.GUN].name}
+                            stopped = {this.props.stopped[boardName.GUN]}
+                            buttonColor = {color.BUTTON} 
                             withButton = {true}
-                            setCanvas = {el => this.examples[boardNames.GUN].canvas = el}
-                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardNames.GUN])}
+                            setCanvas = {el => this.examples[boardName.GUN].canvas = el}
+                            handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.GUN])}
                         />                    
    			    </Grid>
 
@@ -640,23 +638,23 @@ class About extends Component {
 	}
 }
 
-
-
 About.propTypes = {
     classes: PropTypes.object.isRequired,
     setStopped: PropTypes.func.isRequired,
     stopped: PropTypes.shape({
-        [boardNames.MAIN]: PropTypes.bool,
-        [boardNames.BLOCK]: PropTypes.bool,
-        [boardNames.BOAT]: PropTypes.bool,
-        [boardNames.LOAF]: PropTypes.bool,
-        [boardNames.BEEHIVE]: PropTypes.bool,
-        [boardNames.BLINKER]: PropTypes.bool,
-        [boardNames.BEACON]: PropTypes.bool,
-        [boardNames.TOAD]: PropTypes.bool,
-        [boardNames.GLIDER]: PropTypes.bool,
-        [boardNames.SPACESHIP]: PropTypes.bool,
-        [boardNames.GUN]: PropTypes.bool,
+        [boardName.MAIN]: PropTypes.bool,
+        [boardName.BLOCK]: PropTypes.bool,
+        [boardName.BOAT]: PropTypes.bool,
+        [boardName.LOAF]: PropTypes.bool,
+        [boardName.BEEHIVE]: PropTypes.bool,
+        [boardName.BLINKER]: PropTypes.bool,
+        [boardName.BEACON]: PropTypes.bool,
+        [boardName.TOAD]: PropTypes.bool,
+        [boardName.GLIDER]: PropTypes.bool,
+        [boardName.SPACESHIP]: PropTypes.bool,
+        [boardName.GUN]: PropTypes.bool,
+        [boardName.GLASSES]: PropTypes.bool,
+        [boardName.QUAD]: PropTypes.bool,
   }).isRequired,
 };
 
@@ -672,18 +670,18 @@ const BoardElement = ({width, patternName, stopped, buttonColor, withButton, ...
     
     <div className="board" style={{width: width, height: "100%"}}>
         <div className="item">
-            <canvas
+            <div className="canvas">
+            <canvas 
                 ref={props.setCanvas}
-                // onClick={(e) => this.handleClick(e)}
             />
-        
+            </div>
             {withButton ? (
-                <IconButton className="button" onClick = {props.handlePlayToggle}>
+                <IconButton className="button" title={stopped?"Start":"Pause"} onClick = {props.handlePlayToggle}>
                     <ToggleIcon
                         on={stopped}
                         onIcon={<PlayArrow className="icon" />}
                         offIcon={<Pause className="icon" />}
-                        color = {buttonColor} 
+                        
                       />
                 </IconButton>
 
@@ -712,22 +710,27 @@ const BoardElement = ({width, patternName, stopped, buttonColor, withButton, ...
             .button {
                 width: 35px;
                 height: 35px;
+                color:${color.BUTTON};
+        
             }
             .icon {
                 width: 25px;
                 height: 25px;
 
             }
+            .canvas {
+                background-color: ${color.BOARD};
+            }
         `}</style>
     </div>    
     );
 }
 
-const createCellsList = (coordinates, shift) => {
+const createCellsList = (coordinates) => {
     return coordinates.split("\r\n").reduce(function(acc, val, Y){
         val.split('c').reduce((accX, valX, X) => {
             if(valX !== "")
-            return acc.push([Y + shift[0], +valX + shift[1]])
+            return acc.push([Y, +valX])
         },[]);
         
         return acc;

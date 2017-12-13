@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
 import NoSSR from 'react-no-ssr';
 import GameGrid from '../helpers/GameGrid';
-
+import {colors as color} from '../helpers/colors';
 import Grid from 'material-ui/Grid';
 import {connect} from 'react-redux'
 import withRoot from './withRoot';
-// import Header from './components/Header'
 import Link from 'next/link';
 import SelectButtonsBar from './SelectButtonsBar';
 import PlayButtonsBar from './PlayButtonsBar';
@@ -27,7 +26,6 @@ import Dialog, {
 class Game extends Component {
     constructor(props){
         super(props);
-// console.log(props);
         this.currentBoardSize = boardSizes.medium;
  
         if(props.cellsList){
@@ -100,6 +98,7 @@ class Game extends Component {
 
 
     updateOnce(){
+
         this.grid.update(this.mode);
         if(!this.mode.drawing)
             this.incrementGeneration();
@@ -107,16 +106,17 @@ class Game extends Component {
     }
 
     update(){
-            this.now = Date.now();
-            this.delta = this.now - this.then;
-             
-            if (this.delta > this.interval) {
-                this.then = this.now - (this.delta % this.interval);
 
-                this.updateOnce();
-               
-            }  
-            this.rAF = requestAnimationFrame(() =>{this.update()}); 
+        this.now = Date.now();
+        this.delta = this.now - this.then;
+         
+        if (this.delta > this.interval) {
+            this.then = this.now - (this.delta % this.interval);
+
+            this.updateOnce();
+           
+        }  
+        this.rAF = requestAnimationFrame(() =>{this.update()}); 
 
     }
 
@@ -186,6 +186,7 @@ class Game extends Component {
     };  
 
     setInterval(value){
+        
         this.interval=1000/value;
         this.setSpeed(value)
     }
@@ -234,7 +235,9 @@ class Game extends Component {
 
 
     start(){
+
         if(!this.startPressed && !this.mode.clear){
+
             this.changeButtonPressedStatus("start");
             this.then = Date.now();
             this.mode.drawing=false;
@@ -256,7 +259,7 @@ class Game extends Component {
     clear(){
         
         if(!this.mode.clear){
-            console.log("da")
+            // console.log("da")
             this.stop();
             this.setClear();
             this.mode.clear = true;
@@ -288,9 +291,9 @@ class Game extends Component {
 
     componentDidMount(){
     
-    this.interval=1000/this.props.fps;this.interval=1000/this.props.fps;
-    const ratio = this.state.screen ? this.state.screen.ratio : window.devicePixelRatio || 1
-       if(!this.props.cellsList){
+        // this.interval=1000/this.props.fps;
+        const ratio = this.state.screen ? this.state.screen.ratio : window.devicePixelRatio || 1
+        if(!this.props.cellsList){
 
             this.mode.clear=false;
             this.grid.makeBoard(this.gridWidth,this.gridHeight,this.squareSize,ratio,this.canvasBoard,null);
@@ -303,8 +306,8 @@ class Game extends Component {
         }
 
         if(this.props.error){
-                this.handleOpenErrorDialog()
-            }
+            this.handleOpenErrorDialog()
+        }
     
     }
 
@@ -326,8 +329,7 @@ class Game extends Component {
     };
     
     render() {
-        const patterns = this.props.patterns;
-        const Loading = () => (<div>Loading...</div>)
+        const {patterns} = this.props;
         const screen = this.state.screen ? this.state.screen : {};
     
       	return (
@@ -398,8 +400,6 @@ class Game extends Component {
                                         handlePlayToggle={() => this.handlePlayToggle()}
                                         step={() => this.step()}
                                         clear={() => this.clear()}
-                                        color='rgba(0, 0, 0, .7)'
-                                        fps={this.props.fps}
                                         setInterval={(v) => this.setInterval(v)}
                                         
                                         />
@@ -484,7 +484,6 @@ Game.propTypes = {
     setGameValues: PropTypes.func.isRequired,
     patternNamesIndex: PropTypes.number,
     gridSizesIndex: PropTypes.number,
-    fps: PropTypes.number,
     error: PropTypes.bool,
 };
 

@@ -32,9 +32,7 @@ var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProp
 
 var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
-var _jsxFileName = 'C:\\folder\\new\\gol\\components\\SpeedSlider.js'; // import 'rc-slider/assets/index.css';
-// import styleSheet from '../statics/rc-slider/index.css';
-// import Tooltip from 'rc-tooltip';
+var _jsxFileName = 'C:\\folder\\new\\gol\\components\\SpeedSlider.js';
 
 var _react = require('react');
 
@@ -60,38 +58,25 @@ var _Handle = require('./Handle');
 
 var _Handle2 = _interopRequireDefault(_Handle);
 
+var _reactRedux = require('react-redux');
+
 function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : { default: obj };
 }
 
-// import Slider from 'react-rangeslider'
-// import Slider from 'react-bootstrap-slider';
-// import ReactBootstrapSlider from 'react-bootstrap-slider';
-
-
 var style = {
     width: 60,
     height: 40
-    // marginTop: 20,
-    // marginLeft: 20
-};
-var styleSmall = {
-    // width: 52,
-    // height: 32,
-    // paddingTop: 40,
-    // marginLeft: 20
 };
 
-var handle = function handle(props) {
-    var value = props.value,
-        dragging = props.dragging,
-        index = props.index,
-        restProps = (0, _objectWithoutProperties3.default)(props, ['value', 'dragging', 'index']);
+var handle = function handle(_ref) {
+    var fps = _ref.fps,
+        Props = (0, _objectWithoutProperties3.default)(_ref, ['fps']);
 
-    return _react2.default.createElement(_Handle2.default, (0, _extends3.default)({ value: value, style: { borderColor: 'black' } }, restProps, {
+    return _react2.default.createElement(_Handle2.default, (0, _extends3.default)({ value: fps, style: { borderColor: 'black' } }, Props, {
         __source: {
             fileName: _jsxFileName,
-            lineNumber: 36
+            lineNumber: 22
         }
     }));
 };
@@ -105,9 +90,9 @@ var SpeedSlider = function (_Component) {
     }
 
     (0, _createClass3.default)(SpeedSlider, [{
-        key: 'shouldComponentUpdate',
-        value: function shouldComponentUpdate(nextProps) {
-            return nextProps.value !== this.props.value;
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            this.props.onChange(this.props.fps);
         }
     }, {
         key: 'render',
@@ -116,22 +101,21 @@ var SpeedSlider = function (_Component) {
 
             return _react2.default.createElement('div', { style: style, __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 51
+                    lineNumber: 35
                 }
             }, _react2.default.createElement(_rcSlider2.default, {
 
                 min: 2,
                 max: 60,
                 step: 2,
-                value: this.props.value,
-                handleStyle: { borderColor: 'black' },
+                value: this.props.fps,
                 onChange: function onChange(v) {
                     return _this2.props.onChange(v);
                 },
                 handle: handle,
                 __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 53
+                    lineNumber: 37
                 }
             }));
         }
@@ -139,22 +123,15 @@ var SpeedSlider = function (_Component) {
     return SpeedSlider;
 }(_react.Component);
 
-exports.default = SpeedSlider;
+var mapStateToProps = function mapStateToProps(_ref2) {
+    var fps = _ref2.fps;
+    return { fps: fps };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(SpeedSlider);
 
 SpeedSlider.propTypes = {
     value: _propTypes2.default.number.isRequired,
     onChange: _propTypes2.default.func.isRequired
-
-    // return ( 
-    // <div>
-    // {this.props.size == 'small'? (
-    //     <Slider style={styleSmall} min={2} max={60} step={2} handleStyle={{borderColor: 'black',}} value={this.props.value} handle={handle}  onChange={(e,v) => this.props.onChange(e,v)}/>
-    // ) : (
-    //     <Slider style={style} min={2} max={60} step={2} value={this.props.value} handle={handle} onChange={(v) => this.props.onChange(v)}/>
-    // )}
-    // </div>
-
-    // );
-
 };
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbXBvbmVudHNcXFNwZWVkU2xpZGVyLmpzIl0sIm5hbWVzIjpbInN0eWxlIiwid2lkdGgiLCJoZWlnaHQiLCJzdHlsZVNtYWxsIiwiaGFuZGxlIiwicHJvcHMiLCJ2YWx1ZSIsImRyYWdnaW5nIiwiaW5kZXgiLCJyZXN0UHJvcHMiLCJib3JkZXJDb2xvciIsIlNwZWVkU2xpZGVyIiwibmV4dFByb3BzIiwidiIsIm9uQ2hhbmdlIiwicHJvcFR5cGVzIiwibnVtYmVyIiwiaXNSZXF1aXJlZCIsImZ1bmMiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7dUVBQUE7QUFDQTtBQUNBOztBQUNBOzs7O0FBQ0E7Ozs7QUFDQTs7OztBQUNBOzs7O0FBQ0E7Ozs7QUFDQTs7Ozs7Ozs7QUFDQTtBQUNBO0FBQ0E7OztBQUlBLElBQU07V0FBUSxBQUNILEFBQ1A7WUFBUSxBQUNSO0FBQ0E7QUFKSixBQUFjO0FBQUEsQUFDVjtBQUtKLElBQU07QUFFRjtBQUNBO0FBQ0E7QUFKSixBQUFtQjtBQUFBLEFBQ2Y7O0FBU0osSUFBTSxTQUFTLFNBQVQsQUFBUyxPQUFBLEFBQUMsT0FBVTtRQUFBLEFBQ2hCLFFBRGdCLEFBQ3lCLE1BRHpCLEFBQ2hCO1FBRGdCLEFBQ1QsV0FEUyxBQUN5QixNQUR6QixBQUNUO1FBRFMsQUFDQyxRQURELEFBQ3lCLE1BRHpCLEFBQ0M7UUFERCxBQUNXLG1EQURYLEFBQ3lCLDZCQUNqRDs7b0ZBRVksT0FBUixBQUFlLE9BQU8sT0FBTyxFQUFDLGFBQTlCLEFBQTZCLEFBQWMsYUFBM0MsQUFBMEQ7O3NCQUExRDt3QkFGSixBQUVJLEFBR0w7QUFISztBQUFBLE1BQUE7QUFKTjs7SUFVcUIsQTs7Ozs7Ozs7Ozs4Q0FHSyxBLFdBQVcsQUFDN0I7bUJBQU8sVUFBQSxBQUFVLFVBQVcsS0FBQSxBQUFLLE1BQWpDLEFBQXVDLEFBQzFDOzs7O2lDQUVRO3lCQUNMOzttQ0FDRSxjQUFBLFNBQUssT0FBTCxBQUFZOzhCQUFaO2dDQUFBLEFBRUU7QUFGRjthQUFBOztxQkFFRSxBQUVPLEFBQ0w7cUJBSEYsQUFHTyxBQUNMO3NCQUpGLEFBSVEsQUFDTjt1QkFBTyxLQUFBLEFBQUssTUFMZCxBQUtvQixBQUNqQjs2QkFBYSxFQUFDLGFBTmpCLEFBTWdCLEFBQWMsQUFDNUI7MEJBQVUsa0JBQUEsQUFBQyxHQUFEOzJCQUFPLE9BQUEsQUFBSyxNQUFMLEFBQVcsU0FBbEIsQUFBTyxBQUFvQjtBQVB2QyxBQVFFO3dCQVJGLEFBUVU7OzhCQVJWO2dDQUhKLEFBQ0UsQUFFRSxBQWNQO0FBZE87QUFFRTs7Ozs7O2tCQWJPLEE7O0FBOEJyQixZQUFBLEFBQVk7V0FDRCxvQkFBQSxBQUFVLE9BREcsQUFDSSxBQUN4QjtjQUFVLG9CQUFBLEFBQVUsS0FBSyxBQUdyQjs7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUVBOztBQWRSLEFBQXdCOztBQUFBLEFBQ3BCIiwiZmlsZSI6IlNwZWVkU2xpZGVyLmpzIiwic291cmNlUm9vdCI6IkM6L2ZvbGRlci9uZXcvZ29sIn0=
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbXBvbmVudHNcXFNwZWVkU2xpZGVyLmpzIl0sIm5hbWVzIjpbInN0eWxlIiwid2lkdGgiLCJoZWlnaHQiLCJoYW5kbGUiLCJmcHMiLCJQcm9wcyIsImJvcmRlckNvbG9yIiwiU3BlZWRTbGlkZXIiLCJwcm9wcyIsIm9uQ2hhbmdlIiwidiIsIm1hcFN0YXRlVG9Qcm9wcyIsInByb3BUeXBlcyIsInZhbHVlIiwibnVtYmVyIiwiaXNSZXF1aXJlZCIsImZ1bmMiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQUFBOzs7O0FBQ0E7Ozs7QUFDQTs7OztBQUNBOzs7O0FBQ0E7Ozs7QUFDQTs7OztBQUNBOzs7Ozs7QUFJQSxJQUFNO1dBQVEsQUFDSCxBQUNQO1lBRkosQUFBYyxBQUVGO0FBRkUsQUFDVjs7QUFPSixJQUFNLFNBQVMsU0FBVCxBQUFTLGFBQXVCO1FBQXBCLEFBQW9CLFdBQXBCLEFBQW9CO1FBQVosQUFBWSxzREFDbEM7O29GQUVZLE9BQVIsQUFBZSxLQUFLLE9BQU8sRUFBQyxhQUE1QixBQUEyQixBQUFjLGFBQXpDLEFBQXdEOztzQkFBeEQ7d0JBRkosQUFFSSxBQUdQO0FBSE87QUFBQSxNQUFBO0FBSFI7O0lBUU0sQTs7Ozs7Ozs7Ozs2Q0FFbUIsQUFDakI7aUJBQUEsQUFBSyxNQUFMLEFBQVcsU0FBUyxLQUFBLEFBQUssTUFBekIsQUFBK0IsQUFDbEM7Ozs7aUNBRVE7eUJBQ0w7O21DQUNJLGNBQUEsU0FBSyxPQUFMLEFBQVk7OEJBQVo7Z0NBQUEsQUFFSTtBQUZKO2FBQUE7O3FCQUVJLEFBRU8sQUFDTDtxQkFIRixBQUdPLEFBQ0w7c0JBSkYsQUFJUSxBQUNOO3VCQUFPLEtBQUEsQUFBSyxNQUxkLEFBS29CLEFBQ2xCOzBCQUFVLGtCQUFBLEFBQUMsR0FBRDsyQkFBTyxPQUFBLEFBQUssTUFBTCxBQUFXLFNBQWxCLEFBQU8sQUFBb0I7QUFOdkMsQUFPRTt3QkFQRixBQU9VOzs4QkFQVjtnQ0FIUixBQUNJLEFBRUksQUFhWDtBQWJXO0FBRUU7Ozs7OztBQWNsQixJQUFNLGtCQUFpQixTQUFqQixBQUFpQix1QkFBQTtRQUFBLEFBQUUsWUFBRixBQUFFO1dBQVUsRUFBQyxLQUFiLEFBQVk7QUFBbkM7O2tCQUVnQix5QkFBQSxBQUFRLGlCQUFSLEEsQUFBeUI7O0FBRXpDLFlBQUEsQUFBWTtXQUNELG9CQUFBLEFBQVUsT0FERyxBQUNJLEFBQ3hCO2NBQVUsb0JBQUEsQUFBVSxLQUZ4QixBQUF3QixBQUVLO0FBRkwsQUFDcEIiLCJmaWxlIjoiU3BlZWRTbGlkZXIuanMiLCJzb3VyY2VSb290IjoiQzovZm9sZGVyL25ldy9nb2wifQ==

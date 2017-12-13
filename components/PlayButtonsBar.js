@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
-import Button1 from './Button1';
 import SpeedSlider from './SpeedSlider';
 import Generation from './Generation';
 import PlayArrow from 'material-ui-icons/PlayArrow';
@@ -13,6 +12,7 @@ import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import ToggleIcon from 'material-ui-toggle-icon';
 import pure from 'recompose/pure'
+import {colors as color} from '../helpers/colors';
 
 
 const styles = theme => ({
@@ -32,6 +32,7 @@ const styles = theme => ({
          // border: '1px solid blue',
          // padding: 0,
          // margin: 0,
+         color:color.BUTTON,
          width: 35,
           height: 35,
           },
@@ -119,33 +120,33 @@ const PlayButtonsBar = (props) => {
             <div className={props.classes.bar}>
                 <div className={props.classes.controls}>
                     <div  className={props.classes.item}>
-                        <IconButton className={props.classes.button} aria-label="Play"  onClick = {() => props.handlePlayToggle()}>
+                        <IconButton className={props.classes.button} title={props.on?"Start":"Pause"} onClick = {() => props.handlePlayToggle()}>
                             <ToggleIcon
                                 on={props.on}
-                                onIcon={<PlayArrow className={props.classes.icon} />}
+                                onIcon={<PlayArrow className={props.classes.icon}/>}
                                 offIcon={<Pause className={props.classes.icon} />}
-                                color = {props.color} 
+                                 
                               />
                         </IconButton>
                
                     </div>
                     <div  className={props.classes.item}>
-                        <IconButton className={props.classes.button} onClick = {() => props.step()} >
-                            <SkipNext className={props.classes.icon} color = {props.color}/>
+                        <IconButton className={props.classes.button} title="Next Generation" onClick = {() => props.step()} >
+                            <SkipNext className={props.classes.icon}/>
                         </IconButton>
                     
                     </div>
                     <div  className={props.classes.item}>
-                        <IconButton className={props.classes.button} onClick = {() => props.clear()} >
-                            <Clear  className={props.classes.icon} color = {props.color}/>
+                        <IconButton className={props.classes.button} title="Clear" onClick = {() => props.clear()} >
+                            <Clear  className={props.classes.icon}/>
                         </IconButton>
                     </div>
-                    <div className={props.classes.slider}>
-                    <SpeedSlider value={props.fps} onChange={(v) => props.setInterval(v)}/>
+                    <div className={props.classes.slider} title="Set Speed">
+                    <SpeedSlider onChange={(v) => props.setInterval(v)}/>
                     </div>
                 </div>
                 <div>
-                    <div className={props.classes.generation}>
+                    <div className={props.classes.generation} title="Generation">
                     <Generation />
                     </div>
                 </div>
@@ -166,7 +167,6 @@ PlayButtonsBar.propTypes = {
     color: PropTypes.string.isRequired,
     step: PropTypes.func.isRequired,
     clear: PropTypes.func.isRequired,
-    fps: PropTypes.number.isRequired,
     setInterval: PropTypes.func.isRequired,
     // generationCount: PropTypes.number.isRequired,
 };

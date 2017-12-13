@@ -143,7 +143,7 @@ export function makeUnique(checkList){
 
 // }
 
-export function shiftToCenter(pattern,boardHeight,boardWidth){
+export function shiftPatternToCenter(pattern,boardHeight,boardWidth){
     const patternSize = getPatternSize(pattern)
     const center = [Math.floor((boardHeight - 1) / 2), Math.floor((boardWidth - 1) / 2)]
     const trans = [Math.floor((patternSize.maxY - patternSize.minY) / 2), Math.floor((patternSize.maxX - patternSize.minX) / 2)]
@@ -159,6 +159,14 @@ export function shiftToCenter(pattern,boardHeight,boardWidth){
     return result;
 }
 
+export function shiftPattern(pattern,vertShift,horShift){
+    return pattern.map(cell => {
+        const y = cell[0] + vertShift
+        // console.log(y+ "pat");
+        const x = cell[1] + horShift
+        return [y,x];
+    });
+}
 // export function alterNextGenerationChangeCellsList(nextGenerationChangeCellsList,valuesBoard,clickedCell){
 //     console.log(nextGenerationChangeCellsList);
 //     const ind = nextGenerationChangeCellsList.indexOf(clickedCell);

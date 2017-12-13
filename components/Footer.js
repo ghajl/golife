@@ -4,14 +4,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import SvgIcon from 'material-ui/SvgIcon';
 import Grid from 'material-ui/Grid';
+import {colors as color} from '../helpers/colors';
 
-const styles = {
-	icon: {
-        'border-radius': '50%',
-		border: '1px solid rgba(0, 0, 0, .6)',
-	}
-
-}
 
 const Footer = ({classes, screen}) => {
 	const direction = screen.width < 600 ? 'column' : 'row';
@@ -31,25 +25,12 @@ const Footer = ({classes, screen}) => {
     	    	} else {
     	    		push.style.height = height + 'px';
     	    	}
-    	    	console.log(heightFooter)
-    	    	console.log(bottomPush)
-    	    	
-    	    	console.log(screen.height)
-    	    	// if (Math.floor(heightFooter) + Math.floor(heightPush) + Math.floor(topPush) <= screen.height){
-    	    	// 	console.log("cc")
-    	    	// 	push.style.height = screen.height - Math.floor(heightFooter) - Math.floor(topPush) + 'px';
-    	    	// } else {
-    	    	// 	console.log("cc2")
-    	    	// 	push.style.height = 0;
-    	    	// }
-    	    	console.log(push.style.height)
-    	    	// console.log(screen.height)
     	    }
     }
 	return (
 		<div className="wrapper">
 		
-		<div className="footer">
+		
 		<Grid container spacing={0} justify={"center"} direction={direction} alignItems={align}>
                 
 		
@@ -109,56 +90,35 @@ const Footer = ({classes, screen}) => {
 			</div>		
 		</Grid>	
 		</Grid>
-		</div>
+		
 		<style jsx >{`
 			.wrapper {
 				margin-top: 2em;
-				border-bottom: 10px solid rgba(162,215,41,.5);
-				background-color: rgba(196,196,196,.1);
+				border-bottom: 10px solid ${color.FOOTER_BOTTOM};
+				background-color: ${color.FOOTER_TOP};
 			}
-			.footer {
-				// display: block;
-				// justify-content: center;
-				// flex-wrap: wrap;
-				// width: 50%;
-				// border-top: 1px solid rgba(1,111,185,.8);
-				 // position:absolute;
-			  //  bottom:0;
-			  //  width:100%;
-			   // height:60px;
-			    // width: 100%;
-		// 		display: flex;
-  // justify-content: center;
-			}
-			// .footer::before {
-			// 	content: '""';
-			// 	height: 20px;
-			// 	visibility: hidden;
-			// 	display: block;
-			// 	width: 100%;
-			// }
 			.icon {
 				transition: .4s;
 				border-radius: 50%;
-				border: 1px solid rgba(1,22,39,.7);//rgb(255,185,5)
+				border: 1px solid ${color.FOOTER_LINK};
 				padding: 5px;
 				margin: .5em;
 			}
 			.icon:hover {
-				border-color: black;
-				background-color: black;
-				fill: white;
+				border-color: ${color.FOOTER_LINK_ACTIVE};
+				background-color: ${color.FOOTER_LINK_ACTIVE};
+				fill: ${color.FOOTER_LINK_ICON_ACTIVE};
 			}
 			a:hover  {
 				
 				
-				color: black;
+				color: ${color.FOOTER_LINK_ACTIVE};
 				// fill: black;
 			}
 			a {
 				// transition: .4s;
-				color: rgba(1,22,39,.7);
-				fill: rgba(1,22,39,.7);
+				color: ${color.FOOTER_LINK};
+				fill: ${color.FOOTER_LINK};
 			}
 			.item {
 				display: flex;
@@ -170,10 +130,7 @@ const Footer = ({classes, screen}) => {
 			.link {
 				margin: 5px 20px 5px;
 			}
-			// svg {
-			// 	width: 20px;
-			// 	height: 20px;
-			// }
+
 		`}						
 		</style> 
 		
@@ -183,4 +140,4 @@ const Footer = ({classes, screen}) => {
 }
 
 
-export default withStyles(styles)(Footer);
+export default Footer;

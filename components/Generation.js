@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {colors as color} from '../helpers/colors';
 
 
 const Generation =({generationCount}) => {
@@ -9,11 +10,11 @@ const Generation =({generationCount}) => {
 	    <div className="generation">
 	      	{generationCount}
 			<style jsx global>{`
-                 .generation {
-					color: rgba(255,0,0,.8);
+                .generation {
+					color: ${color.GENERATION};
 					font-size: 1.5em;
 			        text-align: right;
-                 }
+                }
                  
             `}</style>
       	</div>
