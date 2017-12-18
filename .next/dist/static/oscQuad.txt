@@ -1,1 +1,0 @@
-module.exports = "0c1c4c5\r\n0c2c5\r\n4\r\n1\r\n0c3c5\r\n0c1c4c5"

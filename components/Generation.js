@@ -7,16 +7,16 @@ import {colors as color} from '../helpers/colors';
 const Generation =({generationCount}) => {
 
     return (
-	    <div className="generation">
-	      	{generationCount}
-			<style jsx global>{`
-                .generation {
-					color: ${color.GENERATION};
-					font-size: 1.5em;
-			        text-align: right;
-                }
-                 
-            `}</style>
+  	    <div className="generation">
+  	      	{generationCount}
+  			<style jsx global>{`
+            .generation {
+				color: ${color.GENERATION};
+				font-size: 1.5em;
+		        text-align: right;
+            }
+                       
+        `}</style>
       	</div>
     );
 }
@@ -26,5 +26,5 @@ export default (connect(mapStateToProps)(Generation));
 
 
 Generation.propTypes = {
-  generationCount: PropTypes.number.isRequired,
+    generationCount: PropTypes.number.isRequired,
 };

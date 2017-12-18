@@ -146,7 +146,7 @@ class Game extends Component {
             } else {
                 this.stop();
         
-        this.updateOnce();
+                this.updateOnce();
             }
 
         }
@@ -331,7 +331,7 @@ class Game extends Component {
     render() {
         const {patterns} = this.props;
         const screen = this.state.screen ? this.state.screen : {};
-    
+     
       	return (
             
             <div className="gameBoard">
@@ -351,7 +351,6 @@ class Game extends Component {
                                             gridSizesLabel={this.gridSizesLabel}
                                             changeBoardSizeEventHandler={(v) => this.changeBoardSizeEventHandler(v)}
                                             gridLabel="Board Size"
-                                            justify="center"
                                             
                                             />
                                     </div>
@@ -402,7 +401,7 @@ class Game extends Component {
                                         clear={() => this.clear()}
                                         setInterval={(v) => this.setInterval(v)}
                                         
-                                        />
+                                    />
                                 </Grid>
                             </Grid>
                         </Grid>                               

@@ -6,21 +6,29 @@ import { withStyles } from 'material-ui/styles';
 import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 
-const styles = {
-
+const styles = theme => ({
+    container: {
+        textAlign: 'center',
+    },
 	item: {
-		width:'100%',
+        [theme.breakpoints.up('xs')]: {
+            width:'50%',
+        },
+        [theme.breakpoints.up('md')]: {
+            width:'100%',
+        },
+        display: 'inline-block',
+		
 		maxWidth:360
 	}
-}
+})
 
-const SelectButtonsBar = (props) => {
-
-// console.log(props.patternValue)
+const SelectButtonsBar = ({direction, ...props}) => {
+    let width = direction == 'column' ? '100%' : null;
 	return (
 		
-		<Grid container spacing={0} direction={props.direction} justify={props.justify}>
-			<Grid item xs className={props.classes.item}>
+		<div className={props.classes.container} >
+			<div className={props.classes.item} style={{width:width}}>
                 <Select
                     
                     index={props.patternNamesIndex}
@@ -29,8 +37,8 @@ const SelectButtonsBar = (props) => {
                     onChange={(v) => props.changePatternEvent(v)}
                     label={props.patternLabel}
                 />
-            </Grid>
-            <Grid item xs className={props.classes.item}>
+            </div>
+            <div className={props.classes.item} style={{width:width}}>
                 <Select
                     
                     index={props.gridSizesIndex}
@@ -39,8 +47,8 @@ const SelectButtonsBar = (props) => {
                     onChange={(v) => props.changeBoardSizeEventHandler(v)}
                     label={props.gridLabel}
                 />
-            </Grid>
-		</Grid>
+            </div>
+		</div>
 		
 	);
 }
@@ -61,3 +69,26 @@ SelectButtonsBar.propTypes = {
     changeBoardSizeEventHandler: PropTypes.func.isRequired,
     gridLabel: PropTypes.string.isRequired,
 };
+
+        // <Grid container spacing={0} direction={props.direction} justify={props.justify}>
+        //     <Grid item xs className={props.classes.item}>
+        //         <Select
+                    
+        //             index={props.patternNamesIndex}
+        //             items={props.patternNames}
+                    
+        //             onChange={(v) => props.changePatternEvent(v)}
+        //             label={props.patternLabel}
+        //         />
+        //     </Grid>
+        //     <Grid item xs className={props.classes.item}>
+        //         <Select
+                    
+        //             index={props.gridSizesIndex}
+        //             items={props.gridSizesLabel}
+                    
+        //             onChange={(v) => props.changeBoardSizeEventHandler(v)}
+        //             label={props.gridLabel}
+        //         />
+        //     </Grid>
+        // </Grid>

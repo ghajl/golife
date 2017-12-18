@@ -74,9 +74,10 @@ const styles = {
 const Header = (props) => {
         const classes = props.classes;
         const isSmall = props.screen.width < 480;
-        console.log(props.url.pathname === '/')
+        
         return (
         <div className={classes.nav}>
+        
             {isSmall ? (
             <div className={classes.title}><Link prefetch href="/">
                 

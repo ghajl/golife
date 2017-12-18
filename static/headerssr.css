@@ -1,0 +1,27 @@
+
+.front {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;  
+    background: white;
+    -webkit-animation: moveRight 500ms linear forwards;
+    animation: moveRight 500ms linear forwards;
+    
+}
+@keyframes moveRight {
+
+  100% {
+
+    
+    transform: scaleX(0);
+  }
+}
+@-webkit-keyframes moveRight {
+
+  100% {
+  	
+	-webkit-transform: scaleX(0);
+  }
+}

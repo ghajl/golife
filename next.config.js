@@ -36,7 +36,11 @@ module.exports = {
         use: 'raw-loader'
       } 
     )
+    
     return config
   }
 
 }
+
+// ,
+//   entry: ["babel-polyfill", "./app/js"]

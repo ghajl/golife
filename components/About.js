@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
-import YouTube from 'react-youtube';
+import YouTube from './YouTubePlayer';
 import GameGrid from '../helpers/GameGrid';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
-import ToggleIcon from 'material-ui-toggle-icon';
+import ToggleIcon from './ToggleIcon';
 import PlayArrow from 'material-ui-icons/PlayArrow';
 import Pause from 'material-ui-icons/Pause';
 import {boardNames as boardName} from '../helpers/boardNames'
@@ -304,9 +304,9 @@ class About extends Component {
     	    	<div className={classes.video}>
                 <YouTube
                   videoId="R9Plq-D1gEk"                  
-                  opts={{width:'100%', playerVars: {showinfo:0, rel:0}}}    
-        
-
+                  showinfo={0}
+                  rel={0}    
+                  
                 />
                 John H. Conway on the creation of his Game of Life
                 </div>
@@ -314,9 +314,9 @@ class About extends Component {
                 <div className={classes.video}>
                 <YouTube
                   videoId="CgOcEZinQ2I"                  
-                  opts={{width:'100%', playerVars: {showinfo:0, rel:0}}}    
-        
-
+                  showinfo={0}
+                  rel={0}    
+                    
                 />
                 Fragment from Stephen Hawking`s The Meaning of Life
                 </div>
@@ -365,50 +365,50 @@ class About extends Component {
     	    	Stable finite patterns.
     	    	</p>
     	    	<div  className={classes.boardsSection} >
-    	    	<Grid container spacing={16} >
+    	    	
     	   
     			    
     			    
-    			    <Grid item xs>
+    			    
                         <BoardElement 
                             width = {this.examples[boardName.BLOCK].canvasWidth}
                             patternName = {this.examples[boardName.BLOCK].name}
                             withButton = {false}
                             setCanvas = {el => this.examples[boardName.BLOCK].canvas = el}
                         />
-    			    </Grid>
     			    
     			    
-    			    <Grid item xs>
+    			    
+    			    
                         <BoardElement 
                             width = {this.examples[boardName.BOAT].canvasWidth}
                             patternName = {this.examples[boardName.BOAT].name}
                             withButton = {false}
                             setCanvas = {el => this.examples[boardName.BOAT].canvas = el}
                         />
-    			    </Grid>
+    			   
     			   
     			    
-    			    <Grid item xs>
+    			    
                         <BoardElement 
                             width = {this.examples[boardName.LOAF].canvasWidth}
                             patternName = {this.examples[boardName.LOAF].name}
                             withButton = {false}
                             setCanvas = {el => this.examples[boardName.LOAF].canvas = el}
                         />
-    			    </Grid>
     			    
     			    
-    			    <Grid item xs>
+    			    
+    			    
                         <BoardElement 
                             width = {this.examples[boardName.BEEHIVE].canvasWidth}
                             patternName = {this.examples[boardName.BEEHIVE].name}
                             withButton = {false}
                             setCanvas = {el => this.examples[boardName.BEEHIVE].canvas = el}
                         />
-    	            </Grid>
+    	            
     			   
-    		    </Grid>
+    		    
     		    </div>
     			<h4 className={classes.title}>
     		    Oscillators 
@@ -418,10 +418,7 @@ class About extends Component {
                 The most common period-2 oscillators include:
     	    	</p>
     	    	<div  className={classes.boardsSection} >
-    	    	<Grid container spacing={16}>
-    	   
-    			    
-    			    <Grid item xs>
+    	    	
                         <BoardElement 
                             width = {this.examples[boardName.BLINKER].canvasWidth}
                             patternName = {this.examples[boardName.BLINKER].name}
@@ -431,10 +428,7 @@ class About extends Component {
                             setCanvas = {el => this.examples[boardName.BLINKER].canvas = el}
                             handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.BLINKER])}
                         />
-    			    </Grid>
     			    
-    			    
-    			    <Grid item xs> 
                         <BoardElement 
                             width = {this.examples[boardName.BEACON].canvasWidth}
                             patternName = {this.examples[boardName.BEACON].name}
@@ -445,9 +439,7 @@ class About extends Component {
                             handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.BEACON])}
                         />                    
     
-    			    </Grid>
     			    
-    			    <Grid item xs >
                         <BoardElement 
                             width = {this.examples[boardName.TOAD].canvasWidth}
                             patternName = {this.examples[boardName.TOAD].name}
@@ -457,9 +449,7 @@ class About extends Component {
                             setCanvas = {el => this.examples[boardName.TOAD].canvas = el}
                             handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.TOAD])}
                         />                    
-    			    </Grid>
-
-                    <Grid item xs >
+    			    
                         <BoardElement 
                             width = {this.examples[boardName.GLASSES].canvasWidth}
                             patternName = {this.examples[boardName.GLASSES].name}
@@ -469,9 +459,7 @@ class About extends Component {
                             setCanvas = {el => this.examples[boardName.GLASSES].canvas = el}
                             handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.GLASSES])}
                         />                    
-                    </Grid>
-
-                    <Grid item xs >
+                    
                         <BoardElement 
                             width = {this.examples[boardName.QUAD].canvasWidth}
                             patternName = {this.examples[boardName.QUAD].name}
@@ -481,9 +469,7 @@ class About extends Component {
                             setCanvas = {el => this.examples[boardName.QUAD].canvas = el}
                             handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.QUAD])}
                         />                    
-                    </Grid>
-    			    
-    		    </Grid>
+                    
     		    </div>
     			<h4 className={classes.title}>
     		    Gliders and Spaceships
@@ -496,10 +482,7 @@ class About extends Component {
     	    	They each move in a straight line.
     	    	</p>
     	    	<div  className={classes.boardsSection} >
-    	    	<Grid container spacing={16}>
-    	   
-    			    
-    			    <Grid item xs> 
+    	    	
                         <BoardElement 
                             width = {this.examples[boardName.GLIDER].canvasWidth}
                             patternName = {this.examples[boardName.GLIDER].name}
@@ -509,10 +492,7 @@ class About extends Component {
                             setCanvas = {el => this.examples[boardName.GLIDER].canvas = el}
                             handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.GLIDER])}
                         />                    
-    			    </Grid>
-    			   
-
-    			    <Grid item xs> 
+    			    
                         <BoardElement 
                             width = {this.examples[boardName.SPACESHIP].canvasWidth}
                             patternName = {this.examples[boardName.SPACESHIP].name}
@@ -522,10 +502,7 @@ class About extends Component {
                             setCanvas = {el => this.examples[boardName.SPACESHIP].canvas = el}
                             handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.SPACESHIP])}
                         />                    
-    			    </Grid>
-
-    			    
-    		    </Grid>	   
+    			       
     		    </div> 	
     			<h4 className={classes.title}>
     		    Guns
@@ -539,10 +516,7 @@ class About extends Component {
     			This glider moves away in time for the process to repeat itself 30 steps later.
     			</p>
     			<div  className={classes.boardsSection} >
-    			<Grid container spacing={0}>
-    	   
-    			    
-    			    <Grid item xs={12}> 
+    			 
                         <BoardElement 
                             patternName =  {this.examples[boardName.GUN].name}
                             stopped = {this.props.stopped[boardName.GUN]}
@@ -551,10 +525,7 @@ class About extends Component {
                             setCanvas = {el => this.examples[boardName.GUN].canvas = el}
                             handlePlayToggle = {() => this.handlePlayToggle(this.examples[boardName.GUN])}
                         />                    
-   			    </Grid>
-
-    			    
-    		    </Grid>	
+   			    
     		    </div>
     	    	<h2 className={classes.title}>
     	    	Origins
@@ -667,7 +638,7 @@ const patternBoard = (grid,cellsList) => ({grid,cellsList})
 const BoardElement = ({width, patternName, stopped, buttonColor, withButton, ...props}) => {
 
     return (
-    
+    <div className="boardElement">
     <div className="board" style={{width: width, height: "100%"}}>
         <div className="item">
             <div className="canvas">
@@ -695,8 +666,12 @@ const BoardElement = ({width, patternName, stopped, buttonColor, withButton, ...
             {patternName}
             </div>
         </div>
-    
+        </div>
         <style jsx global>{`
+            .boardElement {
+                display: inline-block;
+                margin: 16px 0 0 16px;
+            }
             .board {
                 display: flex;
                 font-size: .7em;

@@ -1,4 +1,3 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
 
 import React, { Component } from 'react';
 import { withStyles, MuiThemeProvider } from 'material-ui/styles';
@@ -11,8 +10,6 @@ const styles = theme => ({
     '@global': {
         html: {
             background: 'white',
-            // WebkitFontSmoothing: 'antialiased', // Antialiasing.
-            // MozOsxFontSmoothing: 'grayscale', // Antialiasing.
             height: '100%',
             fontSize: '14px',
         },
@@ -21,28 +18,22 @@ const styles = theme => ({
             fontFamily: 'Century Gothic', 
             fallbacks:{
                 fontFamily: 'sans-serif',
-            },      
-              // font: 14px "Century Gothic", Futura, sans-serif;
-              // height: '100%',
-            // marginTop:'160px',
-            // paddingTop: '60px', 
+            }, 
+            margin: 0,     
             display: 'flex',
-                        'flex-direction': 'column',
-                        height: '100%',
+            'flex-direction': 'column',
+            height: '100%',
             '& > div:first-child': {
-              height: '100%',
-              flex: '1 0 auto',
-              '& > div': {
-              // height: '100%',
-              // flex: '1 0 auto',
-              '&:first-child': {
-              height: '100%',
-              // flex: '1 0 auto',
-              '& > div': {
                 height: '100%',
-              }
-            }
-            }
+                flex: '1 0 auto',
+                '& > div': {
+                    '&:first-child': {
+                        height: '100%',
+                        '& > div': {
+                            height: '100%',
+                        }
+                    }
+                }
             }
         },
 
@@ -50,29 +41,6 @@ const styles = theme => ({
             'text-decoration': 'none !important',
             outline: 'none',
         },
-        
-        // ol: {
-        //     paddingLeft: '30px',
-
-          
-        // },
-        // ul: {
-        //     paddingLeft: '30px',
-
-          
-        // },
-        // label: {
-        //     fontWeight: 'normal !important',
-        // },
-    // navbar: {
-    //     overflow: 'hidden',
-    //     boxShadow: [0, 3, 15, -6, '#222'],
-    //     position: 'fixed',
-    //     top: 0,
-    //     width: '100%',
-    //      'z-index': 3,
-    //     backgroundColor:"#fff",
-    // },
     },
 });
 

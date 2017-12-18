@@ -37,7 +37,6 @@ class Layout extends React.Component {
             screen: {},
         }
 
-        this.setHeight = this.setHeight.bind(this);
     }
 
 
@@ -53,23 +52,6 @@ class Layout extends React.Component {
                 ratio: window.devicePixelRatio || 1,
               }
         });
-        // this.setHeight(this.footer)
-    }
-    setHeight(el) {
-        if(!this.footer) this.footer = el;
-        if(el && this.push && this.main){
-            console.log("das")
-                let {top: topFooter, bottom: bottomFooter} = el.getBoundingClientRect();
-                let {top: topMain, bottom: bottomMain} = this.main.getBoundingClientRect();
-                let heightMain = bottomMain - topMain;
-                let heightFooter = bottomFooter - topFooter;
-                let height = this.state.screen.height - Math.floor(heightFooter) - Math.floor(heightMain);
-                if(height < 0){
-                    this.push.style.height = 0;
-                } else {
-                    this.push.style.height = height + 'px';
-                }
-            }
     }
     handleWindowSizeChange = () => {
         this.setState({
@@ -79,7 +61,6 @@ class Layout extends React.Component {
                 ratio: window.devicePixelRatio || 1,
               }
         });
-        this.setHeight(this.footer)
     };
 
 
@@ -112,8 +93,7 @@ class Layout extends React.Component {
                         height: 100%;
                     }
                     .Content {
-                        flex: 1 0 auto; /* 2 */
-                        // padding: var(--space) var(--space) 0;
+                        flex: 1 0 auto; 
                         width: 100%;
                     }
                 `}</style>

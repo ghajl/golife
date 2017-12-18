@@ -13,10 +13,12 @@ export function fetchPatterns() {
 export function * loadDataSaga () {
 	    try {
 		    const data = yield call(fetchPatterns);
-		    
+		    // const data = [{ name: 'Glider',
+		    //   pattern: [ [0,1], [0,2] ] }]
+		    // console.log(data) 
 		    yield put(loadDataSuccess(data));
 	    } catch (err) {
-	    
+	    // console.log("data") 
 	        yield put(failure(err));
 	    }
 }
