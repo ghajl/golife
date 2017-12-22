@@ -1,30 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Grid from 'material-ui/Grid';
 import Select from './Select';
 import { withStyles } from 'material-ui/styles';
-import pure from 'recompose/pure';
-import compose from 'recompose/compose';
 
 const styles = theme => ({
     container: {
         textAlign: 'center',
     },
 	item: {
-        [theme.breakpoints.up('xs')]: {
-            width:'50%',
-        },
-        [theme.breakpoints.up('md')]: {
-            width:'100%',
-        },
+        width:'50%',
         display: 'inline-block',
-		
-		maxWidth:360
+		maxWidth:360,
 	}
 })
 
 const SelectButtonsBar = ({direction, ...props}) => {
     let width = direction == 'column' ? '100%' : null;
+
 	return (
 		
 		<div className={props.classes.container} >
@@ -53,7 +45,7 @@ const SelectButtonsBar = ({direction, ...props}) => {
 	);
 }
 
-export default withStyles(styles)(pure(SelectButtonsBar));
+export default withStyles(styles)(SelectButtonsBar);
 
 
 SelectButtonsBar.propTypes = {
@@ -69,26 +61,3 @@ SelectButtonsBar.propTypes = {
     changeBoardSizeEventHandler: PropTypes.func.isRequired,
     gridLabel: PropTypes.string.isRequired,
 };
-
-        // <Grid container spacing={0} direction={props.direction} justify={props.justify}>
-        //     <Grid item xs className={props.classes.item}>
-        //         <Select
-                    
-        //             index={props.patternNamesIndex}
-        //             items={props.patternNames}
-                    
-        //             onChange={(v) => props.changePatternEvent(v)}
-        //             label={props.patternLabel}
-        //         />
-        //     </Grid>
-        //     <Grid item xs className={props.classes.item}>
-        //         <Select
-                    
-        //             index={props.gridSizesIndex}
-        //             items={props.gridSizesLabel}
-                    
-        //             onChange={(v) => props.changeBoardSizeEventHandler(v)}
-        //             label={props.gridLabel}
-        //         />
-        //     </Grid>
-        // </Grid>

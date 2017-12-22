@@ -8,15 +8,12 @@ import {colors as color} from '../helpers/colors';
 
 const styles = {
     nav: {
-
-        
         display: 'flex',
-        flexWrap: 'wrap',
+        // flexWrap: 'wrap',
         'text-transform': 'uppercase',
         justifyContent: 'space-between',
-        '@global a': {
+        '& a': {
             color: color.HEADER_LINK_INACTIVE,
-            
             display: 'block',
             padding: '1em',
             transition: '.2s',
@@ -24,16 +21,9 @@ const styles = {
             fallbacks:{
                 fontFamily: 'sans-serif',
             },
-            // '&:hover': {
-            //     color: color.HEADER_LINK_ACTIVE,
-            //     // background: '#3b80d1',  
-            // }
         },
-        
-        
     },
     title: {
-
         fontWeight: 900,
         'text-transform': 'none',
         fontSize: '1.1em',
@@ -50,25 +40,22 @@ const styles = {
     gameName: {
         color: color.TITLE_GAME,
     },
-    about: {
+    links: {
         display: 'flex',
         fontWeight: 900,
-        '@global a': {
+        '& a': {
             '&:hover': {
                 color: color.HEADER_LINK_ACTIVE,
-                // background: '#3b80d1',  
             }
         },     
-
         fontSize: '1.1em',
-        
         '@media (min-width: 768px)': {
             fontSize: '1.5em',
         }
     },
     active: {
-            color: color.HEADER_LINK_ACTIVE,
-        },
+        color: color.HEADER_LINK_ACTIVE,
+    },
 }
 
 const Header = (props) => {
@@ -79,25 +66,29 @@ const Header = (props) => {
         <div className={classes.nav}>
         
             {isSmall ? (
-            <div className={classes.title}><Link prefetch href="/">
+                <Link prefetch href="/">
+                    <a className={classes.title}>
+                    <span className={classes.gameName}>GoL</span>
+                    </a>
+                </Link>
                 
-                <a><span className={classes.gameName}>GoL</span></a></Link>
-            </div>
-                ) : (
-            <div ><Link prefetch href="/">
-                <a className={classes.title}><span className={classes.authorName}>John Conway`s</span>
-                <span className={classes.gameName}>Game of Life</span></a></Link>
-            </div>
+            ) : (
+                <Link prefetch href="/">
+                    <a className={classes.title}>
+                    <span className={classes.authorName}>John Conway`s</span>
+                    <span className={classes.gameName}>Game of Life</span>
+                    </a>
+                </Link>
             )}
             
     		
             {props.url.pathname === '/' ? (
-                <div className={classes.about}>
+                <div className={classes.links}>
                 <Link prefetch href="/"><a><span className={classes.active}>Play</span></a></Link>
                 <Link prefetch href="/about"><a>Read</a></Link>
                 </div>
             ) : (
-                <div className={classes.about}>
+                <div className={classes.links}>
                 <Link prefetch href="/"><a>Play</a></Link>
                 <Link prefetch href="/about"><a><span className={classes.active}>Read</span></a></Link>
                 </div>

@@ -1,32 +1,9 @@
-import {loadData} from '../actions'
-import Game from '../containers/Game'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Game from './Game'
+import Header from './Header'
+import Footer from './Footer'
 import NoSSR from 'react-no-ssr'
-import HeaderSSR from '../components/HeaderSSR'
-import withRedux from 'next-redux-wrapper'
-import {withReduxSaga} from '../store'
-import { compose, setDisplayName, pure, lifecycle, withProps } from 'recompose'
-import configureStore from '../store'
-import withRoot from '../components/withRoot';
-import injectSheet from 'react-jss';
+import HeaderSSR from './HeaderSSR'
 import stylesheet from '../static/rc-slider/index.css'
-
-const styles = {
-    navbar: {
-        overflow: 'hidden',
-        boxShadow: [0, 3, 15, -6, '#222'],
-        position: 'fixed',
-        top: 0,
-        width: '100%',
-         'z-index': 3,
-        backgroundColor:"#fff",
-    },
-    main: {
-        marginTop: 30,
-        'z-index': 2,
-    }
-}
 
 
 class Layout extends React.Component {
@@ -39,11 +16,7 @@ class Layout extends React.Component {
 
     }
 
-
-
-
     componentDidMount(){
-        // console.log(this.footer);
         window.addEventListener('resize', this.handleWindowSizeChange);
         this.setState({
             screen : {
@@ -69,39 +42,42 @@ class Layout extends React.Component {
             <div className="App">
                 <style dangerouslySetInnerHTML={{ __html: stylesheet }} />
                     <NoSSR onSSR={<HeaderSSR />}>
-                    <div className="Content">
-                    
-                    
-                        <div className={this.props.classes.navbar}>
+                        
+                        <div className="Navbar">
                             <Header url={this.props.url} screen={this.state.screen}/>
                         </div>
-                   
-                    <div>
-                    {this.props.children}
-                    </div>
-                    </div>
+                        <div className="Content">
+                            {this.props.children}
+                        </div>
 
-                <div></div>
-                <div>
-                <Footer screen={this.state.screen}/>
-                </div>
-                </NoSSR>
+                        <Footer screen={this.state.screen}/>
+                    </NoSSR>
                 <style jsx global>{`
                     .App {
                         display: flex;
                         flex-direction: column;
                         height: 100%;
+                        width: 100%;
                     }
                     .Content {
                         flex: 1 0 auto; 
                         width: 100%;
                     }
+                    .Navbar {
+                        overflow: hidden;
+                        box-shadow: 0 3px 15px -6px #222;
+                        position: fixed;
+                        top: 0;
+                        width: inherit;
+                        z-index: 3;
+                        background-color: #fff;
+                    }
                 `}</style>
             </div>
-            )
+        )
     }
 }
 
-export default injectSheet(styles)(Layout)
+export default Layout
 
 

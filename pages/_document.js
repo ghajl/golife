@@ -1,3 +1,4 @@
+//from next.js examples
 import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 import JssProvider from 'react-jss/lib/JssProvider';
@@ -16,21 +17,18 @@ class MyDocument extends Document {
                         name="viewport"
                         content={
                             'user-scalable=0, initial-scale=1, ' +
-                            'minimum-scale=1, width=device-width, height=device-height'
+                            'width=device-width, height=device-height'
                         }
                     />
                     
                     <link
                         rel="stylesheet"
-                        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+                        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Open+Sans|Julius+Sans+One"
                     />
-                    <link 
-                        rel="stylesheet" 
-                        href="https://fonts.googleapis.com/css?family=Open+Sans|Julius+Sans+One"
-                     />
+                    
                     <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-                    </Head>
-                    <body>
+                </Head>
+                <body>
 
                   
                     <Main/>

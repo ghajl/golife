@@ -1,18 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
-import NoSSR from 'react-no-ssr';
 import GameGrid from '../helpers/GameGrid';
 import {colors as color} from '../helpers/colors';
-import Grid from 'material-ui/Grid';
-import {connect} from 'react-redux'
-import withRoot from './withRoot';
-import Link from 'next/link';
 import SelectButtonsBar from './SelectButtonsBar';
 import PlayButtonsBar from './PlayButtonsBar';
 import {boardNames} from '../helpers/boardNames';
 import {boardSizes} from '../helpers/boardSizes';
-import SvgIcon from 'material-ui/SvgIcon';
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -28,8 +22,8 @@ class Game extends Component {
         super(props);
         this.currentBoardSize = boardSizes.medium;
  
-        if(props.cellsList){
-            switch(props.gridSizesIndex){
+        if(props.savedCellList){
+            switch(props.currentGridSizeIndex){
                 case 0: this.currentBoardSize = boardSizes.small; break;
                 case 2: this.currentBoardSize = boardSizes.large; break;
             }
@@ -53,15 +47,13 @@ class Game extends Component {
         }
 
         this.checkList = [];
-        this.mode = {
+        this.boardMode = {
+            playing: false,
+            stopped: false,
             drawing: false,
             clear:true,
         }
-        this.startPressed = false;
-        this.pausePressed = false;
-        this.clearPressed = false;
-        this.stepPressed = false;
-
+        
         this.grid = new GameGrid(boardNames.MAIN, this.gridWidth, this.gridHeight, this.squareSize);
 
         this.changePattern = index => props.changePattern(index);
@@ -71,7 +63,7 @@ class Game extends Component {
         this.incrementGeneration = () => props.incrementGeneration();
         this.setSpeed = fps => props.setSpeed(fps);
         this.setClear = () => props.setClear();
-        this.setGameValues =  (cellsList, size) => props.setGameValues(cellsList, size);
+        this.setGameValues =  (savedCellList, size) => props.setGameValues(savedCellList, size);
 
         this.state = {showMessage: false};
     }
@@ -81,17 +73,15 @@ class Game extends Component {
     reload(boardSize){
 
         this.stop();
-        this.startPressed = false;
-        this.pausePressed = false;
-        this.clearPressed = false;
-        this.stepPressed = false;
         this.currentBoardSize = boardSize;
         this.gridWidth = this.currentBoardSize.width;
         this.gridHeight = this.currentBoardSize.height; 
         this.squareSize = this.currentBoardSize.squareSize;
         this.grid.reload(this.gridWidth,this.gridHeight,this.squareSize,this.canvasBoard);
-        this.mode.clear = true;
-        this.mode.drawing = false;
+        this.boardMode.clear = true;
+        this.boardMode.drawing = false;
+        this.boardMode.playing = false;
+        this.boardMode.stopped = false;
 
     }
 
@@ -99,8 +89,8 @@ class Game extends Component {
 
     updateOnce(){
 
-        this.grid.update(this.mode);
-        if(!this.mode.drawing)
+        this.grid.update(this.boardMode);
+        if(!this.boardMode.drawing)
             this.incrementGeneration();
 
     }
@@ -135,12 +125,12 @@ class Game extends Component {
 
     changePatternEvent(index){
         
-        if(index !== this.props.patternNamesIndex){
+        if(index !== this.props.currentPatternNameIndex){
 
-            this.grid.changePattern(index, this.props.patterns, this.mode);
+            this.grid.changePattern(index, this.props.patterns, this.boardMode);
             this.changePattern(index)
-            if(this.mode.clear){
-                this.mode.clear = false;
+            if(this.boardMode.clear){
+                this.boardMode.clear = false;
                 this.updateOnce();
                 
             } else {
@@ -154,17 +144,11 @@ class Game extends Component {
     }
 
     changeBoardSizeEventHandler(index){
-        if(index !== this.props.gridSizesIndex)
+        if(index !== this.props.currentGridSizeIndex)
         {
-            let size;
-
-            if(index === 0){
-                size = boardSizes.small;
-            } else if(index === 1) {
-                size = boardSizes.medium;
-            } else if(index === 2) {
-                size = boardSizes.large;
-            } 
+            let size = index === 0 ? boardSizes.small 
+                    : index === 1 ? boardSizes.medium
+                    : boardSizes.large;
 
             this.reload(size);
             this.changeBoardSize(index)
@@ -188,35 +172,14 @@ class Game extends Component {
     setInterval(value){
         
         this.interval=1000/value;
-        this.setSpeed(value)
+        this.setSpeed(value);
     }
 
-    changeButtonPressedStatus(buttonPressed){
-
-        this.startPressed = false;
-        this.pausePressed = false;
-        this.clearPressed = false;
-        this.stepPressed = false;        
-        switch(buttonPressed){
-            case "start":
-                this.startPressed = true;
-                break;
-            case "pause":
-                this.pausePressed = true;
-                break;             
-            case "clear":
-                this.clearPressed = true;
-                break;   
-            case "step":
-                this.stepPressed = true;
-               break;              
-        }
-
-    }
+    
 
     handleClick(e){
         
-        this.mode.drawing=true;
+        this.boardMode.drawing=true;
         if(!this.props.stopped[boardNames.MAIN]){
             this.stop();
         }
@@ -224,7 +187,7 @@ class Game extends Component {
         const isCellClicked = this.grid.handleClick(e);
 
         if(isCellClicked){
-                this.mode.clear=false;
+                this.boardMode.clear=false;
                 this.updateOnce();
             
         }
@@ -236,21 +199,23 @@ class Game extends Component {
 
     start(){
 
-        if(!this.startPressed && !this.mode.clear){
+        if(!this.boardMode.playing && !this.boardMode.clear){
 
-            this.changeButtonPressedStatus("start");
+            this.boardMode.playing = true;
+            this.boardMode.stopped = false;
             this.then = Date.now();
-            this.mode.drawing=false;
+            this.boardMode.drawing=false;
             this.setStopped(false);
             this.rAF = requestAnimationFrame(() =>{this.update()});
         }
     }
 
     stop(){
-        if(!this.pausePressed){
+        if(!this.boardMode.stopped){
             
             this.setStopped(true);
-            this.changeButtonPressedStatus("pause");
+            this.boardMode.playing = false;
+            this.boardMode.stopped = true;
             cancelAnimationFrame(this.rAF);
         }
 
@@ -258,22 +223,22 @@ class Game extends Component {
 
     clear(){
         
-        if(!this.mode.clear){
-            // console.log("da")
+        if(!this.boardMode.clear){
             this.stop();
             this.setClear();
-            this.mode.clear = true;
-            this.mode.drawing=false;
+            this.boardMode.clear = true;
+            this.boardMode.drawing=false;
             this.updateOnce();
         }
 
     }
 
     step(){
-        if(!this.startPressed && !this.mode.clear){
-            this.changeButtonPressedStatus("step");
-            if(this.mode.drawing){
-                this.mode.drawing=false;
+        if(!this.boardMode.playing && !this.boardMode.clear){
+            this.boardMode.playing = false;
+            this.boardMode.stopped = true;
+            if(this.boardMode.drawing){
+                this.boardMode.drawing=false;
             }
             this.updateOnce();
         }
@@ -291,20 +256,12 @@ class Game extends Component {
 
     componentDidMount(){
     
-        // this.interval=1000/this.props.fps;
         const ratio = this.state.screen ? this.state.screen.ratio : window.devicePixelRatio || 1
-        if(!this.props.cellsList){
-
-            this.mode.clear=false;
-            this.grid.makeBoard(this.gridWidth,this.gridHeight,this.squareSize,ratio,this.canvasBoard,null);
-            this.updateOnce()
-
-        } else {
-            this.mode.clear = false;
-            this.grid.makeBoard(this.gridWidth,this.gridHeight,this.squareSize,ratio,this.canvasBoard,this.props.cellsList);
-            this.updateOnce();
-        }
-
+        
+        this.boardMode.clear = false;
+        this.grid.makeBoard(this.gridWidth,this.gridHeight,this.squareSize,ratio,this.canvasBoard,this.props.savedCellList);
+        this.updateOnce();
+        
         if(this.props.error){
             this.handleOpenErrorDialog()
         }
@@ -329,99 +286,101 @@ class Game extends Component {
     };
     
     render() {
-        const {patterns} = this.props;
-        const screen = this.state.screen ? this.state.screen : {};
-     
-      	return (
+        const {screen} = this.state;
+        const width = screen.width > 1280 ? '50%' : '100%';
+        const horSelectBarDisplay = screen.width < screen.height ||  screen.width > 1280 ? 'block' : 'none';
+        const vertSelectBarDisplay = screen.width < screen.height ||  screen.width > 1280 ? 'none' : 'inline-block';
+        const canvasAndControlsDisplay = screen.width < screen.height ||  screen.width > 1280 ? 'block' : 'inline-block';
+        const canvasAndControlsWidth = screen.width < screen.height ||  screen.width > 1280 ? '100%' : '70%';
+        
+        return (
             
             <div className="gameBoard">
 
+                <div className="container">
+
+                    <div className="horSelectBar">
+                        <div className="paddingSides">
+                            <SelectButtonsBar 
+                                patternNamesIndex={this.props.currentPatternNameIndex}
+                                patternNames={this.patternNames}
+                                changePatternEvent={(v) => this.changePatternEvent(v)}
+                                patternLabel="Pattern"
+                                gridSizesIndex={this.props.currentGridSizeIndex}
+                                gridSizesLabel={this.gridSizesLabel}
+                                changeBoardSizeEventHandler={(v) => this.changeBoardSizeEventHandler(v)}
+                                gridLabel="Board Size"
+                                
+                                />
+                        </div>
+                    </div>
+
+                    <div className="vertSelectBar">
+                        <SelectButtonsBar 
+                            patternNamesIndex={this.props.currentPatternNameIndex}
+                            patternNames={this.patternNames}
+                            changePatternEvent={(v) => this.changePatternEvent(v)}
+                            patternLabel="Pattern"
+                            gridSizesIndex={this.props.currentGridSizeIndex}
+                            gridSizesLabel={this.gridSizesLabel}
+                            changeBoardSizeEventHandler={(v) => this.changeBoardSizeEventHandler(v)}
+                            gridLabel="Board Size"
+                            
+                            direction="column"
+                            />
+                    </div>
+                    <div className="canvasAndControls">
+                        <div className="canvas">
+                            <div className="paddingSides">
+                                <canvas
+                                    ref={(canvas) => { this.canvasBoard = canvas}}
+                                    onClick={(e) => this.handleClick(e)}
+                                />
+
+                            </div>
+                        </div>
+                        <div className="controls">
+                            <PlayButtonsBar 
+                                on={this.props.stopped[boardNames.MAIN]}
+                                handlePlayToggle={() => this.handlePlayToggle()}
+                                step={() => this.step()}
+                                clear={() => this.clear()}
+                                setInterval={(v) => this.setInterval(v)}
+                                
+                            />
+                        </div>
+                    </div>
+                    
+                </div>
                 
-                <Grid container spacing={0}>
-                            {screen.width < screen.height ||  screen.width > 1280 ? (
-                                <Grid item xs={12}>
-                                    
-                                    <div className="paddingSides">
-                                        <SelectButtonsBar 
-                                            patternNamesIndex={this.props.patternNamesIndex}
-                                            patternNames={this.patternNames}
-                                            changePatternEvent={(v) => this.changePatternEvent(v)}
-                                            patternLabel="Pattern"
-                                            gridSizesIndex={this.props.gridSizesIndex}
-                                            gridSizesLabel={this.gridSizesLabel}
-                                            changeBoardSizeEventHandler={(v) => this.changeBoardSizeEventHandler(v)}
-                                            gridLabel="Board Size"
-                                            
-                                            />
-                                    </div>
-                                        
-                                </Grid>
-                                ):(
-                                <Grid item xs={4}>
-                                    
-                                    
-                            
-                                    <SelectButtonsBar 
-                                        patternNamesIndex={this.props.patternNamesIndex}
-                                        patternNames={this.patternNames}
-                                        changePatternEvent={(v) => this.changePatternEvent(v)}
-                                        patternLabel="Pattern"
-                                        gridSizesIndex={this.props.gridSizesIndex}
-                                        gridSizesLabel={this.gridSizesLabel}
-                                        changeBoardSizeEventHandler={(v) => this.changeBoardSizeEventHandler(v)}
-                                        gridLabel="Board Size"
-                                        
-                                        direction="column"
-                                        />
-                                    
-                                
-                                        
-                                </Grid>
-                                )
-                            }
-
-                        <Grid item lg={3}>
-                            
-                        </Grid>
-                        <Grid item xs>
-                            <Grid container spacing={0}>
-                                <Grid item xs={12} className="paddingSides">
-                                    <canvas
-                                        ref={(canvas) => { this.canvasBoard = canvas}}
-                                        onClick={(e) => this.handleClick(e)}
-                                    />
-
-                                </Grid>
-                            
-                                <Grid item xs={12}>
-                                    <PlayButtonsBar 
-                                        on={this.props.stopped[boardNames.MAIN]}
-                                        handlePlayToggle={() => this.handlePlayToggle()}
-                                        step={() => this.step()}
-                                        clear={() => this.clear()}
-                                        setInterval={(v) => this.setInterval(v)}
-                                        
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Grid>                               
-                        <Grid item lg={3}>
-                                
-                        </Grid>
-                 </Grid>            
-
-               <style jsx global>{`
+               <style jsx >{`
                     .gameBoard {
                         text-align: center;
                         margin-top: 80px;
                         z-index: 2;
 
-                     }
+                    }
                     .paddingSides {
                         padding-left: 10px;
                         padding-right: 10px;
                     }
-                    
+                    .container {
+                        width: ${width};
+                        display: inline-block;
+                    }
+                    .horSelectBar {
+                        display: ${horSelectBarDisplay};
+                    }
+                    .vertSelectBar {
+                        display: ${vertSelectBarDisplay};
+                        width: 25%;
+                        padding: 2px;
+                        vertical-align: top;
+                    }
+                    .canvasAndControls {
+                        display: ${canvasAndControlsDisplay};
+                        width: ${canvasAndControlsWidth}
+                    }
               `}</style>
               <Dialog open={this.state.showMessage} onRequestClose={this.handleCloseErrorDialog}>
                   <DialogTitle>{"Can`t download patterns"}</DialogTitle>
@@ -454,7 +413,6 @@ const TWO_NUMBERS_ARRAY = function(props, propName, componentName){
 
 
 Game.propTypes = {
-    classes: PropTypes.object.isRequired,
     setStopped: PropTypes.func.isRequired,
     stopped: PropTypes.shape({
         [boardNames.MAIN]: PropTypes.bool,
@@ -469,7 +427,7 @@ Game.propTypes = {
         [boardNames.SPACESHIP]: PropTypes.bool,
         [boardNames.GUN]: PropTypes.bool,
     }).isRequired,
-    cellsList: TWO_NUMBERS_ARRAY,
+    savedCellList: TWO_NUMBERS_ARRAY,
     patterns: PropTypes.arrayOf(PropTypes.shape({
         name: PropTypes.string,
         pattern: TWO_NUMBERS_ARRAY
@@ -481,8 +439,7 @@ Game.propTypes = {
     setSpeed: PropTypes.func.isRequired,
     setClear: PropTypes.func.isRequired,
     setGameValues: PropTypes.func.isRequired,
-    patternNamesIndex: PropTypes.number,
-    gridSizesIndex: PropTypes.number,
+    currentPatternNameIndex: PropTypes.number,
+    currentGridSizeIndex: PropTypes.number,
     error: PropTypes.bool,
 };
-

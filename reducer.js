@@ -8,10 +8,10 @@ export const initialState = {
   generationCount: -1,   
   stopped: initBoards(),
 
-  patternNamesIndex:0,
+  currentPatternNameIndex:0,
   fps: 2,
-  gridSizesIndex:1,
-  cellsList: null, 
+  currentGridSizeIndex:1,
+  savedCellList: null, 
   size: null
 }
 
@@ -40,7 +40,7 @@ export function reducer (state = initialState, action) {
     case actionTypes.CHANGE_PATTERN:
       return {
         ...state,
-        ...{patternNamesIndex: action.index,
+        ...{currentPatternNameIndex: action.index,
             generationCount: -1
           }
       }
@@ -49,9 +49,9 @@ export function reducer (state = initialState, action) {
     case actionTypes.CHANGE_BOARD_SIZE:
       return {
         ...state,
-        ...{gridSizesIndex: action.index,
+        ...{currentGridSizeIndex: action.index,
             generationCount: 0,
-            patternNamesIndex:-1,
+            currentPatternNameIndex:-1,
           }
       }
     case actionTypes.SET_STOPPED:
@@ -91,7 +91,7 @@ export function reducer (state = initialState, action) {
         ...state,
         ...{
             generationCount: -1,
-            patternNamesIndex:-1,
+            currentPatternNameIndex:-1,
           }
       }   
 
@@ -100,7 +100,7 @@ export function reducer (state = initialState, action) {
       return {
         ...state,
         ...{
-            cellsList: action.cellsList, 
+            savedCellList: action.savedCellList, 
             
             generationCount: state.generationCount -  1,
             }

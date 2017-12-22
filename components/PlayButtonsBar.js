@@ -1,31 +1,23 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import SpeedSlider from './SpeedSlider';
 import Generation from './Generation';
-import PlayArrow from 'material-ui-icons/PlayArrow';
-import Pause from 'material-ui-icons/Pause';
-import Clear from 'material-ui-icons/Clear';
-import SkipNext from 'material-ui-icons/SkipNext';
-import Icon from 'material-ui/Icon';
+import {PlayArrow, Pause, Clear, SkipNext} from 'material-ui-icons';
 import IconButton from 'material-ui/IconButton';
 import ToggleIcon from './ToggleIcon';
-import pure from 'recompose/pure'
 import {colors as color} from '../helpers/colors';
 
 
 const styles = theme => ({
     button: {
-         color:color.BUTTON,
-         width: 35,
-          height: 35,
-          },
-
-  icon: {
-      width: 25,
-      height: 25,
-
+        color:color.BUTTON,
+        width: 35,
+        height: 35,
+    },
+    icon: {
+        width: 25,
+        height: 25,
     },
     vertical: {
         [theme.breakpoints.up('xs')]: {
@@ -47,7 +39,6 @@ const styles = theme => ({
         marginTop: 10,
         marginLeft: 15,
     },
-
     generation: {
         align: 'flex-end',
         marginTop: 5,
@@ -56,55 +47,46 @@ const styles = theme => ({
      }
 });
 
-const textColor = 'white';
-
-const PlayButtonsBar = (props) => {
-
-    
+const PlayButtonsBar = ({classes, ...props}) => {
 	return (
-
-
-            <div className={props.classes.bar}>
-                <div className={props.classes.controls}>
-                    <div  className={props.classes.item}>
-                        <IconButton className={props.classes.button} title={props.on?"Start":"Pause"} onClick = {() => props.handlePlayToggle()}>
-                            <ToggleIcon
-                                on={props.on}
-                                onIcon={<PlayArrow className={props.classes.icon}/>}
-                                offIcon={<Pause className={props.classes.icon} />}
-                                 
-                              />
-                        </IconButton>
-               
-                    </div>
-                    <div  className={props.classes.item}>
-                        <IconButton className={props.classes.button} title="Next Generation" onClick = {() => props.step()} >
-                            <SkipNext className={props.classes.icon}/>
-                        </IconButton>
-                    
-                    </div>
-                    <div  className={props.classes.item}>
-                        <IconButton className={props.classes.button} title="Clear" onClick = {() => props.clear()} >
-                            <Clear  className={props.classes.icon}/>
-                        </IconButton>
-                    </div>
-                    <div className={props.classes.slider} title="Set Speed">
-                    <SpeedSlider onChange={(v) => props.setInterval(v)}/>
-                    </div>
+        <div className={classes.bar}>
+            <div className={classes.controls}>
+                <div  className={classes.item}>
+                    <IconButton className={classes.button} title={props.on?"Start":"Pause"} onClick = {() => props.handlePlayToggle()}>
+                        <ToggleIcon
+                            on={props.on}
+                            onIcon={<PlayArrow className={classes.icon}/>}
+                            offIcon={<Pause className={classes.icon} />}
+                             
+                          />
+                    </IconButton>
+           
                 </div>
-                <div>
-                    <div className={props.classes.generation} title="Generation">
-                    <Generation />
-                    </div>
+                <div  className={classes.item}>
+                    <IconButton className={classes.button} title="Next Generation" onClick = {() => props.step()} >
+                        <SkipNext className={classes.icon}/>
+                    </IconButton>
+                
+                </div>
+                <div  className={classes.item}>
+                    <IconButton className={classes.button} title="Clear" onClick = {() => props.clear()} >
+                        <Clear  className={classes.icon}/>
+                    </IconButton>
+                </div>
+                <div className={classes.slider} title="Set Speed">
+                <SpeedSlider onChange={(v) => props.setInterval(v)}/>
                 </div>
             </div>
-
-		
+            <div>
+                <div className={classes.generation} title="Generation">
+                <Generation />
+                </div>
+            </div>
+        </div>
 	);
-   
 }
 
-export default withStyles(styles)(pure(PlayButtonsBar));
+export default withStyles(styles)(PlayButtonsBar);
 
 
 PlayButtonsBar.propTypes = {

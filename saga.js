@@ -1,7 +1,4 @@
-/* global fetch */
-
-import {delay} from 'redux-saga';
-import {all, call, put, take, takeLatest} from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 import fetch from 'isomorphic-fetch'
 import {actionTypes, failure, loadDataSuccess} from './actions';
 
@@ -13,18 +10,13 @@ export function fetchPatterns() {
 export function * loadDataSaga () {
 	    try {
 		    const data = yield call(fetchPatterns);
-		    // const data = [{ name: 'Glider',
-		    //   pattern: [ [0,1], [0,2] ] }]
-		    // console.log(data) 
 		    yield put(loadDataSuccess(data));
 	    } catch (err) {
-	    // console.log("data") 
 	        yield put(failure(err));
 	    }
 }
 
 export function * rootSaga () {
     yield takeLatest(actionTypes.LOAD_DATA, loadDataSaga);
- 
 }
 

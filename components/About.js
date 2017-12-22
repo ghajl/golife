@@ -4,7 +4,6 @@ import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import YouTube from './YouTubePlayer';
 import GameGrid from '../helpers/GameGrid';
-import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import ToggleIcon from './ToggleIcon';
 import PlayArrow from 'material-ui-icons/PlayArrow';
@@ -80,84 +79,84 @@ class About extends Component {
                 width: 6,
                 height: 6, 
                 coordinates: createCellsList(beaconCoordinates),    
-                wrapped: true,   
+                unwrapped: false,   
                 name: "Beacon",       
             },
             [boardName.BEEHIVE]: {
                 width: 6,
                 height: 5,
                 coordinates: createCellsList(beehiveCoordinates),
-                wrapped: true, 
+                unwrapped: false, 
                 name: "Beehive",
             },
             [boardName.BLINKER]: {
                 width: 5,
                 height: 5,
                 coordinates: createCellsList(blinkerCoordinates),
-                wrapped: true, 
+                unwrapped: false, 
                 name: "Blinker",
             },
             [boardName.BLOCK]: {
                 width: 4,
                 height: 4,
                 coordinates: createCellsList(blockCoordinates),
-                wrapped: true, 
+                unwrapped: false, 
                 name: "Block",
             },
             [boardName.BOAT]: {
                 width: 5,
                 height: 5,
                 coordinates: createCellsList(boatCoordinates),
-                wrapped: true, 
+                unwrapped: false, 
                 name: "Boat",
             },
             [boardName.GLIDER]: {
                 width: 10,
                 height: 10,
                 coordinates: createCellsList(gliderCoordinates),
-                wrapped: true, 
+                unwrapped: false, 
                 name: "Glider",
             },
             [boardName.GUN]: {
                 width: 40,
                 height: 20,
                 coordinates: createCellsList(gunCoordinates),
-                wrapped: false, 
+                unwrapped: true, 
                 name: "The Gosper Glider Gun",
             },
             [boardName.LOAF]: {
                 width: 6,
                 height: 6,
                 coordinates: createCellsList(loafCoordinates),
-                wrapped: true, 
+                unwrapped: false, 
                 name: "Loaf",
             },
             [boardName.SPACESHIP]: {
                 width: 12,
                 height: 12,
                 coordinates: createCellsList(lspaceshipCoordinates),
-                wrapped: true, 
+                unwrapped: false, 
                 name: "Lightweight Spaceship",
             },
             [boardName.GLASSES]: {
                 width: 20,
                 height: 13,
                 coordinates: createCellsList(oscGlassesCoordinates),
-                wrapped: true, 
+                unwrapped: false, 
                 name: "Glasses",
             },
             [boardName.QUAD]: {
                 width: 8,
                 height: 8,
                 coordinates: createCellsList(oscQuadCoordinates),
-                wrapped: true, 
+                unwrapped: false, 
                 name: "Quad",
             },
             [boardName.TOAD]: {
                 width: 6,
                 height: 6,
                 coordinates: createCellsList(toadCoordinates),
-                wrapped: true, 
+                unwrapped: false, 
                 name: "Toad",
             },
         }
@@ -165,7 +164,7 @@ class About extends Component {
         this.examples = {};
         for(let name in parameters){
             this.examples[name] = {
-                grid: new GameGrid(name, parameters[name].width, parameters[name].height, squareSize, !parameters[name].wrapped),
+                grid: new GameGrid(name, parameters[name].width, parameters[name].height, squareSize, parameters[name].unwrapped),
                 cells: name == boardName.GUN ? 
                                 shiftPattern(parameters[name].coordinates, 1, 1) :
                                 shiftPatternToCenter(parameters[name].coordinates, parameters[name].height, parameters[name].width),
@@ -174,7 +173,6 @@ class About extends Component {
         }
 
         this.state = {
-            reload:false,
             screen: {
                 width: window.innerWidth,
                 height: window.innerHeight,
@@ -184,7 +182,7 @@ class About extends Component {
         }
 
         for(let name in parameters){
-            this.examples[name].canvasWidth = this.getCanvasWidth(this.examples[name].grid) 
+            this.examples[name].canvasWidth = this.getCanvasWidth(this.examples[name].grid, this.state.screen) 
         }
 
 		this.startedPatternsList = [];
@@ -195,8 +193,7 @@ class About extends Component {
         this.setStopped = (stopped, name) => props.setStopped(stopped, name);
 	}
 
-    getCanvasWidth(grid){
-        let {screen} = this.state;
+    getCanvasWidth(grid, screen){
         let {width, squareSize} = grid;
         let w = ((width + 1) * squareSize * screen.width/100 * .7)/screen.factor;
         return w > screen.width * .6 ? screen.width * .6 : w;
@@ -237,35 +234,31 @@ class About extends Component {
     }
 
 	update(){
-            this.now = Date.now();
-            this.delta = this.now - this.then;
-             
-            if (this.delta > this.interval) {
-                this.then = this.now - (this.delta % this.interval);
+        this.now = Date.now();
+        this.delta = this.now - this.then;
+         
+        if (this.delta > this.interval) {
+            this.then = this.now - (this.delta % this.interval);
 
-                this.startedPatternsList.forEach(p => p.grid.update())
-               
-            }  
-            this.rAF = requestAnimationFrame(() =>{this.update()}); 
+            this.startedPatternsList.forEach(p => p.grid.update())
+           
+        }  
+        this.rAF = requestAnimationFrame(() =>{this.update()}); 
     }
 
     handleWindowSizeChange = () => {
 		this.examples[boardName.GUN].grid.handleWindowSizeChange(this.examples[boardName.GUN].canvas);
     }
 
-    componentWillUpdate() {
-		this.examples[boardName.GUN].canvasWidth = this.examples[boardName.GUN].canvasWidth > this.state.screen.width * .6 ? 
-                                                    this.state.screen.width * .6 : this.examples[boardName.GUN].canvasWidth
-    }
-
+    
     componentWillMount() {
         window.addEventListener('resize', this.handleWindowSizeChange);
     }
 
     componentDidMount() {
-        let ratio = this.state.screen.ratio
+        const {ratio} = this.state.screen;
         for(let name in this.examples){
-            let {grid, cells, canvas} = this.examples[name];
+            const {grid, cells, canvas} = this.examples[name];
             grid.makeBoard(grid.width, grid.height, grid.squareSize, ratio, canvas, cells);
             grid.update();
         }
@@ -275,12 +268,12 @@ class About extends Component {
     componentWillUnmount(){
         
         cancelAnimationFrame(this.rAF);    
-        this.setStopped(true, null)
+        this.setStopped(true, null);
     }
 
 
     render() {    
-    	const classes = this.props.classes;
+    	const {classes} = this.props;
     	return(
     	    <div className={classes.mainContent}>
             
@@ -290,7 +283,7 @@ class About extends Component {
     	    
     	    <Grid item xs={10}  sm={8} >
     	    
-    	    	<p className={`${classes.intro} ${classes.text}`}>
+    	    	<p className={classes.text}>
     	    	<strong>The Game of Life</strong> is the best-known two-dimensional  
                 "<a className={classes.link} href="https://en.wikipedia.org/wiki/Cellular_automaton" target="_blank" title="Cellular automaton">cellular automaton</a>", 
                 invented in 1970 by the British mathematician <a className={classes.link} href="https://en.wikipedia.org/wiki/John_Horton_Conway" title="John Conway">John Horton Conway</a>. 
@@ -321,7 +314,7 @@ class About extends Component {
                 Fragment from Stephen Hawking`s The Meaning of Life
                 </div>
 
-    	    	<div className={classes.rulesPar}>
+    	    	
     	    	<h2 className={classes.title}>
     	    	Rules
     	    	</h2>
@@ -346,7 +339,7 @@ class About extends Component {
     			(in other words, each generation is a pure function of the preceding one). 
     			The rules continue to be applied repeatedly to create further generations.
     	    	</p>
-    	    	</div>
+    	    	
     	    	<h2 className={classes.title}>
     	    	Examples of Patterns
     	    	</h2>
@@ -634,8 +627,22 @@ export default withStyles(styles)(About);
 
 const patternBoard = (grid,cellsList) => ({grid,cellsList})
 
+const boardstyles = {
+    iconbutton: {
+        width: 35,
+        height: 35,
+        color: color.BUTTON,
+    },
+    icon: {
+        width: 25,
+        height: 25,
 
-const BoardElement = ({width, patternName, stopped, buttonColor, withButton, ...props}) => {
+    }
+            
+}
+
+const BoardElement =  withStyles(boardstyles)(({width, patternName, stopped, buttonColor, withButton, ...props}) =>{
+    const display = withButton ? 'inline' : 'none';
 
     return (
     <div className="boardElement">
@@ -646,28 +653,24 @@ const BoardElement = ({width, patternName, stopped, buttonColor, withButton, ...
                 ref={props.setCanvas}
             />
             </div>
-            {withButton ? (
-                <IconButton className="button" title={stopped?"Start":"Pause"} onClick = {props.handlePlayToggle}>
+            <div className="buttonElement">
+                <IconButton className={props.classes.iconbutton} title={stopped?"Start":"Pause"} onClick = {props.handlePlayToggle}>
                     <ToggleIcon
                         on={stopped}
-                        onIcon={<PlayArrow className="icon" />}
-                        offIcon={<Pause className="icon" />}
+                        onIcon={<PlayArrow className={props.classes.icon} />}
+                        offIcon={<Pause className={props.classes.icon} />}
                         
                       />
                 </IconButton>
-
-                ) : (
-                    <div></div>
-                )
-
-            }
+            
+            </div>
         
             <div>
             {patternName}
             </div>
         </div>
         </div>
-        <style jsx global>{`
+        <style jsx>{`
             .boardElement {
                 display: inline-block;
                 margin: 16px 0 0 16px;
@@ -682,16 +685,8 @@ const BoardElement = ({width, patternName, stopped, buttonColor, withButton, ...
             .item {
                 align-self: flex-end;
             }
-            .button {
-                width: 35px;
-                height: 35px;
-                color:${color.BUTTON};
-        
-            }
-            .icon {
-                width: 25px;
-                height: 25px;
-
+            .buttonElement {
+                display: ${display};
             }
             .canvas {
                 background-color: ${color.BOARD};
@@ -699,7 +694,9 @@ const BoardElement = ({width, patternName, stopped, buttonColor, withButton, ...
         `}</style>
     </div>    
     );
-}
+})
+
+
 
 const createCellsList = (coordinates) => {
     return coordinates.split("\r\n").reduce(function(acc, val, Y){

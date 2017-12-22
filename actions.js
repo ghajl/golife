@@ -68,9 +68,9 @@ export function setClear() {
   return {type: actionTypes.SET_CLEAR}
 }
 
-export function setGameValues(cellsList) {
+export function setGameValues(savedCellList) {
   return {
     type: actionTypes.SET_GAME_VALUES,
-    cellsList
+    savedCellList
   }
 }

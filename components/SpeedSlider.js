@@ -2,13 +2,33 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import Slider from 'rc-slider';
-import Head from 'next/head';
-import Handle from './Handle';
 import { connect } from 'react-redux';
 
+const handleStyle = {
+    position: "absolute",
+    transform: 'translate(-35%, -35%)',
+    width: "15px",
+    height: "15px",
+    cursor: "pointer",
+    borderRadius: "50%",
+    border: "solid 3px",
+    borderColor: 'rgba(0, 0, 0, .7)',
+    backgroundColor: "white"
+};
 
 
-const style = {    
+
+class Handle extends Component {
+    render() {
+        const style = Object.assign({ left: `${this.props.offset}%` }, handleStyle);
+        return(
+            <div style={style}/>
+        )
+    }
+}
+
+
+const sliderStyle = {    
     width: 60,
     height: 40,
 };
@@ -32,16 +52,16 @@ class SpeedSlider extends Component {
 
     render() { 
         return (
-            <div style={style}>
+            <div style={sliderStyle}>
 
                 <Slider
                 
-                  min={2}
-                  max={60}
-                  step={2}
-                  value={this.props.fps}
-                  onChange={(v) => this.props.onChange(v)}
-                  handle={handle}
+                    min={2}
+                    max={60}
+                    step={2}
+                    value={this.props.fps}
+                    onChange={(v) => this.props.onChange(v)}
+                    handle={handle}
                 />
                 
             </div>
@@ -58,3 +78,5 @@ SpeedSlider.propTypes = {
     value: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,
 }
+
+

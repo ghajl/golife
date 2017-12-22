@@ -1,11 +1,8 @@
 import React from 'react';
 import Head from 'next/head'
+import {colors as color} from '../helpers/colors';
 
 
-const container = {
-    // textAlign: 'center',
-    width: '100%',
-}
 
 const navbar = {
     width: '100%',
@@ -14,21 +11,17 @@ const navbar = {
     top: 0,
     left: 0,   
     fontWeight: 900,
-    // text-transform: none;
     fontSize: '15px',
-    fontFamily: 'Julius Sans One', 
-    fallbacks:{
-        fontFamily: 'sans-serif',
-    },   
+    fontFamily: '"Julius Sans One", sans-serif', 
     padding: '1em',
     
 }
 const authorName = {
-    color: '#011627',
+    color: color.TITLE_AUTHOR,
 }
 
 const gameName = {
-    color: '#A2D729',
+    color: color.TITLE_GAME,
 }
 
 const header = {
@@ -39,40 +32,18 @@ const header = {
 }
 
 export default () => {
-        // let rAF = null;
-        // let i = 0;
-        // let el = null;
-        // let stopped = false;
- 
-        // function move(elem){
-        //     if(elem || el && !stopped) {
-
-        //         if(!el) el = elem;
-        //         el.style.left = i + 'px';
-        //         i += 5
-        //         if(i > 300){
-        //             stopped = true
-        //             cancelAnimationFrame(rAF);
-        //         }
-
-        //         rAF = requestAnimationFrame(() =>{move()}); 
-        //     } 
-        // }
-
-        return (
-            <div style={container}>
-                <Head>
-                  
-                    <link rel='stylesheet' type='text/css' href='/static/headerssr.css' />
-                </Head>
-                <div style={header}>
-                    <div style={navbar}>
-                        <div><span style={authorName}>John Conway`s</span>
-                        <span style={gameName}>Game of Life</span></div>
-                    </div> 
-                    <div className="front">
-                    </div>
-                </div>
+    return (
+        <React.Fragment>
+            <Head>
+                <link rel='stylesheet' type='text/css' href='/static/headerssr.css' />
+            </Head>
+            <div style={header}>
+                <div style={navbar}>
+                    <div><span style={authorName}>John Conway`s</span>
+                    <span style={gameName}>Game of Life</span></div>
+                </div> 
+                <div className="front"></div>
             </div>
+        </React.Fragment>
     );
 }  
