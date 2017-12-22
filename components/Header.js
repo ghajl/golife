@@ -2,7 +2,7 @@ import React from 'react';
 import injectSheet from 'react-jss';
 import PropTypes from 'prop-types';
 import Link from 'next/link'
-import {colors as color} from '../helpers/colors';
+import {colors as color} from '../util/colors';
 
 
 

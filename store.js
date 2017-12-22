@@ -1,6 +1,5 @@
 import createSagaMiddleware from 'redux-saga'
 import { createStore, applyMiddleware } from 'redux'
-// import { createLogger } from 'redux-logger'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import reducer, { initialState } from './reducer'
 import nextReduxSaga from 'next-redux-saga'

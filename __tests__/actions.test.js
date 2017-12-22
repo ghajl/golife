@@ -1,5 +1,5 @@
 import * as actions from '../actions';
-import {boardNames} from '../helpers/boardNames';
+import {boardNames} from '../util/boardNames';
 
 describe('actions', () => {
     test('change pattern', () => {

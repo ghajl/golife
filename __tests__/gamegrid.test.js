@@ -1,7 +1,7 @@
 import{ createCellsValuesMatrix, getNeighborsList, getNeighborStateChangeListenersList,
-					getNeighborsNumberChangeListenersList, createGameMatrix } from '../helpers/GameGrid';
-import {makeUnique} from '../helpers/helpers';					
-import Cell from  '../helpers/Cell';
+					getNeighborsNumberChangeListenersList, createGameMatrix } from '../util/GameGrid';
+import {makeUnique} from '../util/helpers';					
+import Cell from  '../util/Cell';
 
 test('creating two-dimensional matrix of Cell objects for live/dead values of game board', () => {
     let width = 2,

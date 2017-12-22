@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {colors as color} from '../helpers/colors';
+import {colors as color} from '../util/colors';
 
 
 const Generation =({generationCount}) => {

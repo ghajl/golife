@@ -6,7 +6,7 @@ import Generation from './Generation';
 import {PlayArrow, Pause, Clear, SkipNext} from 'material-ui-icons';
 import IconButton from 'material-ui/IconButton';
 import ToggleIcon from './ToggleIcon';
-import {colors as color} from '../helpers/colors';
+import {colors as color} from '../util/colors';
 
 
 const styles = theme => ({

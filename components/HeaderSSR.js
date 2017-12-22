@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head'
-import {colors as color} from '../helpers/colors';
+import {colors as color} from '../util/colors';
 
 
 

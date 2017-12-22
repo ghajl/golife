@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
-import GameGrid from '../helpers/GameGrid';
-import {colors as color} from '../helpers/colors';
+import GameGrid from '../util/GameGrid';
+import {colors as color} from '../util/colors';
 import SelectButtonsBar from './SelectButtonsBar';
 import PlayButtonsBar from './PlayButtonsBar';
-import {boardNames} from '../helpers/boardNames';
-import {boardSizes} from '../helpers/boardSizes';
+import {boardNames} from '../util/boardNames';
+import {boardSizes} from '../util/boardSizes';
 import Dialog, {
   DialogActions,
   DialogContent,

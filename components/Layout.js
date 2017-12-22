@@ -57,7 +57,6 @@ class Layout extends React.Component {
                         display: flex;
                         flex-direction: column;
                         height: 100%;
-                        width: 100%;
                     }
                     .Content {
                         flex: 1 0 auto; 
@@ -68,7 +67,7 @@ class Layout extends React.Component {
                         box-shadow: 0 3px 15px -6px #222;
                         position: fixed;
                         top: 0;
-                        width: inherit;
+                        width: 100%;
                         z-index: 3;
                         background-color: #fff;
                     }

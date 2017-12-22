@@ -1,5 +1,5 @@
 import {call, put, takeLatest} from 'redux-saga/effects';
-import fetch from 'isomorphic-fetch'
+import fetch from 'isomorphic-unfetch'
 import {actionTypes, failure, loadDataSuccess} from './actions';
 
 export function fetchPatterns() {

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import {colors as color} from '../helpers/colors';
+import {colors as color} from '../util/colors';
 
 
 const Footer = ({screen}) => {

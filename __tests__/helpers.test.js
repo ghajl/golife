@@ -1,7 +1,7 @@
-import { getLiveCells, isGoingToChange, getNewPatternChangeList, getRandomPattern, getChangeList} from '../helpers/helpers';	
+import { getLiveCells, isGoingToChange, getNewPatternChangeList, getRandomPattern, getChangeList} from '../util/helpers';	
 import { createCellsValuesMatrix, getNeighborsList, getNeighborStateChangeListenersList,
-					getNeighborsNumberChangeListenersList, createGameMatrix } from '../helpers/GameGrid';
-import Cell from  '../helpers/Cell';
+					getNeighborsNumberChangeListenersList, createGameMatrix } from '../util/GameGrid';
+import Cell from  '../util/Cell';
 
 
 describe('helpers', () => {

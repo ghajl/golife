@@ -1,5 +1,5 @@
 import {actionTypes} from '../actions';
-import {boardNames} from '../helpers/boardNames';
+import {boardNames} from '../util/boardNames';
 import {reducer} from '../reducer'; 
 
 describe('reducer', () => {

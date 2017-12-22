@@ -1,8 +1,5 @@
 import { connect } from 'react-redux';
 import { setStopped } from 'actions'
-// import { addCount } from 'actions'
-// import { selectLight, selectLastUpdate, selectCount } from 'selectors'
-// import { createSelector } from 'reselect';
 import { compose, setDisplayName, pure } from 'recompose';
 import About from '../components/About';
 

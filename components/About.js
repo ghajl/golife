@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import YouTube from './YouTubePlayer';
-import GameGrid from '../helpers/GameGrid';
+import GameGrid from '../util/GameGrid';
 import IconButton from 'material-ui/IconButton';
 import ToggleIcon from './ToggleIcon';
 import PlayArrow from 'material-ui-icons/PlayArrow';
 import Pause from 'material-ui-icons/Pause';
-import {boardNames as boardName} from '../helpers/boardNames'
-import { shiftPatternToCenter, shiftPattern } from '../helpers/helpers';
-import {colors as color} from '../helpers/colors';
+import {boardNames as boardName} from '../util/boardNames'
+import { shiftPatternToCenter, shiftPattern } from '../util/helpers';
+import {colors as color} from '../util/colors';
 
 var beaconCoordinates = require('../static/beacon.txt');
 var beehiveCoordinates = require('../static/beehive.txt');
