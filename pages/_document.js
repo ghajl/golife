@@ -6,17 +6,17 @@ import getContext from '../styles/getContext';
 class MyDocument extends Document {
 
     render() {
-
+        
         return (
             <html lang="en" dir="ltr">
                 <Head>
-                    <title>Project Conway`s Game Of Life</title>
+                    
                     <meta charSet="utf-8" />
                     {/* Use minimum-scale=1 to enable GPU rasterization */}
                     <meta
                         name="viewport"
                         content={
-                            'user-scalable=0, initial-scale=1, ' +
+                            'user-scalable=0, initial-scale=1, minimum-scale=1, ' +
                             'width=device-width, height=device-height'
                         }
                     />

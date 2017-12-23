@@ -35,6 +35,8 @@ export default () => {
     return (
         <React.Fragment>
             <Head>
+                <title>Project Conway`s Game Of Life</title>
+                <link rel='icon' type='image/x-icon' href='/static/livecell.ico'/>
                 <link rel='stylesheet' type='text/css' href='/static/headerssr.css' />
             </Head>
             <div style={header}>

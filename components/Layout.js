@@ -4,6 +4,7 @@ import Footer from './Footer'
 import NoSSR from 'react-no-ssr'
 import HeaderSSR from './HeaderSSR'
 import stylesheet from '../static/rc-slider/index.css'
+import Head from 'next/head'
 
 
 class Layout extends React.Component {
@@ -42,7 +43,10 @@ class Layout extends React.Component {
             <div className="App">
                 <style dangerouslySetInnerHTML={{ __html: stylesheet }} />
                     <NoSSR onSSR={<HeaderSSR />}>
-                        
+                        <Head>
+                            <title>Project Conway`s Game Of Life</title>
+                            <link rel='icon' type='image/x-icon' href='/static/livecell.ico'/>
+                        </Head>
                         <div className="Navbar">
                             <Header url={this.props.url} screen={this.state.screen}/>
                         </div>
