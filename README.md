@@ -1,5 +1,5 @@
 # golife
-FreeCodeCamp Conway's Game of Life project
+Conway's Game of Life project
 ## Built With
 * [React](https://reactjs.org/)
 * [Redux](https://redux.js.org/)
