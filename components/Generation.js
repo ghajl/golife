@@ -11,9 +11,9 @@ const Generation =({generationCount}) => {
   	      	{generationCount}
   			<style jsx global>{`
             .generation {
-				color: ${color.GENERATION};
-				font-size: 1.5em;
-		        text-align: right;
+      				color: ${color.GENERATION};
+      				font-size: 1.5em;
+  		        text-align: right;
             }
                        
         `}</style>

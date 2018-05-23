@@ -4,23 +4,22 @@ import {boardNames} from './util/boardNames';
 
 export const initialState = {
 	error: false,
-	patterns:[],
+	patterns: [],
   generationCount: -1,   
   stopped: initBoards(),
-
-  currentPatternNameIndex:0,
+  currentPatternNameIndex: 0,
   fps: 2,
-  currentGridSizeIndex:1,
+  currentGridSizeIndex: 1,
   savedCellList: null, 
-  size: null
+  size: null,
 }
 
 function initBoards () {
   let boards = {};
-  for( let name in boardNames ) {
-    boards[name] = true
+  for ( let name in boardNames ) {
+    boards[name] = true;
   }  
-  return boards
+  return boards;
 }
 
 export function reducer (state = initialState, action) {

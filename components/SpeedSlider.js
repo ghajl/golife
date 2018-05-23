@@ -57,7 +57,7 @@ class SpeedSlider extends Component {
                 <Slider
                 
                     min={2}
-                    max={60}
+                    max={160}
                     step={2}
                     value={this.props.fps}
                     onChange={(v) => this.props.onChange(v)}

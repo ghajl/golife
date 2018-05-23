@@ -78,10 +78,8 @@ class GameGrid {
     }
 
 
-    //= componentdidmount
-    makeBoard(width,height,squareSize,ratio,canvas,savedCellsList)
+     makeBoard(width,height,squareSize,ratio,canvas,savedCellsList)
     {
-        // console.log(width)
         this.canvas = createCanvas(canvas, width, height, squareSize, ratio);
         this.ratio = ratio;
         drawGrid(this.canvas, width, height, squareSize);
@@ -296,7 +294,8 @@ export function getNeighborsList(valuesBoard, width, height, Y, X, isUnwrapped){
             }
         }
     }
-    cellList = makeUnique(cellList);
+    // cellList = makeUnique(cellList);
+    console.log("ss")
     return cellList;
 }
 

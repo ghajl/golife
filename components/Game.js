@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
-import GameGrid from '../util/GameGrid';
+import GameGrid from '../game/GameGrid';
 import {colors as color} from '../util/colors';
 import SelectButtonsBar from './SelectButtonsBar';
 import PlayButtonsBar from './PlayButtonsBar';
@@ -22,7 +22,7 @@ class Game extends Component {
         super(props);
         this.currentBoardSize = boardSizes.medium;
  
-        if(props.savedCellList){
+        if (props.savedCellList != null) {
             switch(props.currentGridSizeIndex){
                 case 0: this.currentBoardSize = boardSizes.small; break;
                 case 2: this.currentBoardSize = boardSizes.large; break;
@@ -90,8 +90,8 @@ class Game extends Component {
     updateOnce(){
 
         this.grid.update(this.boardMode);
-        if(!this.boardMode.drawing)
-            this.incrementGeneration();
+        // if(!this.boardMode.drawing)
+            // this.incrementGeneration();
 
     }
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import YouTube from './YouTubePlayer';
-import GameGrid from '../util/GameGrid';
+import GameGrid from '../game/GameGrid';
 import IconButton from 'material-ui/IconButton';
 import ToggleIcon from './ToggleIcon';
 import PlayArrow from 'material-ui-icons/PlayArrow';
