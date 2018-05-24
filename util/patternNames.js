@@ -1,4 +1,4 @@
-export const boardNames = {
+export const patternNames = {
   MAIN: 'MAIN',
   BLOCK: 'BLOCK',
   BOAT: 'BOAT',

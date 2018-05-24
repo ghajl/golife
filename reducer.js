@@ -1,22 +1,22 @@
 import {actionTypes} from './actions';
-import {boardNames} from './util/boardNames';
+import {patternNames} from './util/patternNames';
 
 
 export const initialState = {
 	error: false,
 	patterns: [],
   generationCount: -1,   
-  stopped: initBoards(),
+  stopped: {},
   currentPatternNameIndex: 0,
   fps: 2,
   currentGridSizeIndex: 1,
-  savedCellList: null, 
+  savedState: null, 
   size: null,
 }
 
 function initBoards () {
-  let boards = {};
-  for ( let name in boardNames ) {
+  const boards = {};
+  for (let name in patternNames) {
     boards[name] = true;
   }  
   return boards;
@@ -50,7 +50,7 @@ export function reducer (state = initialState, action) {
         ...state,
         ...{currentGridSizeIndex: action.index,
             generationCount: 0,
-            currentPatternNameIndex:-1,
+            currentPatternNameIndex: -1,
           }
       }
     case actionTypes.SET_STOPPED:
@@ -94,12 +94,12 @@ export function reducer (state = initialState, action) {
           }
       }   
 
-    case actionTypes.SET_GAME_VALUES:
+    case actionTypes.SAVE_STATE:
     
       return {
         ...state,
         ...{
-            savedCellList: action.savedCellList, 
+            savedState: action.savedState, 
             
             generationCount: state.generationCount -  1,
             }

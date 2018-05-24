@@ -1,12 +1,12 @@
 import { makeUnique, shiftPatternToCenter, getRandomPattern } from '../util/helpers';
 import Cell from './Cell';
 class Life {
-	constructor(width, height, savedCellList, isUnwrapped = false) {
+	constructor(width, height, savedState, isUnwrapped = false) {
 		this.gridWidth = width;
 	  	this.gridHeight = height;
 	  	this.gridIsUnwrapped = isUnwrapped;
 		this.checkList = [];
-		this.initialState = savedCellList;
+		this.initialState = savedState;
 		this.modifiedCells = {
             list: null,
             isFirst: true,
@@ -45,21 +45,22 @@ class Life {
     }
 
     setPattern(index, patternsList, boardIsClear) {
-        let nextGenerationChangeCellsList;
+
+        let changeList;
         if (index > 0) {
             //get the coordinates of choosed pattern adjusted to current board size
-            nextGenerationChangeCellsList = shiftPatternToCenter(patternsList[index-1].pattern, this.gridHeight, this.gridWidth);
+            changeList = shiftPatternToCenter(patternsList[index-1].pattern, this.gridHeight, this.gridWidth);
         } else {
             //random live cells have index = 0
-            nextGenerationChangeCellsList = getRandomPattern(this.gridHeight,this.gridWidth);
+            changeList = getRandomPattern(this.gridHeight,this.gridWidth);
         }
         if (boardIsClear) {
             //board is clear - there aren't any live cells on the board
-            this.modifiedCells.list = nextGenerationChangeCellsList;
+            this.modifiedCells.list = changeList;
             this.modifiedCells.isFirst = true;
         } else {
             //we have to clear the remained cells 
-            this.modifiedCells.list = getNewPatternChangeList(this.valuesBoard, nextGenerationChangeCellsList);
+            this.modifiedCells.list = getNewPatternChangeList(this.board, changeList);
             this.modifiedCells.isFirst = true;
         }
     }
@@ -67,10 +68,6 @@ class Life {
     addCell(x, y) {
     	this.modifiedCells.list = [];
         this.modifiedCells.list.push([y, x]);
-    }
-
-    getLiveCells() {
-    	return getLiveCells(this.board);
     }
 
 
@@ -96,6 +93,11 @@ class Life {
 
         return redrawList;
 	}
+
+    getLiveCells() {
+        return getLiveCells(this.board);
+    }
+
     
     getBoard() {
     	return this.board;

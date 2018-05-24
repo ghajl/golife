@@ -8,7 +8,7 @@ export const actionTypes = {
   INCREMENT_GENERATION: 'INCREMENT_GENERATION',
   SET_SPEED: 'SET_SPEED',
   SET_CLEAR: 'SET_CLEAR',
-  SET_GAME_VALUES: 'SET_GAME_VALUES',
+  SAVE_STATE: 'SAVE_STATE',
 }
 
 export function failure (error) {
@@ -68,9 +68,9 @@ export function setClear() {
   return {type: actionTypes.SET_CLEAR}
 }
 
-export function setGameValues(savedCellList) {
+export function saveState(savedState) {
   return {
-    type: actionTypes.SET_GAME_VALUES,
-    savedCellList
+    type: actionTypes.SAVE_STATE,
+    savedState
   }
 }

@@ -1,5 +1,5 @@
 export const colors = {
-	EMPTY_CELL: 'rgba(0, 0, 0, .7)',
+	EMPTY_CELL: 'rgba(47,79,79,.2)',
 	LIVE_CELL: '#FF0000',
 	BUTTON: 'rgba(0, 0, 0, .7)',
 	GENERATION: '#FF0000',

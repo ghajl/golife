@@ -4,7 +4,7 @@ import {loadData} from '../actions'
 import {withReduxSaga} from '../store'
 import withRoot from '../components/withRoot';
 import Layout from '../components/Layout'
-import Game from '../containers/Game';
+import Main from '../containers/Main';
 
 class Index extends Component {
     static async getInitialProps ({store}) {
@@ -15,7 +15,7 @@ class Index extends Component {
     render() {
         return (
             <Layout  url={this.props.url}>
-                <Game />
+                <Main />
             </Layout>
             )
         }    

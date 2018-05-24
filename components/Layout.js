@@ -1,10 +1,9 @@
-import Game from './Game'
-import Header from './Header'
-import Footer from './Footer'
-import NoSSR from 'react-no-ssr'
-import HeaderSSR from './HeaderSSR'
-import stylesheet from '../static/rc-slider/index.css'
-import Head from 'next/head'
+import Header from './Header';
+import Footer from './Footer';
+import NoSSR from 'react-no-ssr';
+import HeaderSSR from './HeaderSSR';
+import stylesheet from '../static/rc-slider/index.css';
+import Head from 'next/head';
 
 
 class Layout extends React.Component {

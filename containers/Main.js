@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
-import { changePattern, changeBoardSize, incrementGeneration, setStopped, setSpeed, setClear, setGameValues } from 'actions'
+import { changePattern, changeBoardSize, incrementGeneration, setStopped, setSpeed, setClear, saveState } from 'actions';
 import { compose, setDisplayName } from 'recompose';
-import Game from '../components/Game';
+import Main from '../components/Main';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -23,14 +23,14 @@ const mapDispatchToProps = dispatch => {
     setClear: () => {
     	dispatch(setClear())
     },    
-    setGameValues: (savedCellList, size) => {
-    	dispatch(setGameValues(savedCellList, size))
+    saveState: (savedState, size) => {
+    	dispatch(saveState(savedState, size))
     }
   }
 }
 
-const mapStateToProps =({ stopped, size, savedCellList, patterns, currentPatternNameIndex, currentGridSizeIndex,  error })=> ({ stopped, size, savedCellList, patterns, currentPatternNameIndex, currentGridSizeIndex,  error });
+const mapStateToProps =({ stopped, size, savedState, patterns, currentPatternNameIndex, currentGridSizeIndex,  error })=> ({ stopped, size, savedState, patterns, currentPatternNameIndex, currentGridSizeIndex,  error });
 export default compose(
 	setDisplayName('GameContainer'),
 	connect(mapStateToProps, mapDispatchToProps)
-)(Game)
+)(Main)
