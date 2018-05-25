@@ -6,7 +6,7 @@ export const initialState = {
 	error: false,
 	patterns: [],
   generationCount: -1,   
-  stopped: {},
+  running: {},
   currentPatternNameIndex: 0,
   fps: 2,
   currentGridSizeIndex: 1,
@@ -53,21 +53,17 @@ export function reducer (state = initialState, action) {
             currentPatternNameIndex: -1,
           }
       }
-    case actionTypes.SET_STOPPED:
+    case actionTypes.SET_RUNNING:
       if(action.name){
             return {
               ...state,
-              ...{stopped: {...state.stopped, ...{[action.name]: action.stopped}}}
+              ...{running: {...state.running, ...{[action.name]: action.running}}}
             }
           }
       else {
         return {
               ...state,
-              ...{stopped:
-                  {
-                    ...state.stopped,
-                    ...initBoards()
-                  }
+              ...{running: {}
                  }
               }
           }

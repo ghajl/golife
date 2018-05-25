@@ -20,6 +20,7 @@ import Dialog, {
 class Main extends Component {
     constructor(props){
         super(props);
+
         let boardParams = boardParameters.medium;
         if (props.savedState != null) {
             if (props.currentGridSizeIndex === 0) {
@@ -47,8 +48,8 @@ class Main extends Component {
             clear:true,
         }
 
-        this.board = new GameBoard(patternNames.MAIN, this.boardWidth, this.boardHeight, this.squareSize);
-        this.setStopped = stopped => props.setStopped(stopped, 'main');
+        this.board = new GameBoard('main', this.boardWidth, this.boardHeight, this.squareSize, this.savedState);
+        this.setRunning = running => props.setRunning(running, 'main');
         this.state = {showMessage: false};
     }
 
@@ -121,10 +122,10 @@ class Main extends Component {
     }
     
     handlePlayToggle(){
-        if(this.props.stopped['main']){
-            this.start();
-        } else {
+        if(this.props.running['main']){
             this.stop();
+        } else {
+            this.start();
         }
     };  
 
@@ -135,7 +136,7 @@ class Main extends Component {
 
     handleClick(e){
         this.playMode.drawing = true;
-        if (!this.props.stopped['main']) {
+        if (this.props.running['main']) {
             this.stop();
         }
         const isCircleClicked = this.board.circleClick(e);
@@ -151,14 +152,14 @@ class Main extends Component {
             this.playMode.stopped = false;
             this.then = Date.now();
             this.playMode.drawing = false;
-            this.setStopped(false);
+            this.setRunning(false);
             this.rAF = requestAnimationFrame(() =>{this.run()});
         }
     }
 
     stop() {
         if(!this.playMode.stopped){
-            this.setStopped(true);
+            this.setRunning(true);
             this.playMode.running = false;
             this.playMode.stopped = true;
             cancelAnimationFrame(this.rAF);
@@ -199,7 +200,7 @@ class Main extends Component {
     componentDidMount(){
         const ratio = this.state.screen ? this.state.screen.ratio : window.devicePixelRatio || 1
         this.playMode.clear = false;
-        this.board.drawBoard(this.boardWidth, this.boardHeight, this.squareSize, ratio, this.canvas, this.props.savedState);
+        this.board.drawBoard(this.canvas, ratio, this.boardWidth, this.boardHeight, this.squareSize, this.props.savedState);
         this.updateOnce();
         if(this.props.error){
             this.handleOpenErrorDialog()
@@ -228,7 +229,7 @@ class Main extends Component {
         const vertSelectBarDisplay = screen.width < screen.height ||  screen.width > 1280 ? 'none' : 'inline-block';
         const canvasAndControlsDisplay = screen.width < screen.height ||  screen.width > 1280 ? 'block' : 'inline-block';
         const canvasAndControlsWidth = screen.width < screen.height ||  screen.width > 1280 ? '100%' : '70%';
-        
+        const isRunning = this.props.running['main'] || false;
         return (
             
             <div className="gameBoard">
@@ -277,7 +278,7 @@ class Main extends Component {
                         </div>
                         <div className="controls">
                             <PlayButtonsBar 
-                                on={this.props.stopped['main']}
+                                on={!isRunning}
                                 handlePlayToggle={() => this.handlePlayToggle()}
                                 step={() => this.step()}
                                 clear={() => this.clear()}
@@ -349,8 +350,8 @@ const TWO_NUMBERS_ARRAY = function(props, propName, componentName){
 
 
 Main.propTypes = {
-    setStopped: PropTypes.func.isRequired,
-    stopped: PropTypes.shape({
+    setRunning: PropTypes.func.isRequired,
+    running: PropTypes.shape({
         [patternNames.MAIN]: PropTypes.bool,
         [patternNames.BLOCK]: PropTypes.bool,
         [patternNames.BOAT]: PropTypes.bool,

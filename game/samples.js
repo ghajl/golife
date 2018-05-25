@@ -77,20 +77,19 @@ const coordinates = {
 }
 
 const makeList = (coordinates) => {
-
-	return Object.keys(coordinates).map(y => {
-		
-		return coordinates[y].map(x => [+y, x])
-	})
+	return Object.keys(coordinates).reduce((acc, y) => {
+		coordinates[y].forEach(x => acc.push([+y, x]));
+		return acc;
+	}, [])
 }
 
-const makeSample = (width, height, coordinates, unwrapped, name) => {
+const makeSample = (width, height, coordinates, unwrapped, label) => {
 	return {
 		width,
         height,
         coordinates: makeList(coordinates),
         unwrapped, 
-        name,
+        label,
 	}
 }
 

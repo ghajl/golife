@@ -1,46 +1,31 @@
 import { makeUnique, shiftPatternToCenter, getRandomPattern } from '../util/helpers';
 import Cell from './Cell';
 class Life {
-	constructor(width, height, savedState, isUnwrapped = false) {
+	constructor(width, height, initialState) {
 		this.gridWidth = width;
 	  	this.gridHeight = height;
-	  	this.gridIsUnwrapped = isUnwrapped;
-		this.checkList = [];
-		this.initialState = savedState;
-		this.modifiedCells = {
+	  	this.checkList = [];
+		this.change = {
             list: null,
             isFirst: true,
         };
-		if (this.gridIsUnwrapped) {
-            this.gridWidth = this.gridWidth + 40;
-            this.gridHeight = this.gridHeight + 40;
-        }
-        if (this.initialState != null) {
-            if (this.gridIsUnwrapped) {
-                this.initialState = this.initialState.map(cell => [cell[0]+20,cell[1]+20]);
-            }
-            this.modifiedCells.list = this.initialState;
+		if (initialState != null) {
+            this.change.list = initialState;
         } else {
-            this.modifiedCells.list = getRandomPattern(height,width);
+            this.change.list = getRandomPattern(height, width);
         }
-        this.board = createBoard(this.gridWidth, this.gridHeight, this.checkList, this.gridIsUnwrapped);
+        this.board = createBoard(this.gridWidth, this.gridHeight, this.checkList, setNeighbors);
 	}
 
-	reload(width ,height , isUnwrapped = false) {
+	reload(width, height) {
         this.checkList = [];
-        this.modifiedCells = {
+        this.change = {
             list: null,
             isFirst: true,
         };
         this.gridWidth = width;
         this.gridHeight = height; 
-        this.gridIsUnwrapped = isUnwrapped;
-        if(this.gridIsUnwrapped){
-            this.gridWidth = this.gridWidth + 40;
-            this.gridHeight = this.gridHeight + 40;
-        }
-        
-        this.board = createBoard(this.gridWidth, this.gridHeight, this.checkList, this.gridIsUnwrapped);
+        this.board = createBoard(this.gridWidth, this.gridHeight, this.checkList, setNeighbors);
 
     }
 
@@ -56,18 +41,18 @@ class Life {
         }
         if (boardIsClear) {
             //board is clear - there aren't any live cells on the board
-            this.modifiedCells.list = changeList;
-            this.modifiedCells.isFirst = true;
+            this.change.list = changeList;
+            this.change.isFirst = true;
         } else {
             //we have to clear the remained cells 
-            this.modifiedCells.list = getNewPatternChangeList(this.board, changeList);
-            this.modifiedCells.isFirst = true;
+            this.change.list = getNewPatternChangeList(this.board, changeList);
+            this.change.isFirst = true;
         }
     }
 
     addCell(x, y) {
-    	this.modifiedCells.list = [];
-        this.modifiedCells.list.push([y, x]);
+    	this.change.list = [];
+        this.change.list.push([y, x]);
     }
 
 
@@ -75,22 +60,21 @@ class Life {
 	    this.checkList.length = 0;
         let redrawList = [];
         if (mode.drawing) {
-            redrawList = this.modifiedCells.list;
-            applyChanges(this.board, this.modifiedCells, this.checkList);
-            this.modifiedCells.list = boardTotalCheck(this.board);   
+            redrawList = this.change.list;
+            applyChanges(this.board, this.change, this.checkList);
+            this.change.list = boardTotalCheck(this.board);   
         } else if (mode.clear) {
-            this.modifiedCells.list = getLiveCells(this.board);
-            redrawList = this.modifiedCells.list;
-            applyChanges(this.board, this.modifiedCells, this.checkList);
-            this.modifiedCells.isFirst = true;
+            this.change.list = getLiveCells(this.board);
+            redrawList = this.change.list;
+            applyChanges(this.board, this.change, this.checkList);
+            this.change.isFirst = true;
             this.checkList.length = 0;
         } else {
-            const nextList = applyChanges(this.board,this.modifiedCells,this.checkList);
-            redrawList = this.modifiedCells.list;
-            this.modifiedCells.list = nextList;     
-            this.modifiedCells.isFirst = false;
+            const nextList = applyChanges(this.board,this.change,this.checkList);
+            redrawList = this.change.list;
+            this.change.list = nextList;     
+            this.change.isFirst = false;
         }
-
         return redrawList;
 	}
 
@@ -107,7 +91,7 @@ class Life {
 
 export default Life;
 
-export function createCellsBoard(width, height, checkList, isUnwrapped) {
+export function createCellsBoard(width, height, checkList) {
     const valuesBoard = Array(height).fill(null);
     for (let i = 0; i < height; i++) {
         valuesBoard[i] = Array(width).fill(null);
@@ -118,11 +102,11 @@ export function createCellsBoard(width, height, checkList, isUnwrapped) {
     return valuesBoard;
 }
 
-export function createBoard(width, height, checkList, isUnwrapped) {
-    const board = createCellsBoard(width, height, checkList, isUnwrapped);
+export function createBoard(width, height, checkList, setNeighbors) {
+    const board = createCellsBoard(width, height, checkList);
     for (let i = 0; i < height; i++) {
         for (let j = 0; j < width; j++) {
-            const neighbors = getNeighbors(board, width, height, i, j, isUnwrapped);//  setListeners(i,j);
+            const neighbors = setNeighbors(board, width, height, i, j);//  setListeners(i,j);
             const stateChangeListeners = getStateChangeListeners(neighbors);
             board[i][j].addListeners("neighborStateChange", stateChangeListeners);
             const numberChangeListeners = getNumberChangeListeners(board[i][j]);
@@ -132,30 +116,24 @@ export function createBoard(width, height, checkList, isUnwrapped) {
     return board;
 }
 
-export function getNeighbors(valuesBoard, width, height, Y, X, isUnwrapped){
-    let cellList = [];
+export function setNeighbors(valuesBoard, width, height, Y, X){
+    const cellList = [];
     for (let i = -1; i < 2; i++) {
         for (let j = -1; j < 2; j++) {
             let tX = X + j, tY = Y + i;
-            if (isUnwrapped) {
-                if (tY >= 0 && tY < height && tX >= 0 && tX < width && !(i ===0 && j === 0)) {
-                    cellList.push(valuesBoard[tY][tX]);
-                }
-            } else {
-                if (tY < 0) {
-                	tY = height - 1;
-                } else if (tY >= height) {
-                	tY = 0;
-                }
-                if (tX < 0) {
-                	tX = width - 1;
-                } else if (tX >= width) {
-                	tX = 0;
-                }
-                if (!(i === 0 && j === 0)) {
-                    cellList.push(valuesBoard[tY][tX]);
-                }                    
+            if (tY < 0) {
+            	tY = height - 1;
+            } else if (tY >= height) {
+            	tY = 0;
             }
+            if (tX < 0) {
+            	tX = width - 1;
+            } else if (tX >= width) {
+            	tX = 0;
+            }
+            if (!(i === 0 && j === 0)) {
+                cellList.push(valuesBoard[tY][tX]);
+            }                    
         }
     }
     return cellList;

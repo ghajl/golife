@@ -4,7 +4,7 @@ export const actionTypes = {
   LOAD_DATA_SUCCESS: 'LOAD_DATA_SUCCESS',
   CHANGE_PATTERN: 'CHANGE_PATTERN',
   CHANGE_BOARD_SIZE: 'CHANGE_BOARD_SIZE',
-  SET_STOPPED: 'SET_STOPPED',
+  SET_RUNNING: 'SET_RUNNING',
   INCREMENT_GENERATION: 'INCREMENT_GENERATION',
   SET_SPEED: 'SET_SPEED',
   SET_CLEAR: 'SET_CLEAR',
@@ -46,10 +46,10 @@ export function changeBoardSize(index) {
 
 }
 
-export function setStopped(stopped, name) {
+export function setRunning(running, name) {
   return {
-    type: actionTypes.SET_STOPPED,
-    stopped,
+    type: actionTypes.SET_RUNNING,
+    running,
     name
   }
 }

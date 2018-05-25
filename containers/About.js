@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
-import { setStopped } from 'actions'
+import { setRunning } from 'actions'
 import { compose, setDisplayName, pure } from 'recompose';
 import About from '../components/About';
 
 
 const mapDispatchToProps = dispatch => {
   return {
-    setStopped: (stopped, name) => {
-    	dispatch(setStopped(stopped, name))
+    setRunning: (running, name) => {
+    	dispatch(setRunning(running, name))
     },
 
   }

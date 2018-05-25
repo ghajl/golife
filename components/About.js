@@ -4,6 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import YouTube from './YouTubePlayer';
 import GameBoard from '../game/GameBoard';
+import UnwrappedGameBoard from '../game/UnwrappedGameBoard';
 import IconButton from 'material-ui/IconButton';
 import ToggleIcon from './ToggleIcon';
 import PlayArrow from 'material-ui-icons/PlayArrow';
@@ -12,19 +13,6 @@ import {patternNames} from '../util/patternNames'
 import { shiftPatternToCenter, shiftPattern } from '../util/helpers';
 import {colors as color} from '../util/colors';
 import {samples} from '../game/samples';
-
-var beaconCoordinates = require('../static/beacon.txt');
-var beehiveCoordinates = require('../static/beehive.txt');
-var blinkerCoordinates = require('../static/blinker.txt');
-var blockCoordinates = require('../static/block.txt');
-var boatCoordinates = require('../static/boat.txt');
-var gliderCoordinates = require('../static/glider.txt');
-var gunCoordinates = require('../static/gun.txt');
-var loafCoordinates = require('../static/loaf.txt');
-var lspaceshipCoordinates = require('../static/lspaceship.txt');
-var oscGlassesCoordinates = require('../static/oscGlasses.txt');
-var oscQuadCoordinates = require('../static/oscQuad.txt');
-var toadCoordinates = require('../static/toad.txt');
 
 const styles = {
 
@@ -75,118 +63,22 @@ class About extends Component {
 	constructor(props){
 		super(props);
         this.squareSize = 12;
-        // let parameters = {
-        //     [patternNames.BEACON]: {
-        //         width: 6,
-        //         height: 6, 
-        //         coordinates: createCellsList(beaconCoordinates),    
-        //         unwrapped: false,   
-        //         name: "Beacon",       
-        //     },
-        //     [patternNames.BEEHIVE]: {
-        //         width: 6,
-        //         height: 5,
-        //         coordinates: createCellsList(beehiveCoordinates),
-        //         unwrapped: false, 
-        //         name: "Beehive",
-        //     },
-        //     [patternNames.BLINKER]: {
-        //         width: 5,
-        //         height: 5,
-        //         coordinates: createCellsList(blinkerCoordinates),
-        //         unwrapped: false, 
-        //         name: "Blinker",
-        //     },
-        //     [patternNames.BLOCK]: {
-        //         width: 4,
-        //         height: 4,
-        //         coordinates: createCellsList(blockCoordinates),
-        //         unwrapped: false, 
-        //         name: "Block",
-        //     },
-        //     [patternNames.BOAT]: {
-        //         width: 5,
-        //         height: 5,
-        //         coordinates: createCellsList(boatCoordinates),
-        //         unwrapped: false, 
-        //         name: "Boat",
-        //     },
-        //     [patternNames.GLIDER]: {
-        //         width: 10,
-        //         height: 10,
-        //         coordinates: createCellsList(gliderCoordinates),
-        //         unwrapped: false, 
-        //         name: "Glider",
-        //     },
-        //     [patternNames.GUN]: {
-        //         width: 40,
-        //         height: 20,
-        //         coordinates: createCellsList(gunCoordinates),
-        //         unwrapped: true, 
-        //         name: "The Gosper Glider Gun",
-        //     },
-        //     [patternNames.LOAF]: {
-        //         width: 6,
-        //         height: 6,
-        //         coordinates: createCellsList(loafCoordinates),
-        //         unwrapped: false, 
-        //         name: "Loaf",
-        //     },
-        //     [patternNames.SPACESHIP]: {
-        //         width: 12,
-        //         height: 12,
-        //         coordinates: createCellsList(lspaceshipCoordinates),
-        //         unwrapped: false, 
-        //         name: "Lightweight Spaceship",
-        //     },
-        //     [patternNames.GLASSES]: {
-        //         width: 20,
-        //         height: 13,
-        //         coordinates: createCellsList(oscGlassesCoordinates),
-        //         unwrapped: false, 
-        //         name: "Glasses",
-        //     },
-        //     [patternNames.QUAD]: {
-        //         width: 8,
-        //         height: 8,
-        //         coordinates: createCellsList(oscQuadCoordinates),
-        //         unwrapped: false, 
-        //         name: "Quad",
-        //     },
-        //     [patternNames.TOAD]: {
-        //         width: 6,
-        //         height: 6,
-        //         coordinates: createCellsList(toadCoordinates),
-        //         unwrapped: false, 
-        //         name: "Toad",
-        //     },
-        // }
- 
-        // this.examples = {};
         this.samples = {};
-        console.log(samples)
-        Object.keys(samples).forEach(title => {
-            
-            const {width, height, unwrapped, coordinates, name} = samples[title];
-            const adjustedCoordinates = title == 'gun' ? shiftPattern(coordinates, 1, 1) : shiftPatternToCenter(coordinates, height, width);
-            this.samples[title] = {
-                board: new GameBoard(title, width, height, this.squareSize, unwrapped),
-                cells: adjustedCoordinates,
-                name: title,
+        this.canvases = {};
+        Object.keys(samples).forEach(name => {
+            const {width, height, unwrapped, coordinates, label} = samples[name];
+            const cells = name === 'gun' ? shiftPattern(coordinates, 1, 1) : shiftPatternToCenter(coordinates, height, width);
+            const board = unwrapped ? new UnwrappedGameBoard(name, width, height, this.squareSize, cells, 20) : new GameBoard(name, width, height, this.squareSize, cells);
+            this.samples[name] = {
+                board,
+                label,
                 width, 
                 height,
             }
         })
-        // for(let name in parameters){
-        //     this.examples[name] = {
-        //         grid: new GameBoard(name, parameters[name].width, parameters[name].height, squareSize, parameters[name].unwrapped),
-        //         cells: name == patternNames.GUN ? 
-        //                         shiftPattern(parameters[name].coordinates, 1, 1) :
-        //                         shiftPatternToCenter(parameters[name].coordinates, parameters[name].height, parameters[name].width),
-        //         name: parameters[name].name,
-        //     }
-        // }
-
+		this.running = [];
+		this.rAF = null;
+		this.interval=300;
         this.state = {
             screen: {
                 width: window.innerWidth,
@@ -194,40 +86,29 @@ class About extends Component {
                 ratio: window.devicePixelRatio || 1,
                 factor: window.innerWidth < 600 ? 3 : window.innerWidth < 960 ? 6 : 10,
             },
-        }
-        Object.keys(samples).forEach(title => {
-            this.samples[title].canvasWidth = this.computeWidth(this.samples[title].width, this.squareSize, this.state.screen);
+        };
+        Object.keys(this.samples).forEach(name => {
+            this.samples[name].canvasWidth = this.computeWidth(this.samples[name].width, this.squareSize, this.state.screen);
         })
-        // for(let name in parameters){
-        //     this.examples[name].canvasWidth = this.computeWidth(this.examples[name].grid, this.state.screen) 
-        // }
-
-		this.running = [];
-		this.rAF = null;
-
-		this.interval=300;
-	
-        this.setStopped = (stopped, name) => props.setStopped(stopped, name);
 	}
 
     computeWidth(width, squareSize, screen) {
-        // const {width, squareSize} = grid;
         const w = ((width + 1) * squareSize * screen.width / 100 * .7) / screen.factor;
         return w > screen.width * .6 ? screen.width * .6 : w;
     }
 
-    handlePlayToggle(sample) {
-        if (this.props.stopped[sample.board.name]) {
-            this.start(sample);
+    handlePlayToggle(name) {
+        if (this.props.running[name]) {
+            this.stop(name);
         } else {
-            this.stop(sample);
+            this.start(name);
         }
     }  
 
-    stop(sample){
-        if (!this.props.stopped[sample.board.name]) {
-            this.setStopped(true, sample.board.name);
-            const index = this.running.indexOf(sample);
+    stop(name){
+        if (this.props.running[name]) {
+            this.props.setRunning(false, name);
+            const index = this.running.indexOf(name);
             this.running.splice(index, 1);
             if (this.running.length === 0) {
             	cancelAnimationFrame(this.rAF);
@@ -236,10 +117,10 @@ class About extends Component {
     }
 
 
-    start(sample) {
-        if (this.props.stopped[sample.board.name]) {
-            this.setStopped(false, sample.board.name);
-            this.running.push(sample);
+    start(name) {
+        if (this.props.running[name] == null || this.props.running[name] == false) {
+            this.props.setRunning(true, name);
+            this.running.push(name);
             this.then = Date.now();
             if (this.running.length === 1) {
             	this.rAF = requestAnimationFrame(() =>{this.run()});
@@ -252,7 +133,7 @@ class About extends Component {
         this.delta = this.now - this.then;
         if (this.delta > this.interval) {
             this.then = this.now - (this.delta % this.interval);
-            this.running.forEach(p => p.board.update());
+            this.running.forEach(p => this.samples[p].board.update());
         }  
         this.rAF = requestAnimationFrame(() =>{this.run()}); 
     }
@@ -264,80 +145,86 @@ class About extends Component {
     
     componentWillMount() {
         window.addEventListener('resize', this.handleWindowSizeChange);
+        
     }
 
     componentDidMount() {
         const {ratio} = this.state.screen;
         for (let name in this.samples) {
-            console.log(this.samples[name])
-            const {width, height, board, cells, canvas} = this.samples[name];
-            board.drawBoard(width, height, this.squareSize, ratio, canvas, cells);
+            const canvas = this.canvases[name];
+            const {width, height, board} = this.samples[name];
+            console.log(`${width}, ${height}`)
+            board.drawBoard(canvas, ratio, width, height, this.squareSize);
             board.update();
         }
     }
 
-
     componentWillUnmount(){
         
         cancelAnimationFrame(this.rAF);    
-        this.setStopped(true, null);
+        this.props.setRunning(true, null);
     }
 
-    createSampleElement(name) {
-        const elementWidthPredefined = title => {
-            const {name, canvasWidth} = this.samples[title];
-            const isStopped = this.props.stopped[title];
-            return (
-                <BoardElement 
-                    patternName={name}
-                    stopped={isStopped}
-                    buttonColor={color.BUTTON} 
-                    withButton
-                    setCanvas={el => this.samples[title].canvas = el}
-                    handlePlayToggle = {() => this.handlePlayToggle(this.samples[title])}
-                />  
-            );
-        };
-        const elementWithButton = title => {
-            const {name, canvasWidth} = this.samples[title];
-            const isStopped = this.props.stopped[title];
-            return (
-                <BoardElement 
-                    width={canvasWidth}
-                    patternName={name}
-                    stopped={isStopped}
-                    buttonColor={color.BUTTON} 
-                    withButton
-                    setCanvas={el => this.samples[title].canvas = el}
-                    handlePlayToggle={() => this.handlePlayToggle(this.samples[title])}
-                />
-            );
-        };
-        const elementWithoutButton = title => {
-            const {name, canvasWidth} = this.samples[title];
-            return (
-                <BoardElement 
-                    width={canvasWidth}
-                    patternName={name}
-                    withButton={false}
-                    setCanvas={el => this.samples[title].canvas = el}
-                />
-            );
-        };
+    elementWidthPredefined = name => {
+        const {label} = this.samples[name];
+        const isRunning = this.props.running[name] || false;
+        return (
+            <BoardElement 
+                patternName={label}
+                running={isRunning}
+                buttonColor={color.BUTTON} 
+                key={name}
+                withButton
+                setCanvas={el => this.canvases[name] = el}
+                handlePlayToggle = {() => this.handlePlayToggle(name)}
+            />  
+        );
+    };
+    elementWithButton = name => {
+        const {label, canvasWidth} = this.samples[name];
+        const isRunning = this.props.running[name] || false;
+        return (
+            <BoardElement 
+                width={canvasWidth}
+                patternName={label}
+                key={name}
+                running={isRunning}
+                buttonColor={color.BUTTON} 
+                withButton
+                setCanvas={el => this.canvases[name] = el}
+                handlePlayToggle={() => this.handlePlayToggle(name)}
+            />
+        );
+    };
+    elementWithoutButton = name => {
+        const {label, canvasWidth} = this.samples[name];
+        return (
+            <BoardElement 
+                key={name}
+                width={canvasWidth}
+                patternName={label}
+                withButton={false}
+                setCanvas={el => this.canvases[name] = el}
+            />
+        );
+    };
+
+    createBoardElement(name) {
         const element = {
-            beacon: elementWithButton,
-            beehive: elementWithoutButton,
-            blinker: elementWithButton,
-            block: elementWithoutButton,
-            boat: elementWithoutButton,
-            glider: elementWithButton,
-            gun: elementWidthPredefined,
-            loaf: elementWithoutButton,
-            spaceship: elementWithButton,
-            glasses: elementWithButton,
-            quad: elementWithButton,
-            toad: elementWithButton,
+            beacon: this.elementWithButton,
+            beehive: this.elementWithoutButton,
+            blinker: this.elementWithButton,
+            block: this.elementWithoutButton,
+            boat: this.elementWithoutButton,
+            glider: this.elementWithButton,
+            gun: this.elementWidthPredefined,
+            loaf: this.elementWithoutButton,
+            spaceship: this.elementWithButton,
+            glasses: this.elementWithButton,
+            quad: this.elementWithButton,
+            toad: this.elementWithButton,
         }
+        
         return element[name](name);
     }
 
@@ -379,16 +266,16 @@ class About extends Component {
                 	    	Rules
             	    	</h2>
             	    	<p className={classes.text}>
-                	    	Every cell interacts with its eight neighbours, 
+                	    	Every cell interacts with its eight neighbors, 
                 	    	which are the cells that are horizontally, vertically, or diagonally adjacent. 
                 	    	At each step in time, the following transitions occur:
             	    	</p>
             	    	<div className={classes.rules}>
                 	    	<ul>
-                				<li>Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.</li>
-                				<li>Any live cell with two or three live neighbours lives on to the next generation.</li>
-                				<li>Any live cell with more than three live neighbours dies, as if by overpopulation.</li>
-                				<li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</li>
+                				<li>Any live cell with fewer than two live neighbors dies, as if caused by underpopulation.</li>
+                				<li>Any live cell with two or three live neighbors lives on to the next generation.</li>
+                				<li>Any live cell with more than three live neighbors dies, as if by overpopulation.</li>
+                				<li>Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.</li>
                 			</ul>
             			</div>
             			<p className={classes.text}>
@@ -418,7 +305,7 @@ class About extends Component {
                 	    	Stable finite patterns.
             	    	</p>
             	    	<div className={classes.boardsSection}>
-                            {['block', 'boat', 'loaf', 'beehive'].map(name => this.createSampleElement(name))}
+                            {['block', 'boat', 'loaf', 'beehive'].map(name => this.createBoardElement(name))}
             		    </div>
             			<h4 className={classes.title}>
                 		    Oscillators 
@@ -428,7 +315,7 @@ class About extends Component {
                             The most common period-2 oscillators include:
             	    	</p>
             	    	<div className={classes.boardsSection}>
-                	    	{['blinker', 'beacon', 'toad', 'glasses', 'quad'].map(name => this.createSampleElement(name))}
+                	    	{['blinker', 'beacon', 'toad', 'glasses', 'quad'].map(name => this.createBoardElement(name))}
             		    </div>
             			<h4 className={classes.title}>
                 		    Gliders and Spaceships
@@ -441,7 +328,7 @@ class About extends Component {
                 	    	They each move in a straight line.
             	    	</p>
             	    	<div  className={classes.boardsSection} >
-                	    	{['glider', 'spaceship'].map(name => this.createSampleElement(name))}
+                	    	{['glider', 'spaceship'].map(name => this.createBoardElement(name))}
             		    </div> 	
             			<h4 className={classes.title}>
                 		    Guns
@@ -455,7 +342,7 @@ class About extends Component {
                 			This glider moves away in time for the process to repeat itself 30 steps later.
             			</p>
             			<div  className={classes.boardsSection} >
-            			    {this.createSampleElement('gun')}
+            			    {this.createBoardElement('gun')}
                		    </div>
             	    	<h2 className={classes.title}>
                 	    	Origins
@@ -565,8 +452,8 @@ class About extends Component {
 
 About.propTypes = {
     classes: PropTypes.object.isRequired,
-    setStopped: PropTypes.func.isRequired,
-    stopped: PropTypes.shape({
+    setRunning: PropTypes.func.isRequired,
+    running: PropTypes.shape({
         [patternNames.MAIN]: PropTypes.bool,
         [patternNames.BLOCK]: PropTypes.bool,
         [patternNames.BOAT]: PropTypes.bool,
@@ -602,7 +489,7 @@ const boardstyles = {
             
 }
 
-const BoardElement =  withStyles(boardstyles)(({width, patternName, stopped, buttonColor, withButton, ...props}) =>{
+const BoardElement =  withStyles(boardstyles)(({width, patternName, running, buttonColor, withButton, ...props}) =>{
     const display = withButton ? 'inline' : 'none';
 
     return (
@@ -615,9 +502,9 @@ const BoardElement =  withStyles(boardstyles)(({width, patternName, stopped, but
             />
             </div>
             <div className="buttonElement">
-                <IconButton className={props.classes.iconbutton} title={stopped?"Start":"Pause"} onClick = {props.handlePlayToggle}>
+                <IconButton className={props.classes.iconbutton} title={running ? 'Pause' : 'Start'} onClick = {props.handlePlayToggle}>
                     <ToggleIcon
-                        on={stopped}
+                        on={!running}
                         onIcon={<PlayArrow className={props.classes.icon} />}
                         offIcon={<Pause className={props.classes.icon} />}
                         
@@ -656,7 +543,6 @@ const BoardElement =  withStyles(boardstyles)(({width, patternName, stopped, but
     </div>    
     );
 })
-
 
 
 const createCellsList = (coordinates) => {

@@ -74,9 +74,9 @@ export function shiftPatternToCenter(pattern,boardHeight,boardWidth){
 
 export function shiftPattern(pattern,vertShift,horShift){
     return pattern.map(cell => {
-        const y = cell[0] + vertShift
+        const y = cell[0] + vertShift;
         // console.log(y+ "pat");
-        const x = cell[1] + horShift
+        const x = cell[1] + horShift;
         return [y,x];
     });
 }

@@ -2,7 +2,7 @@ import {colors as color} from '../util/colors';
 
 class Canvas {
 	constructor(canvas, width, height, squareSize, ratio) {
-		console.log(`${canvas}, ${width}, ${height}, ${squareSize}, ${ratio}`)
+
 		this.canvas = canvas;
 		this.width = width;
 		this.height = height;
@@ -20,6 +20,7 @@ class Canvas {
 
 	init() {
 		this.drawGrid(this.width, this.height);
+		console.log(`${this.width}`)
         const bufferCanvas = this.copyCanvas(this.canvas);
         const ctx = bufferCanvas.getContext('2d');         
         this.originalCellImage = ctx.getImageData(this.squareSize * this.ratio / 2, this.squareSize * this.ratio / 2, this.squareSize * this.ratio, this.squareSize * this.ratio);

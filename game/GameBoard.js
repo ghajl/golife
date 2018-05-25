@@ -6,29 +6,32 @@ import {colors as color} from '../util/colors';
 
 
 class GameBoard {
-    constructor(name, width, height, squareSize, savedCellList, isUnwrapped = false)
-    {
-        this.gridSquareSize = squareSize;
-        this.radius = this.gridSquareSize / 2;
-        this.gridName = name;
-        this.savedCellList = savedCellList;
-        this.gridIsUnwrapped = isUnwrapped;
-        this.life = new Life(width, height, this.savedCellList, this.gridIsUnwrapped);
+    constructor(name, width, height, squareSize, initialState) {
+    
+        this.width = width;
+        this.height = height;
+        this.squareSize = squareSize;
+        this.radius = this.squareSize / 2;
+        this.name = name;
+        this.life = new Life(this.width, this.height, initialState);
 	}
 
-    reload(width, height, squareSize, canvas, isUnwrapped = false){
-        this.gridSquareSize = squareSize;
-        this.radius = this.gridSquareSize / 2;
-        this.gridIsUnwrapped = isUnwrapped;
-        this.life.reload(width, height, this.gridIsUnwrapped);
-        this.drawBoard(width, height, this.gridSquareSize, this.ratio, canvas);
+    reload(width, height, squareSize, canvas){
+        this.width = width;
+        this.height = height;
+        this.squareSize = squareSize;
+        this.radius = this.squareSize / 2;
+        this.life.reload(width, height);
+        this.drawBoard(canvas);
     }
 
 
-    drawBoard(width, height, squareSize, ratio, canvas, savedCellsList)
+    drawBoard(canvas, ratio)
     {
-        this.ratio = ratio;
-        this.canvas = new Canvas(canvas, width, height, squareSize, ratio);
+        if (ratio != null) {
+            this.ratio = ratio;
+        }
+        this.canvas = new Canvas(canvas, this.width, this.height, this.squareSize, this.ratio);
         this.canvas.init();
     }
 
@@ -57,37 +60,27 @@ class GameBoard {
     }
 
     update(mode){
+        try{
+         
         const redrawList = this.life.nextGeneration(mode);
         const board = this.life.getBoard();
         this.updateWorld(board, redrawList);
+        }
+        catch(e) {
+            console.log(e)
+        }
     }
 
-    updateWorld(valuesBoard, redrawList, gridIsUnwrapped = false){
-        if(gridIsUnwrapped){
-            redrawList.forEach(cell => {
-                let X = cell[1];
-                let Y = cell[0];
-                    if(X >= 20 &&  X < width - 20 && Y >= 20 &&  Y < height - 20){
-                        X = (X - 19) * this.gridSquareSize;
-                        Y = (Y - 19) * this.gridSquareSize;
-                        if(valuesBoard[cell[0]][cell[1]].state === 0){
-                            this.canvas.drawDeadCell(X, Y);
-                        } else {
-                            this.canvas.drawLiveCell(X, Y);
-                        }
-                    }
-            })
-        } else {
-            redrawList.forEach(cell => {
-                const X = (cell[1] + 1) * this.gridSquareSize;
-                const Y = (cell[0] + 1) * this.gridSquareSize;
-                if(valuesBoard[cell[0]][cell[1]].state === 0){
-                    this.canvas.drawDeadCell(X, Y);
-                } else {
-                    this.canvas.drawLiveCell(X, Y);
-                }            
-            })    
-        }
+    updateWorld(valuesBoard, redrawList){
+        redrawList.forEach(cell => {
+            const X = (cell[1] + 1) * this.squareSize;
+            const Y = (cell[0] + 1) * this.squareSize;
+            if(valuesBoard[cell[0]][cell[1]].state === 0){
+                this.canvas.drawDeadCell(X, Y);
+            } else {
+                this.canvas.drawLiveCell(X, Y);
+            }            
+        })    
     }
 }
 
