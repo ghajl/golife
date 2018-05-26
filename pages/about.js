@@ -8,18 +8,18 @@ import Layout from '../components/Layout'
 
 
 class AboutPage extends Component {
-    static async getInitialProps ({store}) {
-        if (store.getState().patterns.length === 0) {
-            store.dispatch(loadData())
-    }}
+  static async getInitialProps ({store}) {
+    if (store.getState().patterns.length === 0) {
+        store.dispatch(loadData())
+  }}
 
-    render() {
-        return (
-            <Layout  url={this.props.url}>
-                <About />
-            </Layout>
-        )   
-    } 
+  render() {
+    return (
+      <Layout  url={this.props.url}>
+        <About />
+      </Layout>
+    )   
+  } 
 }
 
 export default withReduxSaga(withRoot(AboutPage))

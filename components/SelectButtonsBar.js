@@ -4,60 +4,52 @@ import Select from './Select';
 import { withStyles } from 'material-ui/styles';
 
 const styles = theme => ({
-    container: {
-        textAlign: 'center',
-    },
+  container: {
+    textAlign: 'center',
+  },
 	item: {
-        width:'50%',
-        display: 'inline-block',
-		maxWidth:360,
-	}
+    width:'50%',
+    display: 'inline-block',
+		maxWidth: 360,
+	},
 })
 
 const SelectButtonsBar = ({direction, ...props}) => {
-    let width = direction == 'column' ? '100%' : null;
-
+  const width = direction == 'column' ? '100%' : null;
 	return (
-		
 		<div className={props.classes.container} >
-			<div className={props.classes.item} style={{width:width}}>
-                <Select
-                    
-                    index={props.patternNamesIndex}
-                    items={props.patternNames}
-                    
-                    onChange={(v) => props.changePatternEvent(v)}
-                    label={props.patternLabel}
-                />
-            </div>
-            <div className={props.classes.item} style={{width:width}}>
-                <Select
-                    
-                    index={props.gridSizesIndex}
-                    items={props.gridSizesLabel}
-                    
-                    onChange={(v) => props.changeBoardSizeEventHandler(v)}
-                    label={props.gridLabel}
-                />
-            </div>
+			<div className={props.classes.item} style={{width: width}}>
+        <Select
+          index={props.patternIndex}
+          items={props.patterns}
+          onChange={(index) => props.onPatternChange(index)}
+          label={props.patternLabel}
+        />
+      </div>
+      <div className={props.classes.item} style={{width: width}}>
+        <Select
+          index={props.sizeIndex}
+          items={props.sizes}
+          onChange={(index) => props.onBoardSizeChange(index)}
+          label={props.sizeLabel}
+        />
+      </div>
 		</div>
-		
 	);
 }
 
 export default withStyles(styles)(SelectButtonsBar);
 
-
 SelectButtonsBar.propTypes = {
-    classes: PropTypes.object.isRequired,
-    direction: PropTypes.string,
-    justify: PropTypes.string,
-    patternNamesIndex: PropTypes.number.isRequired,
-    patternNames: PropTypes.array.isRequired,
-    changePatternEvent: PropTypes.func.isRequired,
-    patternLabel: PropTypes.string.isRequired,
-    gridSizesIndex: PropTypes.number.isRequired,
-    gridSizes: PropTypes.array.isRequired,
-    changeBoardSizeEventHandler: PropTypes.func.isRequired,
-    gridLabel: PropTypes.string.isRequired,
+  classes: PropTypes.object.isRequired,
+  direction: PropTypes.string,
+  justify: PropTypes.string,
+  patternNamesIndex: PropTypes.number.isRequired,
+  patternNames: PropTypes.array.isRequired,
+  changePatternEvent: PropTypes.func.isRequired,
+  patternLabel: PropTypes.string.isRequired,
+  gridSizesIndex: PropTypes.number.isRequired,
+  gridSizes: PropTypes.array.isRequired,
+  changeBoardSizeEventHandler: PropTypes.func.isRequired,
+  gridLabel: PropTypes.string.isRequired,
 };

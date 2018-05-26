@@ -86,25 +86,25 @@ const makeList = (coordinates) => {
 const makeSample = (width, height, coordinates, unwrapped, label) => {
 	return {
 		width,
-        height,
-        coordinates: makeList(coordinates),
-        unwrapped, 
-        label,
+      height,
+      coordinates: makeList(coordinates),
+      unwrapped, 
+      label,
 	}
 }
 
 export const samples = {
 	beacon: makeSample(6, 6, coordinates.beacon, false, 'Beacon'),
-    beehive: makeSample(6, 5, coordinates.beehive, false, 'Beehive'),
-    blinker: makeSample(5, 5, coordinates.blinker, false, 'Blinker'),
-    block: makeSample(4, 4, coordinates.block, false, 'Block'),
-    boat: makeSample(5, 5, coordinates.boat, false, 'Boat'),
-    glider: makeSample(10, 10, coordinates.glider, false, 'Glider'),
-    gun: makeSample(40, 20, coordinates.gun, true, 'The Gosper Glider Gun'),
-    loaf: makeSample(6, 6, coordinates.loaf, false, 'Loaf'),
-    spaceship: makeSample(12, 12, coordinates.spaceship, false, 'Lightweight Spaceship'),
-    glasses: makeSample(20, 13, coordinates.glasses, false, 'Glasses'),
-    quad: makeSample(8, 8, coordinates.quad, false, 'Quad'),
-    toad: makeSample(6, 6, coordinates.toad, false, 'Toad'),
+  beehive: makeSample(6, 5, coordinates.beehive, false, 'Beehive'),
+  blinker: makeSample(5, 5, coordinates.blinker, false, 'Blinker'),
+  block: makeSample(4, 4, coordinates.block, false, 'Block'),
+  boat: makeSample(5, 5, coordinates.boat, false, 'Boat'),
+  glider: makeSample(10, 10, coordinates.glider, false, 'Glider'),
+  gun: makeSample(40, 20, coordinates.gun, true, 'The Gosper Glider Gun'),
+  loaf: makeSample(6, 6, coordinates.loaf, false, 'Loaf'),
+  spaceship: makeSample(12, 12, coordinates.spaceship, false, 'Lightweight Spaceship'),
+  glasses: makeSample(20, 13, coordinates.glasses, false, 'Glasses'),
+  quad: makeSample(8, 8, coordinates.quad, false, 'Quad'),
+  toad: makeSample(6, 6, coordinates.toad, false, 'Toad'),
 }
 

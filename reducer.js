@@ -5,13 +5,14 @@ import {patternNames} from './util/patternNames';
 export const initialState = {
 	error: false,
 	patterns: [],
-  generationCount: -1,   
-  running: {},
-  currentPatternNameIndex: 0,
+  generation: -1,   
+  running: {
+    'main': false,
+  },
+  pattern: 0,
   fps: 2,
-  currentGridSizeIndex: 1,
-  savedState: null, 
-  size: null,
+  size: 1,
+  cells: null, 
 }
 
 function initBoards () {
@@ -39,8 +40,8 @@ export function reducer (state = initialState, action) {
     case actionTypes.CHANGE_PATTERN:
       return {
         ...state,
-        ...{currentPatternNameIndex: action.index,
-            generationCount: -1
+        ...{pattern: action.index,
+            generation: -1
           }
       }
 
@@ -48,9 +49,9 @@ export function reducer (state = initialState, action) {
     case actionTypes.CHANGE_BOARD_SIZE:
       return {
         ...state,
-        ...{currentGridSizeIndex: action.index,
-            generationCount: 0,
-            currentPatternNameIndex: -1,
+        ...{size: action.size,
+            generation: 0,
+            pattern: -1,
           }
       }
     case actionTypes.SET_RUNNING:
@@ -70,7 +71,7 @@ export function reducer (state = initialState, action) {
     case actionTypes.INCREMENT_GENERATION:
       return {
         ...state,
-        ...{generationCount: state.generationCount + 1}
+        ...{generation: state.generation + 1}
       }    
 
     case actionTypes.SET_SPEED:
@@ -85,19 +86,19 @@ export function reducer (state = initialState, action) {
       return {
         ...state,
         ...{
-            generationCount: -1,
-            currentPatternNameIndex:-1,
+            generation: 0,
+            pattern:-1,
           }
       }   
 
-    case actionTypes.SAVE_STATE:
+    case actionTypes.SAVE_CELLS:
     
       return {
         ...state,
         ...{
-            savedState: action.savedState, 
+            cells: action.cells, 
             
-            generationCount: state.generationCount -  1,
+            generation: state.generation -  1,
             }
           }
         

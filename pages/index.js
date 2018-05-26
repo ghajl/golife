@@ -7,19 +7,18 @@ import Layout from '../components/Layout'
 import Main from '../containers/Main';
 
 class Index extends Component {
-    static async getInitialProps ({store}) {
-        if (store.getState().patterns.length === 0) {
-            store.dispatch(loadData())
-    }}
+  static async getInitialProps ({store}) {
+    if (store.getState().patterns.length === 0) {
+      store.dispatch(loadData())
+  }}
 
-    render() {
-        return (
-            <Layout  url={this.props.url}>
-                <Main />
-            </Layout>
-            )
-        }    
+  render() {
+    return (
+      <Layout  url={this.props.url}>
+        <Main />
+      </Layout>
+    )
+  }    
 }
-
 
 export default withReduxSaga(withRoot(Index));

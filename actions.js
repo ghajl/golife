@@ -8,7 +8,7 @@ export const actionTypes = {
   INCREMENT_GENERATION: 'INCREMENT_GENERATION',
   SET_SPEED: 'SET_SPEED',
   SET_CLEAR: 'SET_CLEAR',
-  SAVE_STATE: 'SAVE_STATE',
+  SAVE_CELLS: 'SAVE_CELLS',
 }
 
 export function failure (error) {
@@ -37,10 +37,10 @@ export function changePattern(index) {
   }
 }
 
-export function changeBoardSize(index) {
+export function changeBoardSize(size) {
   return {
     type: actionTypes.CHANGE_BOARD_SIZE,
-    index
+    size
   }
 
 
@@ -68,9 +68,9 @@ export function setClear() {
   return {type: actionTypes.SET_CLEAR}
 }
 
-export function saveState(savedState) {
+export function saveCells(cells) {
   return {
-    type: actionTypes.SAVE_STATE,
-    savedState
+    type: actionTypes.SAVE_CELLS,
+    cells
   }
 }

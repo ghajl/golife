@@ -14,369 +14,324 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 
-
-
-
 class Main extends Component {
-    constructor(props){
-        super(props);
+  constructor(props){
+    super(props);
 
-        let boardParams = boardParameters.medium;
-        if (props.savedState != null) {
-            if (props.currentGridSizeIndex === 0) {
-                boardParams = boardParameters.small;
-            } else if (props.currentGridSizeIndex === 2) {
-                boardParams = boardParameters.large;
-            }
-        }
-        this.boardWidth = boardParams.width;
-        this.boardHeight = boardParams.height;
-        this.squareSize = boardParams.squareSize;
-        this.sizeLabel = [
-            `${boardParameters.small.height} X ${boardParameters.small.width}`,
-            `${boardParameters.medium.height} X ${boardParameters.medium.width}`,
-            `${boardParameters.large.height} X ${boardParameters.large.width}`
-        ];
-        this.patternNameLabel = ['Random'];
-        if (props.patterns) {
-            this.patternNameLabel = this.patternNameLabel.concat(props.patterns.map(pattern => pattern.name));
-        }
-        this.playMode = {
-            running: false,
-            stopped: false,
-            drawing: false,
-            clear:true,
-        }
-
-        this.board = new GameBoard('main', this.boardWidth, this.boardHeight, this.squareSize, this.savedState);
-        this.setRunning = running => props.setRunning(running, 'main');
-        this.state = {showMessage: false};
+    let params = boardParameters.medium;
+    if (props.cells != null) {
+      if (props.size === 'small') {
+        params = boardParameters.small;
+      } else if (props.size === 'large') {
+        params = boardParameters.large;
+      }
     }
+    this.boardWidth = params.width;
+    this.boardHeight = params.height;
+    this.squareSize = params.squareSize;
+    this.sizeLabel = [
+      `${boardParameters.small.height} X ${boardParameters.small.width}`,
+      `${boardParameters.medium.height} X ${boardParameters.medium.width}`,
+      `${boardParameters.large.height} X ${boardParameters.large.width}`
+    ];
+    this.patternNameLabel = ['Random'];
+    if (props.patterns) {
+      this.patternNameLabel = this.patternNameLabel.concat(props.patterns.map(pattern => pattern.name));
+    }
+    this.isBoardClear = true;
+    this.game = new GameBoard(this.boardWidth, this.boardHeight, this.squareSize, props.cells);
+    this.setRunning = running => props.setRunning(running, 'main');
+    this.state = {showMessage: false};
+  }
 
-    updateOnce(){
-        this.board.update(this.playMode);
-        if (!this.playMode.drawing) {
-            this.props.incrementGeneration();
+  componentWillMount(){
+    window.addEventListener('resize', this.handleWindowSizeChange);
+    this.setState(
+      {
+        screen: {
+          width: window.innerWidth,
+          height: window.innerHeight,
+          ratio: window.devicePixelRatio || 1,
         }
+      }
+    )        
+  }
+
+  componentDidMount(){
+    const ratio = this.state.screen ? this.state.screen.ratio : window.devicePixelRatio || 1
+    this.isBoardClear = false;
+    this.game.drawBoard(this.canvas, ratio);
+    this.updateOnce();
+    if(this.props.error){
+      this.handleOpenErrorDialog()
     }
+  }
 
-    run(){
-        this.now = Date.now();
-        this.delta = this.now - this.then;
-        if (this.delta > this.interval) {
-            this.then = this.now - (this.delta % this.interval);
-            this.updateOnce();
-        }  
-        this.rAF = requestAnimationFrame(() =>{this.run()}); 
-    }
+  componentWillUnmount(){
+    cancelAnimationFrame(this.rAF);    
+    const liveCellsList = this.game.getLiveCells();
+    this.props.saveCells(liveCellsList);
+  }
 
+  handleWindowSizeChange = () => {
+    this.setState({
+      screen : {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        ratio: window.devicePixelRatio || 1,
+      }
+    });
+    this.game.handleWindowSizeChange(this.canvas);
+  };
 
-    handleWindowSizeChange = () => {
-        this.setState({
-            screen : {
-                width: window.innerWidth,
-                height: window.innerHeight,
-                ratio: window.devicePixelRatio || 1,
-              }
-        });
-        this.board.handleWindowSizeChange(this.canvas);
-    };
-
-
-    handlePatternChange(index){
-        if(index !== this.props.currentPatternNameIndex){
-            this.board.changePattern(index, this.props.patterns, this.playMode);
-            this.props.changePattern(index)
-            if(this.playMode.clear){
-                this.playMode.clear = false;
-                this.updateOnce();
-            } else {
-                this.stop();
-                this.updateOnce();
-            }
-        }
-    }
-
-    handleBoardSizeChange(index){
-        if(index !== this.props.currentGridSizeIndex)
-        {
-            const boardParams = 
-                index === 0 ? boardParameters.small 
-                : index === 1 ? boardParameters.medium
-                : boardParameters.large;
-            this.changeBoardSize(boardParams, index);
-        }
-    }
-
-    changeBoardSize(boardParameters, sizeIndex){
-        this.stop();
-        this.boardWidth = boardParameters.width;
-        this.boardHeight = boardParameters.height; 
-        this.squareSize = boardParameters.squareSize;
-        this.board.reload(this.boardWidth, this.boardHeight, this.squareSize, this.canvas);
-        this.playMode.clear = true;
-        this.playMode.drawing = false;
-        this.playMode.running = false;
-        this.playMode.stopped = false;
-        this.props.changeBoardSize(sizeIndex);
-    }
-    
-    handlePlayToggle(){
-        if(this.props.running['main']){
-            this.stop();
-        } else {
-            this.start();
-        }
-    };  
-
-    setInterval(value){
-        this.interval=1000/value;
-        this.props.setSpeed(value);
-    }
-
-    handleClick(e){
-        this.playMode.drawing = true;
-        if (this.props.running['main']) {
-            this.stop();
-        }
-        const isCircleClicked = this.board.circleClick(e);
-        if (isCircleClicked) {
-            this.playMode.clear = false;
-            this.updateOnce();
-        }
-    }
-
-    start = () => {
-        if(!this.playMode.running && !this.playMode.clear){
-            this.playMode.running = true;
-            this.playMode.stopped = false;
-            this.then = Date.now();
-            this.playMode.drawing = false;
-            this.setRunning(false);
-            this.rAF = requestAnimationFrame(() =>{this.run()});
-        }
-    }
-
-    stop() {
-        if(!this.playMode.stopped){
-            this.setRunning(true);
-            this.playMode.running = false;
-            this.playMode.stopped = true;
-            cancelAnimationFrame(this.rAF);
-        }
-    }
-
-    clear(){
-        if(!this.playMode.clear){
-            this.stop();
-            this.props.setClear();
-            this.playMode.clear = true;
-            this.playMode.drawing=false;
-            this.updateOnce();
-        }
-    }
-
-    step(){
-        if(!this.playMode.running && !this.playMode.clear){
-            this.playMode.running = false;
-            this.playMode.stopped = true;
-            if(this.playMode.drawing){
-                this.playMode.drawing=false;
-            }
-            this.updateOnce();
-        }
-    }
-
-    componentWillMount(){
-        window.addEventListener('resize', this.handleWindowSizeChange);
-        this.setState({screen: {
-                width: window.innerWidth,
-                height: window.innerHeight,
-                ratio: window.devicePixelRatio || 1,
-            }
-        })        
-    }
-
-    componentDidMount(){
-        const ratio = this.state.screen ? this.state.screen.ratio : window.devicePixelRatio || 1
-        this.playMode.clear = false;
-        this.board.drawBoard(this.canvas, ratio, this.boardWidth, this.boardHeight, this.squareSize, this.props.savedState);
+  handlePatternChange(index){
+    if(index !== this.props.pattern){
+      this.game.changePattern(index, this.props.patterns, this.isBoardClear);
+      this.props.changePattern(index)
+      if(this.isBoardClear){
+        this.isBoardClear = false;
         this.updateOnce();
-        if(this.props.error){
-            this.handleOpenErrorDialog()
-        }
+      } else {
+        this.stop();
+        this.updateOnce();
+      }
     }
+  }
 
-
-    componentWillUnmount(){
-        cancelAnimationFrame(this.rAF);    
-        const liveCellsList = this.board.getLiveCells();
-        this.props.saveState(liveCellsList)
+  handleBoardSizeChange(index){
+    if (index !== this.props.size) {
+      const params = index === 0 
+        ? boardParameters.small 
+        : index === 1 
+        ? boardParameters.medium
+        : boardParameters.large;
+      this.stop();
+      this.boardWidth = params.width;
+      this.boardHeight = params.height; 
+      this.squareSize = params.squareSize;
+      this.game.reload(this.boardWidth, this.boardHeight, this.squareSize, this.canvas);
+      this.isBoardClear = true;
+      this.props.changeBoardSize(index);
     }
+  }
 
-    handleOpenErrorDialog = () => {
-        this.setState({showMessage: true});
-    };   
-    
-    handleCloseErrorDialog = () => {
-        this.setState({showMessage: false});
-    };
-    
-    render() {
-        const {screen} = this.state;
-        const width = screen.width > 1280 ? '50%' : '100%';
-        const horSelectBarDisplay = screen.width < screen.height ||  screen.width > 1280 ? 'block' : 'none';
-        const vertSelectBarDisplay = screen.width < screen.height ||  screen.width > 1280 ? 'none' : 'inline-block';
-        const canvasAndControlsDisplay = screen.width < screen.height ||  screen.width > 1280 ? 'block' : 'inline-block';
-        const canvasAndControlsWidth = screen.width < screen.height ||  screen.width > 1280 ? '100%' : '70%';
-        const isRunning = this.props.running['main'] || false;
-        return (
-            
-            <div className="gameBoard">
+  handleClick(e){
+    if (this.props.running['main']) {
+      this.stop();
+    }
+    this.isBoardClear = false;
+    this.game.drawCell(e);
+  }
 
-                <div className="container">
+  handlePlayToggle(){
+    if(this.props.running['main']){
+      this.stop();
+    } else {
+      this.start();
+    }
+  };  
 
-                    <div className="horSelectBar">
-                        <div className="paddingSides">
-                            <SelectButtonsBar 
-                                patternNamesIndex={this.props.currentPatternNameIndex}
-                                patternNames={this.patternNameLabel}
-                                changePatternEvent={(v) => this.handlePatternChange(v)}
-                                patternLabel="Pattern"
-                                gridSizesIndex={this.props.currentGridSizeIndex}
-                                gridSizesLabel={this.sizeLabel}
-                                changeBoardSizeEventHandler={(v) => this.handleBoardSizeChange(v)}
-                                gridLabel="Board Size"
-                                
-                                />
-                        </div>
-                    </div>
+  handleOpenErrorDialog = () => {
+    this.setState({showMessage: true});
+  };   
+  
+  handleCloseErrorDialog = () => {
+    this.setState({showMessage: false});
+  };
+  
+  setInterval(value){
+    this.interval = 1000 / value;
+    this.props.setSpeed(value);
+  }
 
-                    <div className="vertSelectBar">
-                        <SelectButtonsBar 
-                            patternNamesIndex={this.props.currentPatternNameIndex}
-                            patternNames={this.patternNameLabel}
-                            changePatternEvent={(v) => this.handlePatternChange(v)}
-                            patternLabel="Pattern"
-                            gridSizesIndex={this.props.currentGridSizeIndex}
-                            gridSizesLabel={this.sizeLabel}
-                            changeBoardSizeEventHandler={(v) => this.handleBoardSizeChange(v)}
-                            gridLabel="Board Size"
-                            
-                            direction="column"
-                            />
-                    </div>
-                    <div className="canvasAndControls">
-                        <div className="canvas">
-                            <div className="paddingSides">
-                                <canvas
-                                    ref={(canvas) => { this.canvas = canvas}}
-                                    onClick={(e) => this.handleClick(e)}
-                                />
+  start = () => {
+    if (!(this.props.running['main'] || this.isBoardClear)) {
+      this.then = Date.now();
+      this.setRunning(true);
+      this.rAF = requestAnimationFrame(() =>{this.run()});
+    }
+  }
 
-                            </div>
-                        </div>
-                        <div className="controls">
-                            <PlayButtonsBar 
-                                on={!isRunning}
-                                handlePlayToggle={() => this.handlePlayToggle()}
-                                step={() => this.step()}
-                                clear={() => this.clear()}
-                                setInterval={(v) => this.setInterval(v)}
-                                
-                            />
-                        </div>
-                    </div>
-                    
-                </div>
-                
-               <style jsx >{`
-                    .gameBoard {
-                        text-align: center;
-                        margin-top: 80px;
-                        z-index: 2;
+  stop() {
+    if(this.props.running['main']){
+      this.setRunning(false);
+      cancelAnimationFrame(this.rAF);
+    }
+  }
 
-                    }
-                    .paddingSides {
-                        padding-left: 10px;
-                        padding-right: 10px;
-                    }
-                    .container {
-                        width: ${width};
-                        display: inline-block;
-                    }
-                    .horSelectBar {
-                        display: ${horSelectBarDisplay};
-                    }
-                    .vertSelectBar {
-                        display: ${vertSelectBarDisplay};
-                        width: 25%;
-                        padding: 2px;
-                        vertical-align: top;
-                    }
-                    .canvasAndControls {
-                        display: ${canvasAndControlsDisplay};
-                        width: ${canvasAndControlsWidth}
-                    }
-              `}</style>
-              <Dialog open={this.state.showMessage} onRequestClose={this.handleCloseErrorDialog}>
-                  <DialogTitle>{"Can`t download patterns"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>
-                      We are sorry! For some reason we coudn`t download our example patterns from github server.
-                      But you can draw your patterns on the board
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={this.handleCloseErrorDialog} color="primary">
-                      OK
-                    </Button>
-                    
-                  </DialogActions>
-                </Dialog>
+  clear(){
+    if (!this.isBoardClear) {
+      this.stop();
+      this.props.setClear();
+      this.game.clear();
+      this.isBoardClear = true;
+    }
+  }
+
+  step(){
+    if (!this.props.running['main'] && !this.isBoardClear) {
+      this.updateOnce();
+    }
+  }
+  
+  updateOnce(){
+    this.game.update();
+    this.props.incrementGeneration();
+  }
+
+  run(){
+    this.now = Date.now();
+    this.delta = this.now - this.then;
+    if (this.delta > this.interval) {
+      this.then = this.now - (this.delta % this.interval);
+      this.updateOnce();
+    }  
+    this.rAF = requestAnimationFrame(() =>{this.run()}); 
+  }
+
+  render() {
+    const {screen} = this.state;
+    const width = screen.width > 1280 ? '50%' : '100%';
+    const hMBDisplay = screen.width < screen.height ||  screen.width > 1280 ? 'block' : 'none';
+    const vMBDisplay = screen.width < screen.height ||  screen.width > 1280 ? 'none' : 'inline-block';
+    const cCDisplay = screen.width < screen.height ||  screen.width > 1280 ? 'block' : 'inline-block';
+    const cCWidth = screen.width < screen.height ||  screen.width > 1280 ? '100%' : '70%';
+    const isRunning = this.props.running['main'] || false;
+    return (
+      <div className="container">
+        <div className="game">
+          <div className="horizontal-menu-bar">
+            <div className="wrapper">
+              <SelectButtonsBar 
+                patternIndex={this.props.pattern}
+                patterns={this.patternNameLabel}
+                onPatternChange={(index) => this.handlePatternChange(index)}
+                patternLabel="Pattern"
+                sizeIndex={this.props.size}
+                sizes={this.sizeLabel}
+                onBoardSizeChange={(index) => this.handleBoardSizeChange(index)}
+                sizeLabel="Board Size"
+              />
             </div>
-            
-        );
-    }
+          </div>
+          <div className="vertical-menu-bar">
+            <SelectButtonsBar 
+              patternIndex={this.props.pattern}
+              patterns={this.patternNameLabel}
+              onPatternChange={(index) => this.handlePatternChange(index)}
+              patternLabel="Pattern"
+              sizeIndex={this.props.size}
+              sizes={this.sizeLabel}
+              onBoardSizeChange={(index) => this.handleBoardSizeChange(index)}
+                sizeLabel="Board Size"
+                direction="column"
+            />
+          </div>
+          <div className="canvas-controls">
+            <div className="canvas">
+              <div className="wrapper">
+                <canvas
+                  ref={(canvas) => { this.canvas = canvas}}
+                  onClick={(e) => this.handleClick(e)}
+                />
+              </div>
+            </div>
+            <div className="controls">
+              <PlayButtonsBar 
+                on={!isRunning}
+                handlePlayToggle={() => this.handlePlayToggle()}
+                step={() => this.step()}
+                clear={() => this.clear()}
+                setInterval={(v) => this.setInterval(v)}
+              />
+            </div>
+          </div>
+        </div>
+        <style jsx >{`
+          .container {
+              text-align: center;
+              margin-top: 80px;
+              z-index: 2;
+
+          }
+          .wrapper {
+              padding-left: 10px;
+              padding-right: 10px;
+          }
+          .game {
+              width: ${width};
+              display: inline-block;
+          }
+          .horizontal-menu-bar {
+              display: ${hMBDisplay};
+          }
+          .vertical-menu-bar {
+              display: ${vMBDisplay};
+              width: 25%;
+              padding: 2px;
+              vertical-align: top;
+          }
+          .canvas-controls {
+              display: ${cCDisplay};
+              width: ${cCWidth};
+          }
+        `}</style>
+        <Dialog open={this.state.showMessage} onRequestClose={this.handleCloseErrorDialog}>
+          <DialogTitle>{"Can't download patterns"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              We are sorry! For some reason we coudn`t download our example patterns from github server.
+              But you can draw your patterns on the board
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleCloseErrorDialog} color="primary">
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
 }
 
 export default Main;
 
 const TWO_NUMBERS_ARRAY = function(props, propName, componentName){
-    if (!Array.isArray(props.propName) || props.propName.length != 2 || !props.propName.every(Number.isInteger)) {
-        return new Error(`${propName} needs to be an array of two numbers`);
-    }    
+  if (!Array.isArray(props.propName) || props.propName.length != 2 || !props.propName.every(Number.isInteger)) {
+    return new Error(`${propName} needs to be an array of two numbers`);
+  }    
 }
 
 
 Main.propTypes = {
-    setRunning: PropTypes.func.isRequired,
-    running: PropTypes.shape({
-        [patternNames.MAIN]: PropTypes.bool,
-        [patternNames.BLOCK]: PropTypes.bool,
-        [patternNames.BOAT]: PropTypes.bool,
-        [patternNames.LOAF]: PropTypes.bool,
-        [patternNames.BEEHIVE]: PropTypes.bool,
-        [patternNames.BLINKER]: PropTypes.bool,
-        [patternNames.BEACON]: PropTypes.bool,
-        [patternNames.TOAD]: PropTypes.bool,
-        [patternNames.GLIDER]: PropTypes.bool,
-        [patternNames.SPACESHIP]: PropTypes.bool,
-        [patternNames.GUN]: PropTypes.bool,
-    }).isRequired,
-    savedState: TWO_NUMBERS_ARRAY,
-    patterns: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string,
-        pattern: TWO_NUMBERS_ARRAY
-        })
-    ),
-    changePattern: PropTypes.func.isRequired,
-    changeBoardSize: PropTypes.func.isRequired,
-    incrementGeneration: PropTypes.func.isRequired,
-    setSpeed: PropTypes.func.isRequired,
-    setClear: PropTypes.func.isRequired,
-    saveState: PropTypes.func.isRequired,
-    currentPatternNameIndex: PropTypes.number,
-    currentGridSizeIndex: PropTypes.number,
-    error: PropTypes.bool,
+  setRunning: PropTypes.func.isRequired,
+  running: PropTypes.shape({
+    [patternNames.MAIN]: PropTypes.bool,
+    [patternNames.BLOCK]: PropTypes.bool,
+    [patternNames.BOAT]: PropTypes.bool,
+    [patternNames.LOAF]: PropTypes.bool,
+    [patternNames.BEEHIVE]: PropTypes.bool,
+    [patternNames.BLINKER]: PropTypes.bool,
+    [patternNames.BEACON]: PropTypes.bool,
+    [patternNames.TOAD]: PropTypes.bool,
+    [patternNames.GLIDER]: PropTypes.bool,
+    [patternNames.SPACESHIP]: PropTypes.bool,
+    [patternNames.GUN]: PropTypes.bool,
+  }).isRequired,
+  cells: TWO_NUMBERS_ARRAY,
+  patterns: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    pattern: TWO_NUMBERS_ARRAY
+    })
+  ),
+  changePattern: PropTypes.func.isRequired,
+  changeBoardSize: PropTypes.func.isRequired,
+  incrementGeneration: PropTypes.func.isRequired,
+  setSpeed: PropTypes.func.isRequired,
+  setClear: PropTypes.func.isRequired,
+  saveCells: PropTypes.func.isRequired,
+  pattern: PropTypes.number,
+  size: PropTypes.number,
+  error: PropTypes.bool,
 };

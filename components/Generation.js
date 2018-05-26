@@ -3,28 +3,24 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {colors as color} from '../util/colors';
 
-
-const Generation =({generationCount}) => {
-
-    return (
-  	    <div className="generation">
-  	      	{generationCount}
-  			<style jsx global>{`
-            .generation {
-      				color: ${color.GENERATION};
-      				font-size: 1.5em;
-  		        text-align: right;
-            }
-                       
-        `}</style>
-      	</div>
-    );
+const Generation =({generation}) => {
+  return (
+    <div className="generation">
+    	{generation}
+		<style jsx global>{`
+      .generation {
+				color: ${color.GENERATION};
+				font-size: 1.5em;
+        text-align: right;
+      }
+    `}</style>
+  	</div>
+  );
 }
-const mapStateToProps =({generationCount}) => ({generationCount});
+const mapStateToProps = ({generation}) => ({generation});
 
 export default (connect(mapStateToProps)(Generation));
 
-
 Generation.propTypes = {
-    generationCount: PropTypes.number.isRequired,
+  generation: PropTypes.number.isRequired,
 };

@@ -8,15 +8,15 @@ export function fetchPatterns() {
 } 
 
 export function * loadDataSaga () {
-	    try {
-		    const data = yield call(fetchPatterns);
-		    yield put(loadDataSuccess(data));
-	    } catch (err) {
-	        yield put(failure(err));
-	    }
+  try {
+    const data = yield call(fetchPatterns);
+    yield put(loadDataSuccess(data));
+  } catch (err) {
+      yield put(failure(err));
+  }
 }
 
 export function * rootSaga () {
-    yield takeLatest(actionTypes.LOAD_DATA, loadDataSaga);
+  yield takeLatest(actionTypes.LOAD_DATA, loadDataSaga);
 }
 
