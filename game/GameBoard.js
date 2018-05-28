@@ -2,6 +2,7 @@ import Cell from './Cell';
 import Life from './Life';
 import Canvas from './Canvas';
 import {colors as color} from '../util/colors';
+import {makeUnique, shiftPatternToCenter, getRandomPattern} from '../util/helpers';
 
 class GameBoard {
   constructor(width, height, squareSize, initialState) {
@@ -9,7 +10,14 @@ class GameBoard {
     this.height = height;
     this.squareSize = squareSize;
     this.radius = this.squareSize / 2;
-    this.life = new Life(this.width, this.height, initialState);
+    let cells;
+    if (initialState != null) {
+      cells = initialState;
+    } else {
+      cells = getRandomPattern(height, width);
+    }
+    this.life = new Life(this.width, this.height, cells);
+    this.cellmap = this.life.getCellmap();
 	}
 
   reload(width, height, squareSize, canvas){
@@ -18,6 +26,7 @@ class GameBoard {
     this.squareSize = squareSize;
     this.radius = this.squareSize / 2;
     this.life.reload(width, height);
+    this.cellmap = this.life.getCellmap();
     this.drawBoard(canvas);
   }
 
@@ -28,26 +37,33 @@ class GameBoard {
     }
     this.canvas = new Canvas(canvas, this.width, this.height, this.squareSize, this.ratio);
     this.canvas.init();
+    const redrawList = this.life.nextGeneration();
+    this.redrawWorld(redrawList);
   }
 
   drawCell(e){
     const coordinates = this.canvas.getClickCoordinates(e);
     if (coordinates != null) {
-      const redrawList = this.life.addCell(coordinates.X, coordinates.Y);
-      const board = this.life.getBoard();
-      this.updateWorld(board, redrawList);
+      const redrawList = this.life.drawCell(coordinates.Y, coordinates.X);
+      this.redrawWorld(redrawList);
     }
   }
 
-  changePattern(index, patternsList, isClear){
-    const boardIsClear = isClear;
-    this.life.setPattern(index, patternsList, boardIsClear);
+  changePattern(index, patternsList){
+
+    let pattern;
+    if(index === 0) {
+      pattern = getRandomPattern(this.height, this.width);
+    } else {
+      pattern = shiftPatternToCenter(patternsList[index-1].pattern, this.height, this.width);
+    }
+    const redrawList = this.life.setPattern(pattern);
+
+    this.redrawWorld(redrawList);
   }
 
-  handleWindowSizeChange(canvas){
-    if (canvas) {
-      this.canvas.handleWindowSizeChange();
-    }  
+  handleWindowSizeChange(){
+    this.canvas.handleWindowSizeChange();
   };
 
   getLiveCells(){
@@ -56,26 +72,19 @@ class GameBoard {
 
   clear() {
     const redrawList = this.life.clearWorld();
-    const board = this.life.getBoard();
-    this.updateWorld(board, redrawList);
+    this.redrawWorld(redrawList);
   }
 
   update(){
-    try{
     const redrawList = this.life.nextGeneration();
-    const board = this.life.getBoard();
-    this.updateWorld(board, redrawList);
-    }
-    catch(e) {
-      console.log(e)
-    }
+    this.redrawWorld(redrawList);
   }
 
-  updateWorld(valuesBoard, redrawList){
+  redrawWorld(redrawList){
     redrawList.forEach(cell => {
       const X = (cell[1] + 1) * this.squareSize;
       const Y = (cell[0] + 1) * this.squareSize;
-      if(valuesBoard[cell[0]][cell[1]].state === 0){
+      if(this.cellmap[cell[0]][cell[1]].getState() === -1){
         this.canvas.drawDeadCell(X, Y);
       } else {
         this.canvas.drawLiveCell(X, Y);

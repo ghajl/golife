@@ -5,7 +5,7 @@ import {patternNames} from './util/patternNames';
 export const initialState = {
 	error: false,
 	patterns: [],
-  generation: -1,   
+  generation: 0,   
   running: {
     'main': false,
   },
@@ -41,7 +41,7 @@ export function reducer (state = initialState, action) {
       return {
         ...state,
         ...{pattern: action.index,
-            generation: -1
+            generation: 0
           }
       }
 

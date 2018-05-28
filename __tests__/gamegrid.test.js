@@ -3,10 +3,9 @@ import{ createCellsValuesMatrix, getNeighborsList, getNeighborStateChangeListene
 import {makeUnique} from '../util/helpers';					
 import Cell from  '../util/Cell';
 
-test('creating two-dimensional matrix of Cell objects for live/dead values of game board', () => {
-    let width = 2,
-    	height = 3,
-    	checkList = [];
+test('create cellsmap', () => {
+    const width = 2,
+    	height = 3;
 
     let valuesBoard = [[new Cell(checkList,0,0), new Cell(checkList,0,1)],
     			[new Cell(checkList,1,0), new Cell(checkList,1,1)],
@@ -108,3 +107,26 @@ test('creating game board with listeners', () => {
     expect(makeUnique(checkList)).toHaveLength(3);
    
 })
+
+function getNeighbors(width, height, Y, X){
+  const cells = [];
+  for (let i = -1; i < 2; i++) {
+    for (let j = -1; j < 2; j++) {
+      let tX = X + j, tY = Y + i;
+      if (tY < 0) {
+      	tY = height - 1;
+      } else if (tY >= height) {
+      	tY = 0;
+      }
+      if (tX < 0) {
+      	tX = width - 1;
+      } else if (tX >= width) {
+      	tX = 0;
+      }
+      if (!(i === 0 && j === 0)) {
+        cells.push([tY, tX]);
+      }                    
+    }
+  }
+  return cells;
+}

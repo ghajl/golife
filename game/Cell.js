@@ -1,86 +1,40 @@
 export default class Cell {
-  
-  constructor(checkList,Y,X)
+  constructor()
   {  
-    this.value = 0;
-    this._Y=Y;
-    this._X=X;
+    this.state = -1;
     this.count = 0;
-    this.listeners = {};
- 
-    // this.stateChangelisteners = [];
-    // this.neighborsChangeListeners = [];
-    // this.changeTable = checkList;
-    this.checkList = checkList;
-    // console.log(this.checkList.length+"ss");
+    this.neighbors = null;
+    this.neighborsCoordinates = null;
   }
 
-
-  set state(val){
-    if(val != this.value){
-      this.value = val;
-
-      for(let i=0;i<this.listeners["neighborStateChange"].length;i++){
-          this.listeners["neighborStateChange"][i](this.value);        
-      }
-
-    }
+  changeState() {
+    this.state *= -1;
+    this.neighbors.forEach(neighbor => {
+      neighbor.updateNeighborsCount(this.state);
+    })
+  }
+  
+  updateNeighborsCount(value) {
+    this.count += value;
+  }
+  
+  getState(){
+    return this.state;
   }
 
-  get state(){
-    return this.value;
+  setNeighbors(neighbors) {
+    this.neighbors = neighbors;
   }
 
-  get Y(){
-    return this._Y;
+  setNeighborsCoordinates(coordinates) {
+    this.neighborsCoordinates = coordinates;
   }
 
-  get X(){
-    return this._X;
-  }
-
-
-  addNeighbor(){
-    this.count += 1;
-    this.listeners["neighborsChange"][0]();
-  } 
-
-  removeNeighbor(){
-    this.count -= 1;
-    this.listeners["neighborsChange"][0]();
-  }
-
-  getNeighborsCount(){
+  getNeighborsCount() {
     return this.count;
   }
 
-  changeState(){
-    this.value === 0? this.state = 1 : this.state = 0;
+  getNeighborsCoordinates() {
+    return this.neighborsCoordinates;
   }
-
-  addListeners(type, listeners){
-    // if (typeof this.listeners[type] == "undefined"){
-    //     this.listeners[type] = [];
-    // }
-
-    this.listeners[type] = listeners.slice(0);
-    // console.log("x");
-  }
-
-  removeListener(type, listener){
-    if (Array.isArray(this.listeners[type])){
-      var listeners = this.listeners[type];
-      for (var i=0, len=listeners.length; i < len; i++){
-        if (listeners[i] === listener){
-          listeners.splice(i, 1);
-          break;
-        }
-      }
-    }
-  }
-
-  setCheckList(checkList){
-    this.checkList = checkList;
-  }   
-
-}  
+}

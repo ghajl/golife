@@ -61,7 +61,7 @@ class Main extends Component {
     const ratio = this.state.screen ? this.state.screen.ratio : window.devicePixelRatio || 1
     this.isBoardClear = false;
     this.game.drawBoard(this.canvas, ratio);
-    this.updateOnce();
+    // this.updateOnce();
     if(this.props.error){
       this.handleOpenErrorDialog()
     }
@@ -81,7 +81,7 @@ class Main extends Component {
         ratio: window.devicePixelRatio || 1,
       }
     });
-    this.game.handleWindowSizeChange(this.canvas);
+    this.game.handleWindowSizeChange();
   };
 
   handlePatternChange(index){
@@ -90,10 +90,10 @@ class Main extends Component {
       this.props.changePattern(index)
       if(this.isBoardClear){
         this.isBoardClear = false;
-        this.updateOnce();
+        // this.updateOnce();
       } else {
         this.stop();
-        this.updateOnce();
+        // this.updateOnce();
       }
     }
   }
