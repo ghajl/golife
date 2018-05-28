@@ -1,17 +1,43 @@
 import {actionTypes} from './actions';
-import {patternNames} from './util/patternNames';
-
 
 export const initialState = {
-	error: false,
-	patterns: [],
-  generation: 0,   
+  error: false,
+  patterns: [
+    {
+      name: 'random',
+      label: 'Random',
+    }
+  ],
+  parameters: [
+    {
+      name: 'small',
+      width: 30,
+      height: 20,
+      squareSize: 24, 
+      label: '20 X 30',
+    },
+    {
+      name: 'medium',
+      width: 60,
+      height: 40,
+      squareSize: 12,
+      label: '40 X 60',
+    },
+    {
+      name: 'large', 
+      width: 90,
+      height: 60,
+      squareSize: 8,
+      label: '60 X 90',
+    }
+  ],
   running: {
     'main': false,
   },
-  pattern: 0,
-  fps: 2,
-  size: 1,
+  generation: 0,   
+  currentPattern: 0,
+  currentSize: 1,
+  fps: 2,  
   cells: null, 
 }
 
@@ -30,28 +56,24 @@ export function reducer (state = initialState, action) {
         ...state,
         ...{error: true}
       }
-
     case actionTypes.LOAD_DATA_SUCCESS:
       return {
         ...state,
-        ...{patterns: action.data}
+        ...{patterns: [...state.patterns, ...action.data]}
       }
-
     case actionTypes.CHANGE_PATTERN:
       return {
         ...state,
-        ...{pattern: action.index,
+        ...{currentPattern: action.index,
             generation: 0
           }
       }
-
-
     case actionTypes.CHANGE_BOARD_SIZE:
       return {
         ...state,
-        ...{size: action.size,
+        ...{currentSize: action.currentSize,
             generation: 0,
-            pattern: -1,
+            currentPattern: -1,
           }
       }
     case actionTypes.SET_RUNNING:
@@ -73,37 +95,26 @@ export function reducer (state = initialState, action) {
         ...state,
         ...{generation: state.generation + 1}
       }    
-
     case actionTypes.SET_SPEED:
-
       return {
         ...state,
         ...{fps: action.fps}
       }   
-
     case actionTypes.SET_CLEAR:
-    
       return {
         ...state,
         ...{
             generation: 0,
-            pattern:-1,
+            currentPattern:-1,
           }
       }   
-
     case actionTypes.SAVE_CELLS:
-    
       return {
         ...state,
         ...{
             cells: action.cells, 
-            
-            generation: state.generation -  1,
-            }
+           }
           }
-        
-
-
     default:
       return state
   }

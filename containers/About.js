@@ -6,7 +6,7 @@ import About from '../components/About';
 const mapDispatchToProps = dispatch => {
   return {
     setRunning: (running, name) => {
-    	dispatch(setRunning(running, name))
+      dispatch(setRunning(running, name))
     },
   }
 }

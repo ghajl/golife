@@ -47,7 +47,7 @@ const styles = theme => ({
 });
 
 const PlayButtonsBar = ({classes, ...props}) => {
-	return (
+  return (
     <div className={classes.bar}>
       <div className={classes.controls}>
         <div  className={classes.item}>
@@ -81,7 +81,7 @@ const PlayButtonsBar = ({classes, ...props}) => {
         </div>
       </div>
     </div>
-	);
+  );
 }
 
 export default withStyles(styles)(PlayButtonsBar);

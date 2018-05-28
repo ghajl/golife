@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
-import GameBoard from '../game/GameBoard';
+import Game from '../game/Game';
 import {colors as color} from '../util/colors';
 import SelectButtonsBar from './SelectButtonsBar';
 import PlayButtonsBar from './PlayButtonsBar';
 import {patternNames} from '../util/patternNames';
-import {boardParameters} from '../util/boardParameters';
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -17,29 +16,11 @@ import Dialog, {
 class Main extends Component {
   constructor(props){
     super(props);
-
-    let params = boardParameters.medium;
-    if (props.cells != null) {
-      if (props.size === 'small') {
-        params = boardParameters.small;
-      } else if (props.size === 'large') {
-        params = boardParameters.large;
-      }
-    }
+    const params = props.parameters[props.currentSize];
     this.boardWidth = params.width;
     this.boardHeight = params.height;
     this.squareSize = params.squareSize;
-    this.sizeLabel = [
-      `${boardParameters.small.height} X ${boardParameters.small.width}`,
-      `${boardParameters.medium.height} X ${boardParameters.medium.width}`,
-      `${boardParameters.large.height} X ${boardParameters.large.width}`
-    ];
-    this.patternNameLabel = ['Random'];
-    if (props.patterns) {
-      this.patternNameLabel = this.patternNameLabel.concat(props.patterns.map(pattern => pattern.name));
-    }
-    this.isBoardClear = true;
-    this.game = new GameBoard(this.boardWidth, this.boardHeight, this.squareSize, props.cells);
+    this.game = new Game(this.boardWidth, this.boardHeight, this.squareSize, props.cells);
     this.setRunning = running => props.setRunning(running, 'main');
     this.state = {showMessage: false};
   }
@@ -59,9 +40,7 @@ class Main extends Component {
 
   componentDidMount(){
     const ratio = this.state.screen ? this.state.screen.ratio : window.devicePixelRatio || 1
-    this.isBoardClear = false;
     this.game.drawBoard(this.canvas, ratio);
-    // this.updateOnce();
     if(this.props.error){
       this.handleOpenErrorDialog()
     }
@@ -85,32 +64,21 @@ class Main extends Component {
   };
 
   handlePatternChange(index){
-    if(index !== this.props.pattern){
-      this.game.changePattern(index, this.props.patterns, this.isBoardClear);
-      this.props.changePattern(index)
-      if(this.isBoardClear){
-        this.isBoardClear = false;
-        // this.updateOnce();
-      } else {
-        this.stop();
-        // this.updateOnce();
-      }
+    if(index !== this.props.currentPattern){
+      this.stop();
+      this.game.setPattern(index, this.props.patterns);
+      this.props.changePattern(index);
     }
   }
 
   handleBoardSizeChange(index){
-    if (index !== this.props.size) {
-      const params = index === 0 
-        ? boardParameters.small 
-        : index === 1 
-        ? boardParameters.medium
-        : boardParameters.large;
+    if (index !== this.props.currentSize) {
+      const params = this.props.parameters[index]; 
       this.stop();
       this.boardWidth = params.width;
       this.boardHeight = params.height; 
       this.squareSize = params.squareSize;
       this.game.reload(this.boardWidth, this.boardHeight, this.squareSize, this.canvas);
-      this.isBoardClear = true;
       this.props.changeBoardSize(index);
     }
   }
@@ -119,7 +87,6 @@ class Main extends Component {
     if (this.props.running['main']) {
       this.stop();
     }
-    this.isBoardClear = false;
     this.game.drawCell(e);
   }
 
@@ -145,7 +112,7 @@ class Main extends Component {
   }
 
   start = () => {
-    if (!(this.props.running['main'] || this.isBoardClear)) {
+    if (!(this.props.running['main'] || this.game.getCellCount() === 0)) {
       this.then = Date.now();
       this.setRunning(true);
       this.rAF = requestAnimationFrame(() =>{this.run()});
@@ -160,7 +127,7 @@ class Main extends Component {
   }
 
   clear(){
-    if (!this.isBoardClear) {
+    if (!(this.game.getCellCount() === 0)) {
       this.stop();
       this.props.setClear();
       this.game.clear();
@@ -169,7 +136,7 @@ class Main extends Component {
   }
 
   step(){
-    if (!this.props.running['main'] && !this.isBoardClear) {
+    if (!(this.props.running['main'] || this.game.getCellCount() === 0)) {
       this.updateOnce();
     }
   }
@@ -203,28 +170,24 @@ class Main extends Component {
           <div className="horizontal-menu-bar">
             <div className="wrapper">
               <SelectButtonsBar 
-                patternIndex={this.props.pattern}
-                patterns={this.patternNameLabel}
+                patternIndex={this.props.currentPattern}
+                patterns={this.props.patterns}
+                parameters={this.props.parameters}
                 onPatternChange={(index) => this.handlePatternChange(index)}
-                patternLabel="Pattern"
-                sizeIndex={this.props.size}
-                sizes={this.sizeLabel}
+                sizeIndex={this.props.currentSize}
                 onBoardSizeChange={(index) => this.handleBoardSizeChange(index)}
-                sizeLabel="Board Size"
               />
             </div>
           </div>
           <div className="vertical-menu-bar">
             <SelectButtonsBar 
-              patternIndex={this.props.pattern}
-              patterns={this.patternNameLabel}
+              patternIndex={this.props.currentPattern}
+              patterns={this.props.patterns}
+              parameters={this.props.parameters}
               onPatternChange={(index) => this.handlePatternChange(index)}
-              patternLabel="Pattern"
-              sizeIndex={this.props.size}
-              sizes={this.sizeLabel}
+              sizeIndex={this.props.currentSize}
               onBoardSizeChange={(index) => this.handleBoardSizeChange(index)}
-                sizeLabel="Board Size"
-                direction="column"
+              direction="column"
             />
           </div>
           <div className="canvas-controls">
@@ -331,7 +294,7 @@ Main.propTypes = {
   setSpeed: PropTypes.func.isRequired,
   setClear: PropTypes.func.isRequired,
   saveCells: PropTypes.func.isRequired,
-  pattern: PropTypes.number,
-  size: PropTypes.number,
+  currentPattern: PropTypes.number,
+  currentSize: PropTypes.number,
   error: PropTypes.bool,
 };

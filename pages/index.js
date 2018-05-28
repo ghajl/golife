@@ -8,13 +8,13 @@ import Main from '../containers/Main';
 
 class Index extends Component {
   static async getInitialProps ({store}) {
-    if (store.getState().patterns.length === 0) {
+    if (store.getState().patterns.length === 1) {
       store.dispatch(loadData())
   }}
 
   render() {
     return (
-      <Layout  url={this.props.url}>
+      <Layout url={this.props.url}>
         <Main />
       </Layout>
     )

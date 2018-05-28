@@ -11,19 +11,17 @@ export const actionTypes = {
   SAVE_CELLS: 'SAVE_CELLS',
 }
 
-export function failure (error) {
+export function failure(error) {
   return {
     type: actionTypes.FAILURE
   }
 }
 
-
-
-export function loadData () {
+export function loadData() {
   return {type: actionTypes.LOAD_DATA}
 }
 
-export function loadDataSuccess (data) {
+export function loadDataSuccess(data) {
   return {
     type: actionTypes.LOAD_DATA_SUCCESS,
     data
@@ -37,13 +35,11 @@ export function changePattern(index) {
   }
 }
 
-export function changeBoardSize(size) {
+export function changeBoardSize(currentSize) {
   return {
     type: actionTypes.CHANGE_BOARD_SIZE,
-    size
+    currentSize
   }
-
-
 }
 
 export function setRunning(running, name) {
@@ -53,6 +49,7 @@ export function setRunning(running, name) {
     name
   }
 }
+
 export function incrementGeneration() {
   return { type: actionTypes.INCREMENT_GENERATION }
 }
@@ -61,7 +58,6 @@ export function setSpeed(fps) {
   return {type: actionTypes.SET_SPEED,
     fps
   }
-
 }
 
 export function setClear() {

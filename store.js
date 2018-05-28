@@ -9,7 +9,7 @@ import {rootSaga} from './saga'
 const sagaMiddleware = createSagaMiddleware();
 
 export function configureStore (state = initialState){
-	
+  
   const store = createStore(
     reducer,
     state,

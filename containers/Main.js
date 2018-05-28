@@ -12,25 +12,25 @@ const mapDispatchToProps = dispatch => {
       dispatch(changeBoardSize(size))
     },
     incrementGeneration: () => {
-    	dispatch(incrementGeneration())
+      dispatch(incrementGeneration())
     },
     setRunning: (running, name) => {
-    	dispatch(setRunning(running, name))
+      dispatch(setRunning(running, name))
     },
     setSpeed: fps => {
-    	dispatch(setSpeed(fps))
+      dispatch(setSpeed(fps))
     },
     setClear: () => {
-    	dispatch(setClear())
+      dispatch(setClear())
     },    
-    saveCells: (cells, size) => {
-    	dispatch(saveCells(cells, size))
+    saveCells: (cells) => {
+      dispatch(saveCells(cells))
     }
   }
 }
 
-const mapStateToProps =({ running, size, cells, patterns, pattern, error })=> ({ running, size, cells, patterns, pattern,  error });
+const mapStateToProps =({ running, currentSize, cells, patterns, parameters, currentPattern, error })=> ({ running, currentSize, cells, patterns, parameters, currentPattern,  error });
 export default compose(
-	setDisplayName('GameContainer'),
-	connect(mapStateToProps, mapDispatchToProps)
+  setDisplayName('GameContainer'),
+  connect(mapStateToProps, mapDispatchToProps)
 )(Main)

@@ -7,35 +7,37 @@ const styles = theme => ({
   container: {
     textAlign: 'center',
   },
-	item: {
+  item: {
     width:'50%',
     display: 'inline-block',
-		maxWidth: 360,
-	},
+    maxWidth: 360,
+  },
 })
 
 const SelectButtonsBar = ({direction, ...props}) => {
+  const sizeItems = props.parameters.map(size => size.label);
+  const patternItems = props.patterns.map(pattern => pattern.label);
   const width = direction == 'column' ? '100%' : null;
-	return (
-		<div className={props.classes.container} >
-			<div className={props.classes.item} style={{width: width}}>
+  return (
+    <div className={props.classes.container} >
+      <div className={props.classes.item} style={{width: width}}>
         <Select
           index={props.patternIndex}
-          items={props.patterns}
+          items={patternItems}
           onChange={(index) => props.onPatternChange(index)}
-          label={props.patternLabel}
+          label="Pattern"
         />
       </div>
       <div className={props.classes.item} style={{width: width}}>
         <Select
           index={props.sizeIndex}
-          items={props.sizes}
+          items={sizeItems}
           onChange={(index) => props.onBoardSizeChange(index)}
-          label={props.sizeLabel}
+          label="Board Size"
         />
       </div>
-		</div>
-	);
+    </div>
+  );
 }
 
 export default withStyles(styles)(SelectButtonsBar);

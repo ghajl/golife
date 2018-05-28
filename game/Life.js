@@ -2,21 +2,18 @@ import { makeUnique, shiftPatternToCenter, getRandomPattern } from '../util/help
 import Cell from './Cell';
 
 class Life {
-	constructor(width, height, initialState) {
-		this.gridWidth = width;
-  	this.gridHeight = height;
-  	this.cellmap = null;
+  constructor(width, height, initialState) {
+    this.gridWidth = width;
+    this.gridHeight = height;
     this.changeList = initialState;
-    this.cellmap = createCellmap(this.gridWidth, this.gridHeight, getNeighbors);
-	}
+    this.cellmap = createCellmap(this.gridWidth, this.gridHeight, makeNeighbors);
+  }
 
-	reload(width, height) {
-    this.changeList = null;
-    this.cellmap = null;
-    this.redrawList = null;
+  reload(width, height) {
+    this.changeList = [];
     this.gridWidth = width;
     this.gridHeight = height; 
-    this.cellmap = createCellmap(this.gridWidth, this.gridHeight, getNeighbors);
+    this.cellmap = createCellmap(this.gridWidth, this.gridHeight, makeNeighbors);
   }
 
   setPattern(pattern) {
@@ -46,14 +43,14 @@ class Life {
     const checkList = applyChanges(this.changeList, this.cellmap, this.gridWidth, this.gridHeight);
     this.changeList = makeChangeList(checkList, this.cellmap);
     return redrawList;
-	}
+  }
 
   getLiveCells() {
     return getLiveCells(this.cellmap);
   }
 
   getCellmap() {
-  	return this.cellmap;
+    return this.cellmap;
   }
     
 }
@@ -65,7 +62,7 @@ const nextState = {
   '1': [-1, -1, 1, 1, -1, -1, -1, -1, -1],
 }
 
-export function createCellmap(width, height, getNeighbors) {
+export function createCellmap(width, height, makeNeighbors) {
   const cellmap = Array(height).fill(null);
   for (let i = 0; i < height; i++) {
     cellmap[i] = Array(width).fill(null);
@@ -75,11 +72,11 @@ export function createCellmap(width, height, getNeighbors) {
   }
   for (let i = 0; i < height; i++) {
     for (let j = 0; j < width; j++) {
-      const neighborsCoordinates = getNeighbors(width, height, i, j);
+      const neighborsCoordinates = makeNeighbors(width, height, i, j);
       cellmap[i][j].setNeighborsCoordinates(neighborsCoordinates);
       cellmap[i][j].setNeighbors(neighborsCoordinates.map(coordinates => {
         const [y, x] = coordinates.split(',').map(k => +k);
-        return cellmap[y][x]
+        return cellmap[y][x];
       }));
     }
   }
@@ -92,9 +89,11 @@ export function applyChanges(changeList, cellmap, width, height) {
     const [y, x] = cell;
     cellmap[y][x].changeState();
     checkList[`${y},${x}`] = 1;
-    const neighbors = cellmap[y][x].getNeighborsCoordinates()//getNeighbors(width, height, y, x);
+    const neighbors = cellmap[y][x].getNeighborsCoordinates();
     neighbors.forEach(neighbor => {
-      checkList[neighbor] = 1;
+      if (typeof checkList[neighbor] === 'undefined') {
+        checkList[neighbor] = 1;
+      }
     })
   })  
   return checkList;
@@ -102,13 +101,11 @@ export function applyChanges(changeList, cellmap, width, height) {
 
 export function makeChangeList(checkList, cellmap) {
   const changeList = [];
-
+  const re = /\d+/g;
   Object.keys(checkList).forEach(cell => {
-    // const [y, x] = cell.split(',');
-    const re = /\d+/g;
     const y = +re.exec(cell)[0];
     const x = +re.exec(cell)[0];
-    // console.log(`${y}-${x}`)
+    re.lastIndex = 0;
     const state = cellmap[y][x].getState();
     const neighborsCount = cellmap[y][x].getNeighborsCount();
     if(nextState[state][neighborsCount] !== state) {
@@ -132,20 +129,20 @@ export function totalCheck(cellmap) {
   return changeList;
 }
 
-export function getNeighbors(width, height, Y, X){
+export function makeNeighbors(width, height, Y, X){
   const cells = {};
   for (let i = -1; i < 2; i++) {
     for (let j = -1; j < 2; j++) {
       let tX = X + j, tY = Y + i;
       if (tY < 0) {
-      	tY = height - 1;
+        tY = height - 1;
       } else if (tY >= height) {
-      	tY = 0;
+        tY = 0;
       }
       if (tX < 0) {
-      	tX = width - 1;
+        tX = width - 1;
       } else if (tX >= width) {
-      	tX = 0;
+        tX = 0;
       }
       if (!(i === 0 && j === 0)) {
         cells[`${tY},${tX}`] = 1;
@@ -155,42 +152,14 @@ export function getNeighbors(width, height, Y, X){
   return Object.keys(cells);
 }
 
-
-
 export function getLiveCells(cellmap) {
   const cells = [];
   for (let i = 0; i < cellmap.length; i++) {
     for (let j = 0; j < cellmap[i].length; j++) {
       if (cellmap[i][j].getState() === 1) {
-      	cells.push([i, j]);
+        cells.push([i, j]);
       }
     }
   }
   return cells;
-}
-
-export function boardTotalCheck(valuesBoard) {
-  const redrawList = [];
-  for (let i = 0, ilen = valuesBoard.length; i < ilen; i++) {
-    for (let j = 0, jlen = valuesBoard[i].length; j < jlen; j++) {
-      if (isGoingToChange(valuesBoard[i][j])) {
-        redrawList.push([i,j]);
-      }
-    }
-  }
-  return redrawList;
-}
-
-export function getNewPatternChangeList(valuesBoard, newPattern){
-  var changeList = [];
-  for (let i = 0, ilen = valuesBoard.length; i < ilen; i++) {
-    for (let j = 0, jlen = valuesBoard[i].length; j < jlen; j++) {
-      if (valuesBoard[i][j].state === 1) {
-        const ind = newPattern.indexOf([i,j]);
-        ~ind ? newPattern.splice(ind,1) : changeList.push([i,j]);
-      }
-    }
-  }
-  newPattern.forEach(x => changeList.push(x));
-  return changeList;
 }

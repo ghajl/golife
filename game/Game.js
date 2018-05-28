@@ -4,7 +4,7 @@ import Canvas from './Canvas';
 import {colors as color} from '../util/colors';
 import {makeUnique, shiftPatternToCenter, getRandomPattern} from '../util/helpers';
 
-class GameBoard {
+class Game {
   constructor(width, height, squareSize, initialState) {
     this.width = width;
     this.height = height;
@@ -18,11 +18,13 @@ class GameBoard {
     }
     this.life = new Life(this.width, this.height, cells);
     this.cellmap = this.life.getCellmap();
-	}
+    this.cellCount = 0;
+  }
 
   reload(width, height, squareSize, canvas){
     this.width = width;
     this.height = height;
+    this.cellCount = 0;
     this.squareSize = squareSize;
     this.radius = this.squareSize / 2;
     this.life.reload(width, height);
@@ -49,16 +51,14 @@ class GameBoard {
     }
   }
 
-  changePattern(index, patternsList){
-
+  setPattern(index, patternsList){
     let pattern;
-    if(index === 0) {
+    if(patternsList[index].name === 'random') {
       pattern = getRandomPattern(this.height, this.width);
     } else {
-      pattern = shiftPatternToCenter(patternsList[index-1].pattern, this.height, this.width);
+      pattern = shiftPatternToCenter(patternsList[index].pattern, this.height, this.width);
     }
     const redrawList = this.life.setPattern(pattern);
-
     this.redrawWorld(redrawList);
   }
 
@@ -70,6 +70,10 @@ class GameBoard {
     return this.life.getLiveCells();
   }
 
+  getCellCount(){
+    return this.cellCount;
+  }
+
   clear() {
     const redrawList = this.life.clearWorld();
     this.redrawWorld(redrawList);
@@ -78,6 +82,7 @@ class GameBoard {
   update(){
     const redrawList = this.life.nextGeneration();
     this.redrawWorld(redrawList);
+    return this.cellCount;
   }
 
   redrawWorld(redrawList){
@@ -85,12 +90,14 @@ class GameBoard {
       const X = (cell[1] + 1) * this.squareSize;
       const Y = (cell[0] + 1) * this.squareSize;
       if(this.cellmap[cell[0]][cell[1]].getState() === -1){
+        this.cellCount--;
         this.canvas.drawDeadCell(X, Y);
       } else {
+        this.cellCount++;
         this.canvas.drawLiveCell(X, Y);
       }            
-    })    
+    })  
   }
 }
 
-export default GameBoard;
+export default Game;

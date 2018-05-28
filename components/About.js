@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import YouTube from './YouTubePlayer';
-import GameBoard from '../game/GameBoard';
-import UnwrappedGameBoard from '../game/UnwrappedGameBoard';
+import Game from '../game/Game';
+import UnwrappedGame from '../game/UnwrappedGame';
 import IconButton from 'material-ui/IconButton';
 import ToggleIcon from './ToggleIcon';
 import PlayArrow from 'material-ui-icons/PlayArrow';
@@ -15,18 +15,17 @@ import {colors as color} from '../util/colors';
 import {samples} from '../game/samples';
 
 const styles = {
-
-	mainContent: {
-		marginTop: 75
-	},
+  mainContent: {
+    marginTop: 75
+  },
   rules: {
-  	backgroundColor:'rgba(240,248,255,.7)',
+    backgroundColor:'rgba(240,248,255,.7)',
   },
   text: {
     fontFamily: 'Open Sans', 
     fallbacks:{
       fontFamily: 'sans-serif',
-    },     	
+    },      
   },
   title: {
     fontFamily: 'Julius Sans One', 
@@ -37,16 +36,16 @@ const styles = {
     marginTop: 40
   },
   video: {
-  	textAlign: 'center',
-  	fontFamily: 'Open Sans', 
+    textAlign: 'center',
+    fontFamily: 'Open Sans', 
       fallbacks:{
-          fontFamily: 'sans-serif',
+        fontFamily: 'sans-serif',
       },
-  	marginTop:30,
+    marginTop:30,
   },
   boardsSection: {
     display: 'inline-block',
-  	marginTop:30,
+    marginTop:30,
   },
   link: {
     'text-decoration': 'underline !important',
@@ -59,8 +58,8 @@ const styles = {
 
 
 class About extends Component {
-	constructor(props){
-		super(props);
+  constructor(props){
+    super(props);
       this.squareSize = 12;
       this.samples = {};
       this.canvases = {};
@@ -68,7 +67,7 @@ class About extends Component {
       Object.keys(samples).forEach(name => {
         const {width, height, unwrapped, coordinates, label} = samples[name];
         const cells = name === 'gun' ? shiftPattern(coordinates, 1, 1) : shiftPatternToCenter(coordinates, height, width);
-        const board = unwrapped ? new UnwrappedGameBoard(width, height, this.squareSize, cells, padding) : new GameBoard(width, height, this.squareSize, cells);
+        const board = unwrapped ? new UnwrappedGame(width, height, this.squareSize, cells, padding) : new Game(width, height, this.squareSize, cells);
         this.samples[name] = {
           board,
           label,
@@ -76,9 +75,9 @@ class About extends Component {
           height,
         }
       })
-		this.running = [];
-		this.rAF = null;
-		this.interval=300;
+    this.running = [];
+    this.rAF = null;
+    this.interval = 300;
     this.state = {
       screen: {
         width: window.innerWidth,
@@ -90,7 +89,7 @@ class About extends Component {
     Object.keys(this.samples).forEach(name => {
       this.samples[name].canvasWidth = this.computeWidth(this.samples[name].width, this.squareSize, this.state.screen);
     })
-	}
+  }
 
   componentWillMount() {
     window.addEventListener('resize', this.handleWindowSizeChange);
@@ -101,8 +100,7 @@ class About extends Component {
     for (let name in this.samples) {
       const canvas = this.canvases[name];
       const {width, height, board} = this.samples[name];
-      board.drawBoard(canvas, ratio, width, height, this.squareSize);
-      board.update();
+      board.drawBoard(canvas, ratio);
     }
   }
 
@@ -134,7 +132,7 @@ class About extends Component {
       const index = this.running.indexOf(name);
       this.running.splice(index, 1);
       if (this.running.length === 0) {
-      	cancelAnimationFrame(this.rAF);
+        cancelAnimationFrame(this.rAF);
       }
     }
   }
@@ -145,12 +143,12 @@ class About extends Component {
       this.running.push(name);
       this.then = Date.now();
       if (this.running.length === 1) {
-      	this.rAF = requestAnimationFrame(() =>{this.run()});
+        this.rAF = requestAnimationFrame(() =>{this.run()});
       }
     }
   }
 
-	run() {
+  run() {
     this.now = Date.now();
     this.delta = this.now - this.then;
     if (this.delta > this.interval) {
@@ -226,15 +224,15 @@ class About extends Component {
   }
 
   render() {    
-  	const {classes} = this.props;
-  	return(
-	    <div className={classes.mainContent}>
-  	    <Grid container spacing={0}>
-    	    <Grid item xs={1} sm={2}> 
+    const {classes} = this.props;
+    return(
+      <div className={classes.mainContent}>
+        <Grid container spacing={0}>
+          <Grid item xs={1} sm={2}> 
           </Grid>
-    	    <Grid item xs={10}  sm={8}>
-    	    	<p className={classes.text}>
-      	    	<strong>The Game of Life</strong> is the best-known two-dimensional  
+          <Grid item xs={10}  sm={8}>
+            <p className={classes.text}>
+              <strong>The Game of Life</strong> is the best-known two-dimensional  
               "<a className={classes.link} href="https://en.wikipedia.org/wiki/Cellular_automaton" target="_blank" title="Cellular automaton">cellular automaton</a>", 
               invented in 1970 by the British mathematician <a className={classes.link} href="https://en.wikipedia.org/wiki/John_Horton_Conway" title="John Conway">John Horton Conway</a>. 
               The life is a cellular automaton, which is a model of a discrete abstract computational system, 
@@ -242,8 +240,8 @@ class About extends Component {
               “alive” and “dead”, or "populated" and "unpopulated". The cells live on a two-dimensional grid and each cell 
               has eight adjacent cells - "neighbors". All cells change their state simultaneously, according to update 
               rules by taking into account the states of their neighbors.
-    	    	</p>
-      	    	<div className={classes.video}>
+            </p>
+              <div className={classes.video}>
                 <YouTube
                   videoId="R9Plq-D1gEk"                  
                   showinfo={0}
@@ -259,34 +257,34 @@ class About extends Component {
                 />
                 Fragment from Stephen Hawking`s The Meaning of Life
               </div>
-      	    	<h2 className={classes.title}>
-        	    	Rules
-      	    	</h2>
-      	    	<p className={classes.text}>
-        	    	Every cell interacts with its eight neighbors, 
-        	    	which are the cells that are horizontally, vertically, or diagonally adjacent. 
-        	    	At each step in time, the following transitions occur:
-      	    	</p>
-      	    	<div className={classes.rules}>
-        	    	<ul>
-          				<li>Any live cell with fewer than two live neighbors dies, as if caused by underpopulation.</li>
-          				<li>Any live cell with two or three live neighbors lives on to the next generation.</li>
-          				<li>Any live cell with more than three live neighbors dies, as if by overpopulation.</li>
-          				<li>Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.</li>
-          			</ul>
-        			</div>
-        			<p className={classes.text}>
-          			The initial pattern constitutes the seed of the system. 
-          			The first generation is created by applying the above rules 
-          			simultaneously to every cell in the seed - births and deaths occur simultaneously, 
-          			and the discrete moment at which this happens is sometimes called a tick 
-          			(in other words, each generation is a pure function of the preceding one). 
-          			The rules continue to be applied repeatedly to create further generations.
-      	    	</p>
-        	    	
-      	    	<h2 className={classes.title}>
-        	    	Examples of Patterns
-      	    	</h2>
+              <h2 className={classes.title}>
+                Rules
+              </h2>
+              <p className={classes.text}>
+                Every cell interacts with its eight neighbors, 
+                which are the cells that are horizontally, vertically, or diagonally adjacent. 
+                At each step in time, the following transitions occur:
+              </p>
+              <div className={classes.rules}>
+                <ul>
+                  <li>Any live cell with fewer than two live neighbors dies, as if caused by underpopulation.</li>
+                  <li>Any live cell with two or three live neighbors lives on to the next generation.</li>
+                  <li>Any live cell with more than three live neighbors dies, as if by overpopulation.</li>
+                  <li>Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.</li>
+                </ul>
+              </div>
+              <p className={classes.text}>
+                The initial pattern constitutes the seed of the system. 
+                The first generation is created by applying the above rules 
+                simultaneously to every cell in the seed - births and deaths occur simultaneously, 
+                and the discrete moment at which this happens is sometimes called a tick 
+                (in other words, each generation is a pure function of the preceding one). 
+                The rules continue to be applied repeatedly to create further generations.
+              </p>
+                
+              <h2 className={classes.title}>
+                Examples of Patterns
+              </h2>
               <p className={classes.text}>
                 In order to simulate infinite grid on the game board and in the examples below (except for the gun pattern), 
                 cells that are situated on the edges of the boards are handled in a toroidal manner, 
@@ -295,77 +293,77 @@ class About extends Component {
                 edge will be from the left edge. 
               </p>
 
-      	    	<h4 className={classes.title}>
-        	    	Still Life
-      	    	</h4>
-      	    	<p className={classes.text}>
-        	    	Stable finite patterns.
-      	    	</p>
-      	    	<div className={classes.boardsSection}>
+              <h4 className={classes.title}>
+                Still Life
+              </h4>
+              <p className={classes.text}>
+                Stable finite patterns.
+              </p>
+              <div className={classes.boardsSection}>
                 {['block', 'boat', 'loaf', 'beehive'].map(name => this.createBoardElement(name))}
-      		    </div>
-        			<h4 className={classes.title}>
-        		    Oscillators 
-      		    </h4>
-      		    <p className={classes.text}>
-        	    	These patterns repeat their configuration periodically and infinitely. The basic oscillators have periods of two or three ticks. 
+              </div>
+              <h4 className={classes.title}>
+                Oscillators 
+              </h4>
+              <p className={classes.text}>
+                These patterns repeat their configuration periodically and infinitely. The basic oscillators have periods of two or three ticks. 
                     The most common period-2 oscillators include:
-      	    	</p>
-      	    	<div className={classes.boardsSection}>
-        	    	{['blinker', 'beacon', 'toad', 'glasses', 'quad'].map(name => this.createBoardElement(name))}
-      		    </div>
-        			<h4 className={classes.title}>
-        		    Gliders and Spaceships
-      		    </h4>
-      		    <p className={classes.text}>
-        	    	A spaceship is more complex oscillator, returning to the same configuration but shifted after a finite number of generations. 
-        	    	The glider is a simple spaceship that has period 4, i.e. repeats every four generations, but 
+              </p>
+              <div className={classes.boardsSection}>
+                {['blinker', 'beacon', 'toad', 'glasses', 'quad'].map(name => this.createBoardElement(name))}
+              </div>
+              <h4 className={classes.title}>
+                Gliders and Spaceships
+              </h4>
+              <p className={classes.text}>
+                A spaceship is more complex oscillator, returning to the same configuration but shifted after a finite number of generations. 
+                The glider is a simple spaceship that has period 4, i.e. repeats every four generations, but 
                     moves diagonally one cell every four generations.
-        	    	Other examples of simple spaceships include lightweight, medium weight, and heavyweight spaceships. 
-        	    	They each move in a straight line.
-      	    	</p>
-      	    	<div  className={classes.boardsSection} >
-        	    	{['glider', 'spaceship'].map(name => this.createBoardElement(name))}
-      		    </div> 	
-        			<h4 className={classes.title}>
-        		    Guns
-      		    </h4>
-      		    <p className={classes.text}>
-          			Conway offered a prize for any example of patterns that grow forever. 
-          			Conway's prize was collected soon after its announcement, when two different ways were discovered for designing a pattern that grows forever.
+                Other examples of simple spaceships include lightweight, medium weight, and heavyweight spaceships. 
+                They each move in a straight line.
+              </p>
+              <div  className={classes.boardsSection} >
+                {['glider', 'spaceship'].map(name => this.createBoardElement(name))}
+              </div>  
+              <h4 className={classes.title}>
+                Guns
+              </h4>
+              <p className={classes.text}>
+                Conway offered a prize for any example of patterns that grow forever. 
+                Conway's prize was collected soon after its announcement, when two different ways were discovered for designing a pattern that grows forever.
 
-          			The first of these patterns is the period-30 glider gun, which is based on the interaction of two queen bee shuttles. 
-          			Where these shuttles collide, instead of producing beehives, they produce a new glider. 
-          			This glider moves away in time for the process to repeat itself 30 steps later.
-        			</p>
-        			<div className={classes.boardsSection} >
-      			    {this.createBoardElement('gun')}
-       		    </div>
-      	    	<h2 className={classes.title}>
-        	    	Origins
-      	    	</h2>
-      	    	<p className={classes.text}>
+                The first of these patterns is the period-30 glider gun, which is based on the interaction of two queen bee shuttles. 
+                Where these shuttles collide, instead of producing beehives, they produce a new glider. 
+                This glider moves away in time for the process to repeat itself 30 steps later.
+              </p>
+              <div className={classes.boardsSection} >
+                {this.createBoardElement('gun')}
+              </div>
+              <h2 className={classes.title}>
+                Origins
+              </h2>
+              <p className={classes.text}>
                 Conway was interested in a problem presented in the 1940s by 
-        	    	mathematician <a className={classes.link} href="https://en.wikipedia.org/wiki/John_von_Neumann" title="John von Neumann">John von Neumann</a>, 
-        	    	who attempted to find a hypothetical machine that could build copies of itself 
-        	    	and succeeded when he found a mathematical model for such a machine with very 
-        	    	complicated rules on a rectangular grid. The Game of Life emerged as Conway's 
-        	    	successful attempt to drastically simplify von Neumann's ideas.
-      	    	</p>
-      	    	<p className={classes.text}>
+                mathematician <a className={classes.link} href="https://en.wikipedia.org/wiki/John_von_Neumann" title="John von Neumann">John von Neumann</a>, 
+                who attempted to find a hypothetical machine that could build copies of itself 
+                and succeeded when he found a mathematical model for such a machine with very 
+                complicated rules on a rectangular grid. The Game of Life emerged as Conway's 
+                successful attempt to drastically simplify von Neumann's ideas.
+              </p>
+              <p className={classes.text}>
                 The game made its first public appearance in the October 1970 issue of <i>Scientific American</i>, in Martin Gardner's column. 
-        	    	From a theoretical point of view, it is interesting because it has the power of 
-        	    	a universal Turing machine: that is, anything that can be computed algorithmically 
-        	    	can be computed within Conway's Game of Life. Gardner wrote:
-      	    	</p>
-      	    	<blockquote>
-          			<p>
+                From a theoretical point of view, it is interesting because it has the power of 
+                a universal Turing machine: that is, anything that can be computed algorithmically 
+                can be computed within Conway's Game of Life. Gardner wrote:
+              </p>
+              <blockquote>
+                <p>
                   The game made Conway instantly famous, but it also opened up a whole new 
-            			field of mathematical research, the field of cellular automata&nbsp;... Because of Life's analogies with the rise, 
-            			fall and alterations of a society of living organisms, it belongs to a 
-            			growing class of what are called "simulation games" (games that resemble real life processes).
-          			</p>
-        			</blockquote>
+                  field of mathematical research, the field of cellular automata&nbsp;... Because of Life's analogies with the rise, 
+                  fall and alterations of a society of living organisms, it belongs to a 
+                  growing class of what are called "simulation games" (games that resemble real life processes).
+                </p>
+              </blockquote>
               <h2 className={classes.title}>
                 References
               </h2>
@@ -394,12 +392,12 @@ class About extends Component {
                 <a className={classes.link} href="http://mathworld.wolfram.com/GameofLife.html">
                   http://mathworld.wolfram.com/GameofLife.html
                 </a>
-              </p>   		
+              </p>      
               <p className={classes.text}>
                 <a className={classes.link} href="http://www.conwaylife.com/">
                   http://www.conwaylife.com/
                 </a>
-              </p>	
+              </p>  
               <p className={classes.text}>
                 <a className={classes.link} href="http://golly.sourceforge.net/">
                   http://golly.sourceforge.net/
@@ -435,13 +433,13 @@ class About extends Component {
                   http://natureofcode.com/book/chapter-7-cellular-automata/
                 </a>
               </p>
-      			</Grid>
-    			<Grid item xs={1} sm={2}> 
+            </Grid>
+          <Grid item xs={1} sm={2}> 
           </Grid>
-    		</Grid>
+        </Grid>
       </div>
-  	); 
-	}
+    ); 
+  }
 }
 
 About.propTypes = {

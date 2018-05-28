@@ -9,7 +9,7 @@ import Layout from '../components/Layout'
 
 class AboutPage extends Component {
   static async getInitialProps ({store}) {
-    if (store.getState().patterns.length === 0) {
+    if (store.getState().patterns.length === 1) {
         store.dispatch(loadData())
   }}
 

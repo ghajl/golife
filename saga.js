@@ -3,8 +3,8 @@ import fetch from 'isomorphic-unfetch'
 import {actionTypes, failure, loadDataSuccess} from './actions';
 
 export function fetchPatterns() {
-	return fetch('https://gist.githubusercontent.com/ghajl/d873bcb8d32128b32618c7468dc6ca43/raw/0b4862bb8e1245a263d0c36802c9c0864321f13d/patterns.json')
-	.then(res => res.json());
+  return fetch('https://gist.githubusercontent.com/ghajl/d873bcb8d32128b32618c7468dc6ca43/raw/15a82e2251bb6e4c84c83c785caae528809c59b6/patterns.json')
+  .then(res => res.json());
 } 
 
 export function * loadDataSaga () {
@@ -19,4 +19,3 @@ export function * loadDataSaga () {
 export function * rootSaga () {
   yield takeLatest(actionTypes.LOAD_DATA, loadDataSaga);
 }
-

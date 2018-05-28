@@ -6,15 +6,15 @@ import {colors as color} from '../util/colors';
 const Generation =({generation}) => {
   return (
     <div className="generation">
-    	{generation}
-		<style jsx global>{`
+      {generation}
+    <style jsx global>{`
       .generation {
-				color: ${color.GENERATION};
-				font-size: 1.5em;
+        color: ${color.GENERATION};
+        font-size: 1.5em;
         text-align: right;
       }
     `}</style>
-  	</div>
+    </div>
   );
 }
 const mapStateToProps = ({generation}) => ({generation});
