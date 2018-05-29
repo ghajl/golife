@@ -88,7 +88,9 @@ export function applyChanges(changeList, cellmap, width, height) {
   changeList.forEach(cell => {
     const [y, x] = cell;
     cellmap[y][x].changeState();
-    checkList[`${y},${x}`] = 1;
+    if (typeof checkList[`${y},${x}`] === 'undefined') {
+      checkList[`${y},${x}`] = 1;
+    }
     const neighbors = cellmap[y][x].getNeighborsCoordinates();
     neighbors.forEach(neighbor => {
       if (typeof checkList[neighbor] === 'undefined') {
@@ -96,13 +98,13 @@ export function applyChanges(changeList, cellmap, width, height) {
       }
     })
   })  
-  return checkList;
+  return Object.keys(checkList);
 }
 
 export function makeChangeList(checkList, cellmap) {
   const changeList = [];
   const re = /\d+/g;
-  Object.keys(checkList).forEach(cell => {
+  checkList.forEach(cell => {
     const y = +re.exec(cell)[0];
     const x = +re.exec(cell)[0];
     re.lastIndex = 0;

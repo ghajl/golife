@@ -34,21 +34,23 @@ class Game {
 
   drawBoard(canvas, ratio)
   {
-    if (ratio != null) {
+    if (ratio !== null) {
       this.ratio = ratio;
     }
     this.canvas = new Canvas(canvas, this.width, this.height, this.squareSize, this.ratio);
     this.canvas.init();
     const redrawList = this.life.nextGeneration();
     this.redrawWorld(redrawList);
+    return this.cellCount;
   }
 
   drawCell(e){
     const coordinates = this.canvas.getClickCoordinates(e);
-    if (coordinates != null) {
+    if (coordinates !== null) {
       const redrawList = this.life.drawCell(coordinates.Y, coordinates.X);
       this.redrawWorld(redrawList);
     }
+    return this.cellCount;
   }
 
   setPattern(index, patternsList){
@@ -60,6 +62,7 @@ class Game {
     }
     const redrawList = this.life.setPattern(pattern);
     this.redrawWorld(redrawList);
+    return this.cellCount;
   }
 
   handleWindowSizeChange(){
@@ -77,6 +80,7 @@ class Game {
   clear() {
     const redrawList = this.life.clearWorld();
     this.redrawWorld(redrawList);
+    return this.cellCount;
   }
 
   update(){

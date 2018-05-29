@@ -22,7 +22,6 @@ class Canvas {
     const bufferCanvas = this.copyCanvas(this.canvas);
     const ctx = bufferCanvas.getContext('2d');         
     this.originalCellImage = ctx.getImageData(this.squareSize * this.ratio / 2, this.squareSize * this.ratio / 2, this.squareSize * this.ratio, this.squareSize * this.ratio);
-
   }
 
   handleWindowSizeChange() {
@@ -110,16 +109,12 @@ class Canvas {
     context.closePath();
     context.restore()
   }
-
 }
 
 export default Canvas;
 
 function getCursorPos(e) {
-  var x;
-  var y;
-
-  x = e.clientX
-  y = e.clientY
+  const x = e.clientX;
+  const y = e.clientY;
   return [x, y];
 }

@@ -56,20 +56,18 @@ const PlayButtonsBar = ({classes, ...props}) => {
               on={props.on}
               onIcon={<PlayArrow className={classes.icon}/>}
               offIcon={<Pause className={classes.icon} />}
-               
             />
           </IconButton>
-       
         </div>
         <div className={classes.item}>
-            <IconButton className={classes.button} title="Next Generation" onClick={() => props.step()} >
-                <SkipNext className={classes.icon}/>
-            </IconButton>
+          <IconButton className={classes.button} title="Next Generation" onClick={() => props.step()} >
+            <SkipNext className={classes.icon}/>
+          </IconButton>
           </div>
         <div  className={classes.item}>
-            <IconButton className={classes.button} title="Clear" onClick={() => props.clear()} >
-                <Clear  className={classes.icon}/>
-            </IconButton>
+          <IconButton className={classes.button} title="Clear" onClick={() => props.clear()} >
+            <Clear  className={classes.icon}/>
+          </IconButton>
         </div>
         <div className={classes.slider} title="Set Speed">
           <SpeedSlider onChange={(v) => props.setInterval(v)}/>

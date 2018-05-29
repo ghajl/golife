@@ -5,7 +5,6 @@ import Game from '../game/Game';
 import {colors as color} from '../util/colors';
 import SelectButtonsBar from './SelectButtonsBar';
 import PlayButtonsBar from './PlayButtonsBar';
-import {patternNames} from '../util/patternNames';
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -73,11 +72,12 @@ class Main extends Component {
 
   handleBoardSizeChange(index){
     if (index !== this.props.currentSize) {
-      const params = this.props.parameters[index]; 
       this.stop();
+      const params = this.props.parameters[index]; 
       this.boardWidth = params.width;
       this.boardHeight = params.height; 
       this.squareSize = params.squareSize;
+      console.log(`${this.boardWidth},${this.boardHeight}`)
       this.game.reload(this.boardWidth, this.boardHeight, this.squareSize, this.canvas);
       this.props.changeBoardSize(index);
     }
@@ -131,7 +131,6 @@ class Main extends Component {
       this.stop();
       this.props.setClear();
       this.game.clear();
-      this.isBoardClear = true;
     }
   }
 
@@ -194,7 +193,7 @@ class Main extends Component {
             <div className="canvas">
               <div className="wrapper">
                 <canvas
-                  ref={(canvas) => { this.canvas = canvas}}
+                  ref={(canvas) => {this.canvas = canvas}}
                   onClick={(e) => this.handleClick(e)}
                 />
               </div>
@@ -215,7 +214,6 @@ class Main extends Component {
               text-align: center;
               margin-top: 80px;
               z-index: 2;
-
           }
           .wrapper {
               padding-left: 10px;
@@ -267,34 +265,34 @@ const TWO_NUMBERS_ARRAY = function(props, propName, componentName){
 }
 
 
-Main.propTypes = {
-  setRunning: PropTypes.func.isRequired,
-  running: PropTypes.shape({
-    [patternNames.MAIN]: PropTypes.bool,
-    [patternNames.BLOCK]: PropTypes.bool,
-    [patternNames.BOAT]: PropTypes.bool,
-    [patternNames.LOAF]: PropTypes.bool,
-    [patternNames.BEEHIVE]: PropTypes.bool,
-    [patternNames.BLINKER]: PropTypes.bool,
-    [patternNames.BEACON]: PropTypes.bool,
-    [patternNames.TOAD]: PropTypes.bool,
-    [patternNames.GLIDER]: PropTypes.bool,
-    [patternNames.SPACESHIP]: PropTypes.bool,
-    [patternNames.GUN]: PropTypes.bool,
-  }).isRequired,
-  cells: TWO_NUMBERS_ARRAY,
-  patterns: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    pattern: TWO_NUMBERS_ARRAY
-    })
-  ),
-  changePattern: PropTypes.func.isRequired,
-  changeBoardSize: PropTypes.func.isRequired,
-  incrementGeneration: PropTypes.func.isRequired,
-  setSpeed: PropTypes.func.isRequired,
-  setClear: PropTypes.func.isRequired,
-  saveCells: PropTypes.func.isRequired,
-  currentPattern: PropTypes.number,
-  currentSize: PropTypes.number,
-  error: PropTypes.bool,
-};
+// Main.propTypes = {
+//   setRunning: PropTypes.func.isRequired,
+//   running: PropTypes.shape({
+//     [patternNames.MAIN]: PropTypes.bool,
+//     [patternNames.BLOCK]: PropTypes.bool,
+//     [patternNames.BOAT]: PropTypes.bool,
+//     [patternNames.LOAF]: PropTypes.bool,
+//     [patternNames.BEEHIVE]: PropTypes.bool,
+//     [patternNames.BLINKER]: PropTypes.bool,
+//     [patternNames.BEACON]: PropTypes.bool,
+//     [patternNames.TOAD]: PropTypes.bool,
+//     [patternNames.GLIDER]: PropTypes.bool,
+//     [patternNames.SPACESHIP]: PropTypes.bool,
+//     [patternNames.GUN]: PropTypes.bool,
+//   }).isRequired,
+//   cells: TWO_NUMBERS_ARRAY,
+//   patterns: PropTypes.arrayOf(PropTypes.shape({
+//     name: PropTypes.string,
+//     pattern: TWO_NUMBERS_ARRAY
+//     })
+//   ),
+//   changePattern: PropTypes.func.isRequired,
+//   changeBoardSize: PropTypes.func.isRequired,
+//   incrementGeneration: PropTypes.func.isRequired,
+//   setSpeed: PropTypes.func.isRequired,
+//   setClear: PropTypes.func.isRequired,
+//   saveCells: PropTypes.func.isRequired,
+//   currentPattern: PropTypes.number,
+//   currentSize: PropTypes.number,
+//   error: PropTypes.bool,
+// };

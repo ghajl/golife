@@ -28,5 +28,4 @@ export default class UnwrappedGame extends Game {
       }
     })
   }
-
 }

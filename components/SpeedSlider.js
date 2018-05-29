@@ -30,9 +30,6 @@ const sliderStyle = {
   height: 40,
 };
 
-
-
-
 const handle = ({ fps, ...Props }) => {
   return (
     <Handle value={fps} style={{borderColor: 'black',}} {...Props} />
@@ -43,7 +40,6 @@ class SpeedSlider extends Component {
   componentWillMount() {
       this.props.onChange(this.props.fps)
   }
-
   render() { 
     return (
       <div style={sliderStyle}>
