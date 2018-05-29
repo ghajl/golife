@@ -34,7 +34,7 @@ class Game {
 
   drawBoard(canvas, ratio)
   {
-    if (ratio !== null) {
+    if (ratio != null) {
       this.ratio = ratio;
     }
     this.canvas = new Canvas(canvas, this.width, this.height, this.squareSize, this.ratio);

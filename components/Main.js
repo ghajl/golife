@@ -77,7 +77,6 @@ class Main extends Component {
       this.boardWidth = params.width;
       this.boardHeight = params.height; 
       this.squareSize = params.squareSize;
-      console.log(`${this.boardWidth},${this.boardHeight}`)
       this.game.reload(this.boardWidth, this.boardHeight, this.squareSize, this.canvas);
       this.props.changeBoardSize(index);
     }
